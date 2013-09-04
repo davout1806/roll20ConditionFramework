@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var DavoutConditions = DavoutConditions || {};
+
 on("ready", function() {
     state.davoutFcConditions = state.davoutFcConditions || [];
 
@@ -14,8 +16,20 @@ on("ready", function() {
 
 });
 
+DavoutConditions.getConditionsOnChar = function (charId){
+    return state["davoutFcConditions_" + charId];
+}
+
+DavoutConditions.addConditionToChar = function(charId, conditionName){
+    if (DavoutConditions.getConditionsOnChar(charId) == undefined){
+        state["davoutFcConditions_" + charId] = [conditionName];
+    } else {
+        state["davoutFcConditions_" + charId].push(conditionName);
+    }
+}
+
 on("chat:message", function(msg) {
-    if(msg.type == "api" && msg.who.indexOf("(GM)") !== -1 && msg.content.indexOf("!fat") !== -1){
+    if(msg.type == "api" && DavoutUtils.isSenderGm(msg) && msg.content.indexOf("!fat") !== -1){
         if (msg.selected == undefined){
             sendChat("API", "nothing is selected");
             return;
@@ -23,30 +37,31 @@ on("chat:message", function(msg) {
 
         _.each(msg.selected, function(obj){
             token = getObj("graphic", obj._id);
-            if (token.get("represents") !== "") {
-                state["davoutFcConditions_" + token.get("represents")] = "fatiguedI";
+            log("obj._id = " + obj._id);
+            var characterId = token.get("represents");
+            if (characterId !== "") {
+                DavoutConditions.addConditionToChar(characterId, "fatiguedI");
+                var conditionEffects = state.davoutFcConditions["fatiguedI"].effects;
+                _.each(conditionEffects, function(obj){
+                    log("obj.attrib = " + obj.attrib);
+                    DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
+                });
             }
-
-        });
-
-        log("char state= " + state["davoutFcConditions_" + token.get("represents")]);
-        var conditionEffects = state.davoutFcConditions["fatiguedI"].effects;
-        _.each(conditionEffects, function(obj){
-            log("fat I condition= " + obj.attrib + " modified by " + obj.modifier);
         });
     }
 });
 
 on("chat:message", function(msg) {
-    if(msg.type == "api" && msg.who.indexOf("(GM)") !== -1 && msg.content.indexOf("!cur") !== -1 ){
+    if(msg.type == "api" && DavoutUtils.isSenderGm(msg) && msg.content.indexOf("!cur") !== -1 ){
+        var token;
+        var characterId;
         _.each(msg.selected, function(obj){
             token = getObj("graphic", obj._id);
-            if (token.get("represents") !== "") {
-                var strAttribute = findObjs({_type: "attribute", name: "str", _characterid: token.get("represents")})[0];
-                log("strAttribute = " + strAttribute.get("current"));
+            characterId = token.get("represents");
+            if (characterId !== "") {
+                var strAttribute = findObjs({_type: "attribute", name: "curStr", _characterid: characterId})[0];
+//                log("strAttribute = " + strAttribute.get("current"));
             }
-
         });
-
     }
 });
