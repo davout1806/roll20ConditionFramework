@@ -1,14 +1,36 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Mike
- * Date: 9/2/13
- * Time: 3:35 AM
- * To change this template use File | Settings | File Templates.
- */
 
 var DavoutConditions = DavoutConditions || {};
+DavoutConditions.command = DavoutConditions.command || {};
 
-on("ready", function() {
+DavoutConditions.command._add = function(){
+    log("command H");
+
+}
+
+on("ready", function() {     // Requires community.command
+    if(community == undefined || !("command" in community)) {
+        log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
+        throw "Can't find community.command!";
+    }
+
+    var addCommand = {};
+//    addCommand.minArgs = 1;
+    addCommand.minArgs = 0;
+    addCommand.maxArgs = 0;
+//    addCommand.maxArgs = 1;
+    addCommand.typeList = [];
+//    addCommand.typeList = ["str"];
+    addCommand.syntax = "!cond_add";
+//    addCommand.syntax = "!cond_add ConditionName";
+    addCommand.handle = function (args, who, isGm) {
+       log("args = " + args);
+       log("who = " + who);
+       log("isGm = " + isGm);
+       DavoutConditions.command._add();
+//        DavoutConditions.command._add(args[0].value);
+    };
+    community.command.add("cond_add", addCommand);
+
     state.davoutFcConditions = state.davoutFcConditions || [];
 
     state.davoutFcConditions["fatiguedI"] = {effects: [{attrib: "str", modifier: -2}, {attrib: "dex", modifier: -2}, {attrib: "speed", modifier: -5}] };
