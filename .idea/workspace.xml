@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="44e7563e-bd9a-40ff-80f1-37961d182dd1" name="Default" comment="">
-      <change type="MOVED" beforePath="C:\code\roll20API\myScripts\CreateFCConditions.js" afterPath="$PROJECT_DIR$/myScripts/FcConditions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="roll20API.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/CreateFCConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273495024" ignored="false" />
-    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273904901" ignored="false" />
+    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378323627171" ignored="false" />
     <file path="/CreateFcSheet.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378256044427" ignored="false" />
     <file path="/a.dummy" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378269655411" ignored="false" />
     <file path="/fragment.java" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378259240967" ignored="false" />
@@ -94,13 +93,22 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ChatCommandHandler.js" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="ChatCommandHandler.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="169" column="13" selection-start="7206" selection-end="7206" vertical-scroll-proportion="0.09558824">
+                <state line="169" column="13" selection-start="7206" selection-end="7206" vertical-scroll-proportion="-1.04">
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="workspace.xml" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="35" column="64" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.43434343">
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -579,7 +587,11 @@
       <created>1378273909680</created>
       <updated>1378273909680</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="2">
+      <created>1378323636033</created>
+      <updated>1378323636033</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -651,7 +663,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="2" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -667,6 +679,7 @@
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="Test commit" />
     <MESSAGE value="1" />
+    <MESSAGE value="2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -720,13 +733,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="836" column="57" selection-start="44581" selection-end="44581" vertical-scroll-proportion="0.5084175">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/myScripts/CreateFcSheet.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="11" selection-start="809" selection-end="809" vertical-scroll-proportion="-6.3333335">
@@ -775,10 +781,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="169" column="13" selection-start="7206" selection-end="7206" vertical-scroll-proportion="0.09558824">
+        <state line="169" column="13" selection-start="7206" selection-end="7206" vertical-scroll-proportion="-1.04">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="64" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.43434343">
+          <folding />
         </state>
       </provider>
     </entry>
