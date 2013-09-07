@@ -2,18 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="44e7563e-bd9a-40ff-80f1-37961d182dd1" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libs/underscore-min.js" />
+      <change type="DELETED" beforePath="C:\code\roll20API\myScripts\ChatCommandHandler.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js" afterPath="$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/myScripts/FcConditions.js" afterPath="$PROJECT_DIR$/myScripts/FcConditions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/myScripts/Utils.js" afterPath="$PROJECT_DIR$/myScripts/Utils.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="roll20API.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/CreateFCConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273495024" ignored="false" />
-    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378348126813" ignored="false" />
+    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378530220142" ignored="false" />
     <file path="/CreateFcSheet.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378256044427" ignored="false" />
     <file path="/a.dummy" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378269655411" ignored="false" />
     <file path="/fragment.java" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378259240967" ignored="false" />
     <file path="/Utils.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273329002" ignored="false" />
-    <file path="/FcConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378405610456" ignored="false" />
+    <file path="/FcConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378529459928" ignored="false" />
     <file path="/ChatCommandHandler.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378341814407" ignored="false" />
     <file path="/RandomTableOfPhrases.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378340745815" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -75,7 +79,7 @@
     <favorites_list name="roll20API" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="vertical" split-proportion="0.6580259">
+    <splitter split-orientation="vertical" split-proportion="0.6570289">
       <split-first>
         <leaf>
           <file leaf-file-name="CreateFcSheet.js" pinned="false" current="false" current-in-tab="false">
@@ -90,16 +94,7 @@
           <file leaf-file-name="FcConditions.js" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="81" column="33" selection-start="2982" selection-end="2982" vertical-scroll-proportion="0.6327543">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ChatCommandHandler.js" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/myScripts/ChatCommandHandler.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="29" column="14" selection-start="2094" selection-end="2094" vertical-scroll-proportion="0.0">
+                <state line="84" column="17" selection-start="2985" selection-end="2985" vertical-scroll-proportion="0.8507463">
                   <folding />
                 </state>
               </provider>
@@ -112,7 +107,7 @@
           <file leaf-file-name="CreatePathfinderCharacterSheet.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/Malikai-mgruel/CreatePathfinderCharacterSheet.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="101" column="60" selection-start="7249" selection-end="7249" vertical-scroll-proportion="0.0">
+                <state line="101" column="43" selection-start="7249" selection-end="7249" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -141,7 +136,7 @@
           <file leaf-file-name="StatusTracker.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/Josh-DarokinB/StatusTracker.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="356" column="83" selection-start="12542" selection-end="12542" vertical-scroll-proportion="-87.08">
+                <state line="356" column="0" selection-start="12542" selection-end="12542" vertical-scroll-proportion="-87.08">
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                   </folding>
@@ -161,7 +156,7 @@
           <file leaf-file-name="Utils.js" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/myScripts/Utils.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="10" column="17" selection-start="371" selection-end="371" vertical-scroll-proportion="0.96590906">
+                <state line="2" column="13" selection-start="44" selection-end="55" vertical-scroll-proportion="0.19209039">
                   <folding />
                 </state>
               </provider>
@@ -170,10 +165,8 @@
           <file leaf-file-name="ChatCommandHandler.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="264" column="58" selection-start="11515" selection-end="11515" vertical-scroll-proportion="0.0">
-                  <folding>
-                    <element signature="n#!!doc" expanded="true" />
-                  </folding>
+                <state line="177" column="21" selection-start="6263" selection-end="6263" vertical-scroll-proportion="0.0">
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -210,10 +203,10 @@
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/RandomTableOfPhrases.js" />
         <option value="$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js" />
-        <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js" />
         <option value="$PROJECT_DIR$/myScripts/ChatCommandHandler.js" />
-        <option value="$PROJECT_DIR$/myScripts/Utils.js" />
+        <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js" />
         <option value="$PROJECT_DIR$/myScripts/FcConditions.js" />
+        <option value="$PROJECT_DIR$/myScripts/Utils.js" />
       </list>
     </option>
   </component>
@@ -482,19 +475,35 @@
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Libraries" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="120" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="138" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="142" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="145" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="817" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="824" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="137" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="131" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="appearance" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="FullScreen" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
-    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -623,7 +632,19 @@
       <created>1378348133064</created>
       <updated>1378348133064</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add others' scripts">
+      <created>1378528373476</created>
+      <updated>1378528373476</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add others' scripts">
+      <created>1378528527445</created>
+      <updated>1378528527445</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add others' scripts">
+      <created>1378530234919</created>
+      <updated>1378530234919</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -695,7 +716,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Simple add/remove conditions working." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add others' scripts" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -713,6 +734,7 @@
     <MESSAGE value="1" />
     <MESSAGE value="2" />
     <MESSAGE value="Simple add/remove conditions working." />
+    <MESSAGE value="Add others' scripts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -748,14 +770,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/Malikai-mgruel/CreatePathfinderCharacterSheet.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="60" selection-start="7249" selection-end="7249" vertical-scroll-proportion="0.0">
+        <state line="101" column="43" selection-start="7249" selection-end="7249" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/Josh-DarokinB/StatusTracker.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="356" column="83" selection-start="12542" selection-end="12542" vertical-scroll-proportion="-87.08">
+        <state line="356" column="0" selection-start="12542" selection-end="12542" vertical-scroll-proportion="-87.08">
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -801,13 +823,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/myScripts/ChatCommandHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="14" selection-start="2094" selection-end="2094" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="15" selection-start="924" selection-end="924" vertical-scroll-proportion="0.48973143">
@@ -819,23 +834,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="264" column="58" selection-start="11515" selection-end="11515" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state line="177" column="21" selection-start="6263" selection-end="6263" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="33" selection-start="2982" selection-end="2982" vertical-scroll-proportion="0.6327543">
+        <state line="84" column="17" selection-start="2985" selection-end="2985" vertical-scroll-proportion="0.8507463">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/myScripts/Utils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="17" selection-start="371" selection-end="371" vertical-scroll-proportion="0.96590906">
+        <state line="2" column="13" selection-start="44" selection-end="55" vertical-scroll-proportion="0.19209039">
           <folding />
         </state>
       </provider>

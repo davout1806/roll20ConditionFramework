@@ -5,6 +5,15 @@ DavoutConditions.getConditionsOnChar = function (charId) {
     return state["davoutFcConditions_" + charId];
 }
 
+DavoutConditions.adjustAttributeForChar = function(characterId, attributeName, modifier){
+    var attrib = findObjs({_type: "attribute", name: "cur_" + attributeName, _characterid: characterId})[0];
+    if (attrib == undefined){
+        return;
+    }
+
+    attrib.set("current", parseInt(attrib.get("current")) + modifier);
+}
+
 DavoutConditions.addConditionToChar = function (charId, conditionName) {
     log("ADD prestate = " + conditionName + " " + JSON.stringify(state["davoutFcConditions_" + charId]));
     if (conditionName in state["davoutFcConditions_" + charId]) {
@@ -42,7 +51,7 @@ DavoutConditions.command._add = function (selected, condition) {
             if (state.davoutFcConditions.graded["condition"] == undefined) {
                 if (DavoutConditions.addConditionToChar(characterId, condition)) {
                     _.each(state.davoutFcConditions[condition].effects, function (obj) {
-                        DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
+                        DavoutConditions.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
                     });
                 }
             } else {
@@ -66,7 +75,7 @@ DavoutConditions.command._del = function (selected, condition) {
         if (characterId !== "") {
             if (DavoutConditions.removeConditionToChar(tokenObj.get("name"), characterId, condition)) {
                 _.each(state.davoutFcConditions[condition].effects, function (obj) {
-                    DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, -1 * obj.modifier);
+                    DavoutConditions.adjustAttributeForChar(characterId, obj.attrib, -1 * obj.modifier);
                 });
             }
         }
@@ -78,8 +87,6 @@ on("ready", function () {     // Requires community.command
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";
     }
-
-    // do as above but for DavoutUtils
 
     state.davoutFcConditions = state.davoutFcConditions || [];
     state.davoutFcConditions.graded = state.davoutFcConditions.graded || [];
@@ -116,8 +123,8 @@ on("ready", function () {     // Requires community.command
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
     addCommand.syntax = "!cond_add ConditionName";
-    addCommand.handle = function (args, who, selected, isGm) {
-        DavoutConditions.command._add(selected, args[0].value);
+    addCommand.handle = function (args, who, isGm, msg) {
+        DavoutConditions.command._add(msg.selected, args[0].value);
     };
     community.command.add("cond_add", addCommand);
 
@@ -127,8 +134,8 @@ on("ready", function () {     // Requires community.command
     removeCommand.typeList = [];
     removeCommand.typeList = ["str"];
     removeCommand.syntax = "!cond_del ConditionName";
-    removeCommand.handle = function (args, who, selected, isGm) {
-        DavoutConditions.command._del(selected, args[0].value);
+    removeCommand.handle = function (args, who, isGm, msg) {
+        DavoutConditions.command._del(msg.selected, args[0].value);
     };
     community.command.add("cond_del", removeCommand);
 });

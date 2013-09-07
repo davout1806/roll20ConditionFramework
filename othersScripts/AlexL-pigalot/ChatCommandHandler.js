@@ -1,41 +1,3 @@
-/*
- *  roll20 User: https://app.roll20.net/users/71687/alex-l
- *  git User:    https://gist.github.com/pigalot
- *
- So I have noticed a problem, each script that uses chat commands has its own handler. "What's the problem with that?" I hear you ask, lets think what would happen if I am running 10 different scripts all made by different people and two or more had the command !help, It wouldn't be good that's for sure.
- So to solve this problem I have created a well rounded fully functional chat command handler.
- It uses the commands formatted "!commandName [strings] [-OptionName values]". if the string has a space you can enclose it with quotes to keep it together.
-
- You can add commands by using "community.command.add" and passing it the command name and a object containing (* = required):
-
- minArgs - The minimum number of arguments required.
- maxArgs - The maximum number of arguments permitted.
- gmOnly - You can set this to anything it just has to be there, if it exists the command will be only usable by someone with "(GM)" in there name.
- typeList - This is an array of types for static arguments you want to receive. currently the only types are str (a string) and key (an option) key is the default.
- options - A object with valid options for your command ie: { "lol":"this is a discription", "rofl":"another discription"} would be !test -lol something -rofl "something else"
- handle* - a function with the profile of (args, who, isGM) args is a array of objects containing a value and if the argument was a option a key as well, ie "!test something -option value" would give [{ value:"something"},{key:"option", value:"value"}]. who is msg.who and isGM is a boolean.
- syntax - is a string that will be shown after the command name in the help it should show the basic usage of the command it will be auto generated if not set.
-
- Here is an example:
-
- on("ready", function() {
- obj = {};
- obj.gmOnly = "";
- obj.minArgs = 1;
- obj.typeList = ["str"];
- obj.options = { "lol":"This has to do something :P" };
- obj.handle = function(args) {
- log("test");
- log(JSON.stringify(args));
- };
- community.command.add("test", obj);
- });
-
- this would make the command !test, it requires one argument that will be a string and i can optionaly have as many -lol options as the user wants. When called it will log test and log its args in a JSON string. The add command returns a boolean indicating if the command has been added.
-
- Commands are automatic added to a help command (!?).
- */
-
 var community = community || {};
 community.command = community.command || {};
 
@@ -143,12 +105,12 @@ community.command.whisper = function(who, message) {
 };
 
 
-// Add command to system
+// Add command to system 
 community.command.add = function(command, obj) {
     // Does the command already exist
     if(command in community.command.commandList) {
         log("Error: Command.Add Command name already in use");
-        // Work out a way to auto rename to something sensable.
+        // Work out a way to auto rename to something sensible.
         return false;
     }
 
@@ -162,7 +124,7 @@ community.command.add = function(command, obj) {
 };
 
 // Parse the command
-community.command.parse = function(message, who) {
+community.command.parse = function(message, roll20Object) {
 
     var arr = message.match(/(?:[^\s"]+|"[^"]*")+/g);
 
@@ -174,7 +136,29 @@ community.command.parse = function(message, who) {
     if(command in community.command.commandList) {
 
         if("handle" in community.command.commandList[command]) {
-            var isGM = (who.indexOf("(GM)") != -1);
+            var who = roll20Object.who;
+            var whoid = 0;
+            try
+            {
+                var player = getObj('player', roll20Object.playerid);
+                whoid = player.get("_d20userid");
+            }
+            catch(e)
+            {
+                whoid = 0;
+            }
+
+            // create community.command.gmList as an array containing the GMs roll20 id to set a GM by id
+            var isGM = false;
+            if("gmList" in community.command && whoid != 0)
+            {
+                isGM = _.contains(community.command.gmList, whoid);
+            }
+            else
+            {
+                isGM = (who.indexOf("(GM)") != -1);
+            }
+
             if("gmOnly" in community.command.commandList[command]) {
                 if(!isGM) {
                     community.command.whisper(who, "You must be a GM to use this command");
@@ -184,7 +168,7 @@ community.command.parse = function(message, who) {
                 }
             }
 
-            // Are there enouth arguments?
+            // Are there enough arguments?
             var minArgs = community.command.commandList[command].minArgs || 0;
             var maxArgs = community.command.commandList[command].maxArgs || 0;
 
@@ -224,7 +208,7 @@ community.command.parse = function(message, who) {
                         // Get rid of the "s
                         arr[index] = element.replace(/"/g,"");
 
-                        // Check to see if the type is valid and that the element comforms to that types requirments
+                        // Check to see if the type is valid and that the element conforms to that types requirements
                         if(type in community.command.types) {
                             if(!(community.command.types[type].check(arr[index]))) {
                                 log("does not conform");
@@ -233,7 +217,7 @@ community.command.parse = function(message, who) {
                                 return;
                             }
                         } else {
-                            log("type doesnt exist");
+                            log("type doesn't exist");
                             // show some error code or something
                             error = true;
                             return;
@@ -274,10 +258,10 @@ community.command.parse = function(message, who) {
                 // OMG an error!!!
                 if(error) return;
 
-                community.command.commandList[command].handle(args, who, isGM);
+                community.command.commandList[command].handle(args, roll20Object.who, isGM, roll20Object);
 
             } else {
-                community.command.whisper(who, "Not enouth arguments or to many");
+                community.command.whisper(who, "Not enough arguments or to many");
             }
         } else {
             log("Command is there but has no function to handle it.");
@@ -289,6 +273,6 @@ community.command.parse = function(message, who) {
 
 on("chat:message", function(msg) {
     if(msg.type == "api" && msg.content.indexOf("!") !== -1) {
-        community.command.parse(msg.content, msg.who);
+        community.command.parse(msg.content, msg);
     }
 });
