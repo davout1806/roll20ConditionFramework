@@ -23,7 +23,7 @@ DavoutConditions.removeConditionToChar = function (name, charId, conditionName) 
         log("REMOVED");
         return true;
     } else {
-        sendChat("API", "Selected Token " + name+ " does not have condition: " + conditionName);
+        sendChat("API", "Selected Token " + name + " does not have condition: " + conditionName);
         return false;
     }
 }
@@ -39,13 +39,17 @@ DavoutConditions.command._add = function (selected, condition) {
     _.each(selected, function (obj) {
         characterId = getObj("graphic", obj._id).get("represents");
         if (characterId !== "") {
-            if (DavoutConditions.addConditionToChar(characterId, condition)) {
-                _.each(state.davoutFcConditions[condition].effects, function (obj) {
-                    DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
-                });
+            if (state.davoutFcConditions.graded["condition"] == undefined) {
+                if (DavoutConditions.addConditionToChar(characterId, condition)) {
+                    _.each(state.davoutFcConditions[condition].effects, function (obj) {
+                        DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
+                    });
+                }
+            } else {
+
             }
         }
-    })
+    });
 }
 
 DavoutConditions.command._del = function (selected, condition) {
@@ -75,6 +79,8 @@ on("ready", function () {     // Requires community.command
         throw "Can't find community.command!";
     }
 
+    // do as above but for DavoutUtils
+
     state.davoutFcConditions = state.davoutFcConditions || [];
     state.davoutFcConditions.graded = state.davoutFcConditions.graded || [];
 
@@ -100,6 +106,9 @@ on("ready", function () {     // Requires community.command
         {attrib: "dex", modifier: -2},
         {attrib: "speed", modifier: -5}
     ] };
+    state.davoutFcConditions["deafened"] = {effects: [
+
+    ]};
 
     var addCommand = {};
     addCommand.minArgs = 1;
