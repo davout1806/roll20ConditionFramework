@@ -2,8 +2,6 @@ var DavoutSheet = DavoutSheet || {};
 
 DavoutSheet.diceType = "1d20";
 
-//add init
-
 DavoutSheet.attribs = [];
 DavoutSheet.attribs["name"] = { name: "Name" , current: "", max: "" };
 DavoutSheet.attribs["str"] = { name: "Str" , current: 0, max: 0 };
@@ -17,6 +15,7 @@ DavoutSheet.attribs["ref"] = { name: "Reflex-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["will"] = { name: "Will-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["acp"] = { name: "AC-Penalty", current: 0, max: 0 };
 DavoutSheet.attribs["spd"] = { name: "Speed", current: 30, max: 30 };
+DavoutSheet.attribs["initBase"] = { name: "Initiative-Base" , current: 0, max: 0 };
 DavoutSheet.attribs["acrobaticsBase"] = { name: "Acrobatics-Base", current: 0, max: 0 };
 DavoutSheet.attribs["athleticsBase"] = { name: "Athletics-Base", current: 0, max: 0 };
 DavoutSheet.attribs["blendBase"] = { name: "Blend-Base", current: 0, max: 0 };
@@ -43,6 +42,7 @@ DavoutSheet.saves["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSh
 DavoutSheet.saves["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
 
 DavoutSheet.skills = [
+    { name: "Initiative", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["initBase"].name, acp: true },
     { name: "Acrobatics", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["acrobaticsBase"].name, acp: true },
     { name: "Athletics", attribute: DavoutSheet.attribs["str"].name, rank: DavoutSheet.attribs["athleticsBase"].name, acp: true },
     { name: "Blend", attribute: DavoutSheet.attribs["cha"].name, rank: DavoutSheet.attribs["blendBase"].name, acp: false },
@@ -61,8 +61,7 @@ DavoutSheet.skills = [
     { name: "Sense-Motive", attribute: DavoutSheet.attribs["wis"].name, rank: DavoutSheet.attribs["senseMotiveBase"].name, acp: false },
     { name: "Sneak", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["sneakBase"].name, acp: true },
     { name: "Survival", attribute: DavoutSheet.attribs["wis"].name, rank: DavoutSheet.attribs["survivalBase"].name, acp: false },
-    { name: "Tactics", attribute: DavoutSheet.attribs["int"].name, rank: DavoutSheet.attribs["tacticsBase"].name, acp: false }
-
+    { name: "Tactics", attribute: DavoutSheet.attribs["int"].name, rank: DavoutSheet.attribs["tacticsBase"].name, acp: false },
 ];
 
 DavoutSheet.processAttribs = function processAttribs(character) {
@@ -77,7 +76,7 @@ DavoutSheet.processAttribs = function processAttribs(character) {
 }
 
 DavoutSheet.getSkillBonus = function getSkillBonus(skill, charType) {
-    log("Skill: " + JSON.stringify(skill));
+//    log("Skill: " + JSON.stringify(skill));
     if (_.indexOf(skill.classSkill, charType) !== -1
         || _.indexOf(skill.classSkill, 'all') !== -1) {
         return "+@{" + DavoutSheet.attribs["csb"].name + "}";
@@ -95,7 +94,7 @@ DavoutSheet.createSaveAction = function createSaveAction(save) {
     return saveAction;
 }
 
-DavoutSheet.createAbilityAction = function createAbilityAction(skill, charType) {
+DavoutSheet.createSkillAction = function createSkillAction(skill, charType) {
     var abilityAction = "/w gm @{Name} ";
     abilityAction += skill.name;
     abilityAction += ": [[@{" + skill.attribute + "}";
@@ -111,12 +110,30 @@ DavoutSheet.createAbilityAction = function createAbilityAction(skill, charType) 
 
 DavoutSheet.retrieveUserModifiers = function retrieveUserModifiers(currentSkill, actionCommand) {
     var modifier = actionCommand.replace(currentSkill.name+"\n/r " + DavoutSheet.diceType + "+@{" + currentSkill.attribute + "}", "");
-    log("Modifier - Step 1: " + modifier);
+//    log("Modifier - Step 1: " + modifier);
     modifier = modifier.replace("+@{" + DavoutSheet.attribs["csb"].name + "}", "");
-    log("Modifier - Step 2: " + modifier);
+//    log("Modifier - Step 2: " + modifier);
     modifier = modifier.replace("+@{" + DavoutSheet.attribs["acp"].name + "}", "");
-    log("Modifier - Step 3: " + modifier);
+//    log("Modifier - Step 3: " + modifier);
     return modifier;
+}
+
+DavoutSheet.createSeparator = function createSeparator(character) {
+    var placeHolder = findObjs({
+        name: "--------------------------",
+        description: "",
+        action: "/w gm --------------------------",
+        type: "ability",
+        characterid: character.id
+    }, {caseInsensitive: true});
+    if (placeHolder.length < 1) {
+        createObj("ability", {
+            name: "--------------------------",
+            description: "",
+            action: "/w gm --------------------------",
+            characterid: character.id
+        });
+    }
 }
 
 DavoutSheet.processSkills = function processSkills(character, charType) {
@@ -142,24 +159,10 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
         }
     };
 
-    var placeHolder = findObjs({
-        name: "--------------------------",
-        description: "",
-        action: "",
-        type: "ability",
-        characterid: character.id
-    }, {caseInsensitive: true});
-    if (placeHolder.length < 1) {
-        createObj("ability", {
-            name: "--------------------------",
-            description: "",
-            action: "",
-            characterid: character.id
-        });
-    }
+    DavoutSheet.createSeparator(character);
     
     for (var skill in DavoutSheet.skills) {
-        var abilityAction = DavoutSheet.createAbilityAction(DavoutSheet.skills[skill], charType);
+        var abilityAction = DavoutSheet.createSkillAction(DavoutSheet.skills[skill], charType);
         var abilities = findObjs({
             name: DavoutSheet.skills[skill].name,
             type: "ability",
@@ -169,7 +172,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
         if (abilities.length > 0) {
             _.each(abilities, function(ability) {
                 var userModifier = DavoutSheet.retrieveUserModifiers(DavoutSheet.skills[skill], ability.get("action"));
-                log("Retrieved User-Modifier: " + userModifier);
+                //log("Retrieved User-Modifier: " + userModifier);
                 abilityAction += userModifier;
                 ability.set("action", abilityAction);
             })
@@ -183,21 +186,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
         }
     };
 
-    var placeHolder = findObjs({
-        name: "--------------------------",
-        description: "",
-        action: "",
-        type: "ability",
-        characterid: character.id
-    }, {caseInsensitive: true});
-    if (placeHolder.length < 1) {
-        createObj("ability", {
-            name: "--------------------------",
-            description: "",
-            action: "",
-            characterid: character.id
-        });
-    }
+    DavoutSheet.createSeparator(character);
 }
 
 on("ready", function() {
