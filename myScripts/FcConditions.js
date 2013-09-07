@@ -114,7 +114,7 @@ on("ready", function () {     // Requires community.command
     addCommand.typeList = ["str"];
     addCommand.syntax = "!cond_add ConditionName";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkSelectAndSendIfFalse(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndSendIfNothing(msg.selected, "/w gm nothing is selected") && isGm){
             DavoutConditions.command._add(msg.selected, args[0].value);
         }
     };
@@ -127,7 +127,7 @@ on("ready", function () {     // Requires community.command
     removeCommand.typeList = ["str"];
     removeCommand.syntax = "!cond_del ConditionName";
     removeCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkSelectAndSendIfFalse(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndSendIfNothing(msg.selected, "/w gm nothing is selected") && isGm){
             DavoutConditions.command._del(msg.selected, args[0].value);
         }
     };
