@@ -29,15 +29,18 @@ DavoutConditions.removeConditionToChar = function (name, charId, conditionName) 
 };
 
 DavoutConditions.command._add = function (selected, condition) {
+    var tokenObjR20;
     var characterId;
 
     _.each(selected, function (obj) {
-        characterId = getObj("graphic", obj._id).get("represents");
+        tokenObjR20 = getObj("graphic", obj._id);
+        characterId = tokenObjR20.get("represents");
         if (characterId !== "") {
             if (state.davoutFcConditions.graded["condition"] == undefined) {
                 if (DavoutConditions.addConditionToChar(characterId, condition)) {
                     _.each(state.davoutFcConditions[condition].effects, function (obj) {
                         DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
+                        sendChat("API", "/w gm Condition " + condition + " was added to " + tokenObjR20.get("name"));
                     });
                 }
             } else {
@@ -48,16 +51,17 @@ DavoutConditions.command._add = function (selected, condition) {
 };
 
 DavoutConditions.command._del = function (selected, condition) {
-    var tokenObj;
+    var tokenObjR20;
     var characterId;
 
     _.each(selected, function (obj) {
-        tokenObj = getObj("graphic", obj._id);
-        characterId = tokenObj.get("represents");
+        tokenObjR20 = getObj("graphic", obj._id);
+        characterId = tokenObjR20.get("represents");
         if (characterId !== "") {
-            if (DavoutConditions.removeConditionToChar(tokenObj.get("name"), characterId, condition)) {
+            if (DavoutConditions.removeConditionToChar(tokenObjR20.get("name"), characterId, condition)) {
                 _.each(state.davoutFcConditions[condition].effects, function (obj) {
                     DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, -1 * obj.modifier);
+                    sendChat("API", "/w gm Condition " + condition + " was removed from " + tokenObjR20.get("name"));
                 });
             }
         }
