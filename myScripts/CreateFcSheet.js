@@ -61,7 +61,7 @@ DavoutSheet.skills = [
     { name: "Sense-Motive", attribute: DavoutSheet.attribs["wis"].name, rank: DavoutSheet.attribs["senseMotiveBase"].name, acp: false },
     { name: "Sneak", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["sneakBase"].name, acp: true },
     { name: "Survival", attribute: DavoutSheet.attribs["wis"].name, rank: DavoutSheet.attribs["survivalBase"].name, acp: false },
-    { name: "Tactics", attribute: DavoutSheet.attribs["int"].name, rank: DavoutSheet.attribs["tacticsBase"].name, acp: false },
+    { name: "Tactics", attribute: DavoutSheet.attribs["int"].name, rank: DavoutSheet.attribs["tacticsBase"].name, acp: false }
 ];
 
 DavoutSheet.processAttribs = function processAttribs(character) {
@@ -73,7 +73,7 @@ DavoutSheet.processAttribs = function processAttribs(character) {
             characterid: character.id
         });
     };
-}
+};
 
 DavoutSheet.getSkillBonus = function getSkillBonus(skill, charType) {
 //    log("Skill: " + JSON.stringify(skill));
@@ -82,7 +82,7 @@ DavoutSheet.getSkillBonus = function getSkillBonus(skill, charType) {
         return "+@{" + DavoutSheet.attribs["csb"].name + "}";
     }
     return "";
-}
+};
 
 DavoutSheet.createSaveAction = function createSaveAction(save) {
     var saveAction = "/w gm @{Name} ";
@@ -92,7 +92,7 @@ DavoutSheet.createSaveAction = function createSaveAction(save) {
     saveAction += DavoutSheet.diceType;
     saveAction += "]]";
     return saveAction;
-}
+};
 
 DavoutSheet.createSkillAction = function createSkillAction(skill, charType) {
     var abilityAction = "/w gm @{Name} ";
@@ -106,7 +106,7 @@ DavoutSheet.createSkillAction = function createSkillAction(skill, charType) {
     abilityAction += "+" + DavoutSheet.diceType;
     abilityAction += "]]";
     return abilityAction;
-}
+};
 
 DavoutSheet.retrieveUserModifiers = function retrieveUserModifiers(currentSkill, actionCommand) {
     var modifier = actionCommand.replace(currentSkill.name+"\n/r " + DavoutSheet.diceType + "+@{" + currentSkill.attribute + "}", "");
@@ -116,7 +116,7 @@ DavoutSheet.retrieveUserModifiers = function retrieveUserModifiers(currentSkill,
     modifier = modifier.replace("+@{" + DavoutSheet.attribs["acp"].name + "}", "");
 //    log("Modifier - Step 3: " + modifier);
     return modifier;
-}
+};
 
 DavoutSheet.createSeparator = function createSeparator(character) {
     var placeHolder = findObjs({
@@ -134,7 +134,7 @@ DavoutSheet.createSeparator = function createSeparator(character) {
             characterid: character.id
         });
     }
-}
+};
 
 DavoutSheet.processSkills = function processSkills(character, charType) {
     for (var save in DavoutSheet.saves) {
@@ -187,7 +187,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
     };
 
     DavoutSheet.createSeparator(character);
-}
+};
 
 on("ready", function() {
     on("add:character", function(char) {
