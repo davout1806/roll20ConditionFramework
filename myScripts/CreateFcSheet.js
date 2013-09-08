@@ -87,7 +87,7 @@ DavoutSheet.getSkillBonus = function getSkillBonus(skill, charType) {
 DavoutSheet.createSaveAction = function createSaveAction(save) {
     var saveAction = "/w gm @{Name} ";
     saveAction += save.name;
-    saveAction += ": [[@{" + save.attribute + "}";
+    saveAction += ": [[floor(@{" + save.attribute + "}/2-5)";
     saveAction += "+@{" + save.bonus + "}+";
     saveAction += DavoutSheet.diceType;
     saveAction += "]]";
@@ -97,7 +97,7 @@ DavoutSheet.createSaveAction = function createSaveAction(save) {
 DavoutSheet.createSkillAction = function createSkillAction(skill, charType) {
     var abilityAction = "/w gm @{Name} ";
     abilityAction += skill.name;
-    abilityAction += ": [[@{" + skill.attribute + "}";
+    abilityAction += ": [[floor(@{" + skill.attribute + "}/2-5)";
     abilityAction += "+@{" + skill.rank + "}";
     abilityAction += DavoutSheet.getSkillBonus(skill, charType);
     if (skill.acp) {
