@@ -17,6 +17,7 @@ DavoutNpcStatParser.parseIntoCharStats = function (text, npcType) {
     DavoutNpcStatParser.findStandardThreeAtt(lines[2].trim(), charStats);
     DavoutNpcStatParser.findHealthRangedRef(lines[3].trim(), npcType, charStats);
     DavoutNpcStatParser.findStandardThreeAtt(lines[4].trim(), charStats);
+    charStats.speeds = DavoutNpcStatParser.findSpeeds(lines[5].trim());
     log("charStats = " + JSON.stringify(charStats));
 
     return charStats;
@@ -65,7 +66,7 @@ DavoutNpcStatParser.findAttributes = function (line) {
         var splitPair = attribPair[i].split(": ");
 //        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("/");
-        attribs[splitPair[0]] = splitValue[1];
+        attribs[splitPair[0].trim()] = splitValue[1].trim();
 //        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[1]));
     }
 //    log("attribs = " + JSON.stringify(attribs));
@@ -80,7 +81,7 @@ DavoutNpcStatParser.findStandardThreeAtt = function (line, charStats) {
         var splitPair = attribPair[i].split(": ");
 //        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("=");
-        charStats[splitPair[0]] = splitValue[0];
+        charStats[splitPair[0].trim()] = splitValue[0].trim();
 //        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
     }
 //    log("charStats = " + JSON.stringify(charStats));
@@ -96,20 +97,32 @@ DavoutNpcStatParser.findHealthRangedRef = function (line, npcType, charStats) {
         var health = attribPair[0].split(" ~ ");
         var vitalityWounds = health[1].split("/");
         log("vitalityWounds = " + vitalityWounds);
-        charStats["Vitality"] = vitalityWounds[0];
-        charStats["Wounds"] = vitalityWounds[1];
+        charStats["Vitality"] = vitalityWounds[0].trim();
+        charStats["Wounds"] = vitalityWounds[1].trim();
     }
     for(; i < 3; i++){
         var splitPair = attribPair[i].split(": ");
 //        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("=");
         if (i === 0){
-            charStats["DamageSave"] = splitValue[0];
+            charStats["DamageSave"] = splitValue[0].trim();
         } else {
-            charStats[splitPair[0]] = splitValue[0];
+            charStats[splitPair[0].trim()] = splitValue[0].trim();
         }
         log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
     }
+};
+
+DavoutNpcStatParser.findSpeeds = function (line) {
+    var speeds = {};
+    var splitAtSpeed = line.split("Speed: ");
+    var speedSplit = splitAtSpeed[1].split(", ");
+    _.each(speedSplit, function (str){
+        var speedTypeSplit = str.split(" ft. ");
+        speeds[speedTypeSplit[1].trim()] = speedTypeSplit[0].trim();
+    });
+
+    return speeds;
 };
 
 DavoutNpcStatParser.insertIntoSheet = function (charStats) {
