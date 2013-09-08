@@ -1,17 +1,23 @@
 var DavoutNpcStatParser = DavoutNpcStatParser || {};
 DavoutNpcStatParser.command = DavoutNpcStatParser.command || {};
 
-DavoutNpcStatParser.parseIntoCharStats = function (text) {
+DavoutNpcStatParser.parseIntoCharStats = function (text, npcType) {
     var charStats = {};
 
     text = unescape(text);
     text = text.replace("<strong>", "");
     text = text.replace("</strong>", "");
     var lines = text.split("<br>");  // \n in GM Notes after unescape.
+    _.each(lines, function (line){
+        log("line = " + line);
+    });
 
-    charStats.name = DavoutNpcStatParser.findName(lines[0]);
-//    log("name = " + charStats.name);
-    charStats.attribs = DavoutNpcStatParser.findAttributes(lines[1]);
+    charStats.name = DavoutNpcStatParser.findName(lines[0].trim());
+    charStats.attribs = DavoutNpcStatParser.findAttributes(lines[1].trim());
+    DavoutNpcStatParser.findStandardThreeAtt(lines[2].trim(), charStats);
+    DavoutNpcStatParser.findHealthRangedRef(lines[3].trim(), npcType, charStats);
+    DavoutNpcStatParser.findStandardThreeAtt(lines[4].trim(), charStats);
+    log("charStats = " + JSON.stringify(charStats));
 
     return charStats;
 };
@@ -54,16 +60,56 @@ DavoutNpcStatParser.findAttributes = function (line) {
 //    log("JSON.stringify(line) = " + JSON.stringify(line));
     var attribs = {};
     var attribPair = line.split(";");
-    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
+//    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
     for(var i=0; i < 6; i++){
         var splitPair = attribPair[i].split(": ");
-        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
+//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("/");
         attribs[splitPair[0]] = splitValue[1];
-        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[1]));
+//        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[1]));
     }
-    log("attribs = " + JSON.stringify(attribs));
+//    log("attribs = " + JSON.stringify(attribs));
     return attribs;
+};
+
+DavoutNpcStatParser.findStandardThreeAtt = function (line, charStats) {
+//    log("JSON.stringify(line) = " + JSON.stringify(line));
+    var attribPair = line.split("&nbsp;");
+//    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
+    for(var i=0; i < 3; i++){
+        var splitPair = attribPair[i].split(": ");
+//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
+        var splitValue = splitPair[1].split("=");
+        charStats[splitPair[0]] = splitValue[0];
+//        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
+    }
+//    log("charStats = " + JSON.stringify(charStats));
+//    return charStats;
+};
+
+DavoutNpcStatParser.findHealthRangedRef = function (line, npcType, charStats) {
+    var attribPair = line.split("&nbsp;");
+    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
+    var i = 0;
+    if (npcType == "special"){
+        i = 1;
+        var health = attribPair[0].split(" ~ ");
+        var vitalityWounds = health[1].split("/");
+        log("vitalityWounds = " + vitalityWounds);
+        charStats["Vitality"] = vitalityWounds[0];
+        charStats["Wounds"] = vitalityWounds[1];
+    }
+    for(; i < 3; i++){
+        var splitPair = attribPair[i].split(": ");
+//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
+        var splitValue = splitPair[1].split("=");
+        if (i === 0){
+            charStats["DamageSave"] = splitValue[0];
+        } else {
+            charStats[splitPair[0]] = splitValue[0];
+        }
+        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
+    }
 };
 
 DavoutNpcStatParser.insertIntoSheet = function (charStats) {
@@ -87,7 +133,7 @@ DavoutNpcStatParser.command._parse = function (selected, npcType, isGm, msg){
         characterId = tokenObjR20.get("represents");
         if (characterId !== "") {
 //            DavoutNpcStatParser.insertIntoSheet(DavoutNpcStatParser.parseIntoCharStats(tokenObjR20.get("gmnotes")));
-            var x =DavoutNpcStatParser.parseIntoCharStats(tokenObjR20.get("gmnotes"));
+            var x =DavoutNpcStatParser.parseIntoCharStats(tokenObjR20.get("gmnotes"), npcType);
             log("x = " + JSON.stringify(x));
         } else {
             sendChat("API", tokenObjR20.get("name") + " is not a character.");
