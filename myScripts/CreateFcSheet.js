@@ -39,13 +39,13 @@ DavoutSheet.attribs["sneakBase"] = { name: "Sneak-Base", current: 0, max: 0 };
 DavoutSheet.attribs["survivalBase"] = { name: "Survival-Base", current: 0, max: 0 };
 DavoutSheet.attribs["tacticsBase"] = { name: "Tactics-Base", current: 0, max: 0 };
 
-DavoutSheet.saves = [];
-DavoutSheet.saves["fort"] = { name: "Fort-Save", attribute: "Con", bonus: DavoutSheet.attribs["fort"].name };
-DavoutSheet.saves["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSheet.attribs["ref"].name };
-DavoutSheet.saves["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
+DavoutSheet.misc = [];
+DavoutSheet.misc["fort"] = { name: "Fort-Save", attribute: "Con", bonus: DavoutSheet.attribs["fort"].name };
+DavoutSheet.misc["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSheet.attribs["ref"].name };
+DavoutSheet.misc["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
+DavoutSheet.misc["initiative"] = { name: "Initiative", attribute: "Dex", bonus: DavoutSheet.attribs["initBase"].name };
 
 DavoutSheet.skills = [
-    { name: "Initiative", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["initBase"].name, acp: true },
     { name: "Acrobatics", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["acrobaticsBase"].name, acp: true },
     { name: "Athletics", attribute: DavoutSheet.attribs["str"].name, rank: DavoutSheet.attribs["athleticsBase"].name, acp: true },
     { name: "Blend", attribute: DavoutSheet.attribs["cha"].name, rank: DavoutSheet.attribs["blendBase"].name, acp: false },
@@ -140,10 +140,10 @@ DavoutSheet.createSeparator = function createSeparator(character) {
 };
 
 DavoutSheet.processSkills = function processSkills(character, charType) {
-    for (var save in DavoutSheet.saves) {
-        var saveAction = DavoutSheet.createSaveAction(DavoutSheet.saves[save]);
+    for (var save in DavoutSheet.misc) {
+        var saveAction = DavoutSheet.createSaveAction(DavoutSheet.misc[save]);
         var savingthrows = findObjs({
-            name: DavoutSheet.saves[save].name,
+            name: DavoutSheet.misc[save].name,
             description: "",
             type: "ability",
             characterid: character.id
@@ -154,7 +154,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
             });
         } else {
             createObj("ability", {
-                name: DavoutSheet.saves[save].name,
+                name: DavoutSheet.misc[save].name,
                 description: "",
                 action: saveAction,
                 characterid: character.id

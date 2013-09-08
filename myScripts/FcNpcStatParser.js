@@ -1,6 +1,9 @@
 var DavoutNpcStatParser = DavoutNpcStatParser || {};
 DavoutNpcStatParser.command = DavoutNpcStatParser.command || {};
 
+DavoutNpcStatParser.finsSkills = function (line, compBonus) {
+
+};
 DavoutNpcStatParser.parseIntoCharStats = function (text, npcType) {
     var charStats = {};
 
@@ -18,6 +21,7 @@ DavoutNpcStatParser.parseIntoCharStats = function (text, npcType) {
     DavoutNpcStatParser.findHealthRangedRef(lines[3].trim(), npcType, charStats);
     DavoutNpcStatParser.findStandardThreeAtt(lines[4].trim(), charStats);
     charStats.speeds = DavoutNpcStatParser.findSpeeds(lines[5].trim());
+    charStats.skills = DavoutNpcStatParser.finsSkills(lines[6].trim(), charStats.Comp);
     log("charStats = " + JSON.stringify(charStats));
 
     return charStats;
@@ -125,6 +129,24 @@ DavoutNpcStatParser.findSpeeds = function (line) {
     return speeds;
 };
 
+DavoutNpcStatParser.finsSkills = function (line, compBonus) {
+    var skills = {};
+    line = line.substring("<em>Skills:</em> ".length);
+    var signatureSkills = line.split("; ");
+    _.each (signatureSkills, function (skill){
+        var words = skill.split(" ");
+        skills[words[0]]= words[3];
+    });
+
+    _.each(DavoutSheet.skills, function (skillName){
+        if (skills[skillName.name] == undefined){
+            skills[skillName.name] = compBonus;
+        }
+    });
+
+    return skills;
+};
+
 DavoutNpcStatParser.insertIntoSheet = function (charStats) {
 
 };
@@ -162,6 +184,10 @@ on("ready", function () {
     if (DavoutUtils == undefined) {
         log("You must have DavoutUtils installed in a script tab before the tab this script is in to use.");
         throw "Can't find DavoutUtils!";
+    }
+    if (DavoutSheet == undefined) {
+        log("You must have DavoutSheet installed in a script tab before the tab this script is in to use.");
+        throw "Can't find DavoutSheet!";
     }
 
     var parseCommand = {};
