@@ -14,7 +14,10 @@ DavoutSheet.attribs["fort"] = { name: "Fortitude-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["ref"] = { name: "Reflex-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["will"] = { name: "Will-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["acp"] = { name: "AC-Penalty", current: 0, max: 0 };
-DavoutSheet.attribs["spd"] = { name: "Speed", current: 30, max: 30 };
+DavoutSheet.attribs["spd"] = { name: "Speed", current: 30, max: 0 };
+DavoutSheet.attribs["spdFly"] = { name: "Flying-Speed", current: 0, max: 0 };
+DavoutSheet.attribs["spdSwim"] = { name: "Swimming-Speed", current: 0, max: 0 };
+DavoutSheet.attribs["spdBurrow"] = { name: "Burrow-Speed", current: 0, max: 0 };
 DavoutSheet.attribs["initBase"] = { name: "Initiative-Base" , current: 0, max: 0 };
 DavoutSheet.attribs["acrobaticsBase"] = { name: "Acrobatics-Base", current: 0, max: 0 };
 DavoutSheet.attribs["athleticsBase"] = { name: "Athletics-Base", current: 0, max: 0 };
@@ -195,3 +198,6 @@ on("ready", function() {
         DavoutSheet.processSkills(char, 'all');
     });
 });
+
+// CreateFcSheet
+
