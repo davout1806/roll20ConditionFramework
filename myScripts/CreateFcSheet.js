@@ -39,11 +39,14 @@ DavoutSheet.attribs["sneakBase"] = { name: "Sneak-Base", current: 0, max: 0 };
 DavoutSheet.attribs["survivalBase"] = { name: "Survival-Base", current: 0, max: 0 };
 DavoutSheet.attribs["tacticsBase"] = { name: "Tactics-Base", current: 0, max: 0 };
 
-DavoutSheet.misc = [];
-DavoutSheet.misc["fort"] = { name: "Fort-Save", attribute: "Con", bonus: DavoutSheet.attribs["fort"].name };
-DavoutSheet.misc["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSheet.attribs["ref"].name };
-DavoutSheet.misc["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
-DavoutSheet.misc["initiative"] = { name: "Initiative", attribute: "Dex", bonus: DavoutSheet.attribs["initBase"].name };
+DavoutSheet.saves = [];
+DavoutSheet.saves["fort"] = { name: "Fort-Save", attribute: "Con", bonus: DavoutSheet.attribs["fort"].name };
+DavoutSheet.saves["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSheet.attribs["ref"].name };
+DavoutSheet.saves["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
+
+// TODO create code to generate ability rolls
+DavoutSheet.combat = [];
+DavoutSheet.combat["initiative"] = { name: "Initiative", attribute: "Dex", bonus: DavoutSheet.attribs["initBase"].name };
 
 DavoutSheet.skills = [
     { name: "Acrobatics", attribute: DavoutSheet.attribs["dex"].name, rank: DavoutSheet.attribs["acrobaticsBase"].name, acp: true },
@@ -140,10 +143,10 @@ DavoutSheet.createSeparator = function createSeparator(character) {
 };
 
 DavoutSheet.processSkills = function processSkills(character, charType) {
-    for (var save in DavoutSheet.misc) {
-        var saveAction = DavoutSheet.createSaveAction(DavoutSheet.misc[save]);
+    for (var save in DavoutSheet.saves) {
+        var saveAction = DavoutSheet.createSaveAction(DavoutSheet.saves[save]);
         var savingthrows = findObjs({
-            name: DavoutSheet.misc[save].name,
+            name: DavoutSheet.saves[save].name,
             description: "",
             type: "ability",
             characterid: character.id
@@ -154,7 +157,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
             });
         } else {
             createObj("ability", {
-                name: DavoutSheet.misc[save].name,
+                name: DavoutSheet.saves[save].name,
                 description: "",
                 action: saveAction,
                 characterid: character.id

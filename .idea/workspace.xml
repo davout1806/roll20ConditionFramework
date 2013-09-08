@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="44e7563e-bd9a-40ff-80f1-37961d182dd1" name="Default" comment="">
+    <list default="true" id="44e7563e-bd9a-40ff-80f1-37961d182dd1" name="Default" comment="Moved saves back to saves.&#10;Moved Initiative to combat.">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/myScripts/CreateFcSheet.js" afterPath="$PROJECT_DIR$/myScripts/CreateFcSheet.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="roll20API.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/CreateFCConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273495024" ignored="false" />
-    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378571136037" ignored="false" />
-    <file path="/CreateFcSheet.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378581089897" ignored="false" />
-    <file path="/a.dummy" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378269655411" ignored="false" />
+    <file path="/Dummy.txt" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378679717007" ignored="false" />
+    <file path="/CreateFcSheet.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378679769543" ignored="false" />
+    <file path="/a.dummy" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378583901996" ignored="false" />
     <file path="/fragment.java" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378259240967" ignored="false" />
-    <file path="/Utils.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378273329002" ignored="false" />
-    <file path="/FcConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378529459928" ignored="false" />
+    <file path="/Utils.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378583261143" ignored="false" />
+    <file path="/FcConditions.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378591457534" ignored="false" />
     <file path="/ChatCommandHandler.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378341814407" ignored="false" />
     <file path="/RandomTableOfPhrases.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378340745815" ignored="false" />
     <file path="/fragment.js2" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378580765536" ignored="false" />
+    <file path="/FcNpcStatParser.js" changelist="44e7563e-bd9a-40ff-80f1-37961d182dd1" time="1378678301090" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +32,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -68,6 +68,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -76,22 +77,31 @@
     <favorites_list name="roll20API" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="vertical" split-proportion="0.77313435">
+    <splitter split-orientation="vertical" split-proportion="0.59421736">
       <split-first>
         <leaf>
           <file leaf-file-name="CreateFcSheet.js" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/myScripts/CreateFcSheet.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="181" column="37" selection-start="9991" selection-end="9991" vertical-scroll-proportion="0.7785088">
+                <state line="45" column="69" selection-start="3219" selection-end="3219" vertical-scroll-proportion="0.4586331">
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="FcConditions.js" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
+          <file leaf-file-name="FcNpcStatParser.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/myScripts/FcNpcStatParser.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="92" column="20" selection-start="0" selection-end="5142" vertical-scroll-proportion="0.0">
+                <state line="190" column="40" selection-start="6980" selection-end="6980" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="temp2" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/myScripts/temp2">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="4" column="13" selection-start="307" selection-end="307" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -101,10 +111,10 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="CreatePathfinderCharacterSheet.js" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="CreatePathfinderCharacterSheet.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/Malikai-mgruel/CreatePathfinderCharacterSheet.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="8" column="19" selection-start="155" selection-end="155" vertical-scroll-proportion="2.2295082">
+                <state line="116" column="62" selection-start="10598" selection-end="10598" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -114,15 +124,6 @@
             <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/RandomTableOfPhrases.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state line="26" column="13" selection-start="1056" selection-end="1056" vertical-scroll-proportion="0.0">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="character.js" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/4eHelper/character.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="61" column="69" selection-start="1799" selection-end="1799" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -149,7 +150,7 @@
           <file leaf-file-name="Utils.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/myScripts/Utils.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="6" column="47" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0">
+                <state line="2" column="12" selection-start="50" selection-end="50" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -158,7 +159,34 @@
           <file leaf-file-name="ChatCommandHandler.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="187" column="88" selection-start="6643" selection-end="6643" vertical-scroll-proportion="0.0">
+                <state line="158" column="33" selection-start="5554" selection-end="5559" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="FcConditions.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="62" column="40" selection-start="2500" selection-end="2500" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="temp" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/myScripts/temp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="14" column="30" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.5029412">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="StringFormatter.js" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="20" column="15" selection-start="924" selection-end="924" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -184,9 +212,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/4eHelper/utility.js" />
-        <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/4eHelper/main.js" />
-        <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/TrapScript.js" />
         <option value="$PROJECT_DIR$/othersScripts/RyanL-rlittlefield/GraphicTokenSnapshot.js" />
         <option value="$PROJECT_DIR$/myScripts/CreateFCConditions.js" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -194,10 +219,13 @@
         <option value="$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js" />
         <option value="$PROJECT_DIR$/myScripts/ChatCommandHandler.js" />
         <option value="$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js" />
-        <option value="$PROJECT_DIR$/myScripts/FcConditions.js" />
-        <option value="$PROJECT_DIR$/myScripts/Utils.js" />
         <option value="$PROJECT_DIR$/othersScripts/Malikai-mgruel/B.js" />
         <option value="$PROJECT_DIR$/othersScripts/Malikai-mgruel/A.js" />
+        <option value="$PROJECT_DIR$/myScripts/FcConditions.js" />
+        <option value="$PROJECT_DIR$/myScripts/Utils.js" />
+        <option value="$PROJECT_DIR$/myScripts/temp" />
+        <option value="$PROJECT_DIR$/myScripts/temp2" />
+        <option value="$PROJECT_DIR$/myScripts/FcNpcStatParser.js" />
         <option value="$PROJECT_DIR$/othersScripts/Malikai-mgruel/CreatePathfinderCharacterSheet.js" />
         <option value="$PROJECT_DIR$/myScripts/CreateFcSheet.js" />
       </list>
@@ -468,19 +496,19 @@
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Libraries" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="120" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="138" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="119" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="137" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="142" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="141" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="145" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="824" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="817" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="137" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="131" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="143" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="815" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="807" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="136" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="130" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
@@ -493,7 +521,7 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
-    <property name="options.lastSelected" value="appearance" />
+    <property name="options.lastSelected" value="editing.templates" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="options.searchVisible" value="true" />
@@ -645,27 +673,91 @@
       <created>1378571146286</created>
       <updated>1378571146286</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Added Init attribute and ability.&#10;Commented out logging">
+      <created>1378581630147</created>
+      <updated>1378581630147</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added back DavoutUtils. Problem was not have semi colon after ending function curly bracket. &quot;}&quot; should be &quot;};&quot;">
+      <created>1378584079524</created>
+      <updated>1378584079524</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Message sent on successful add/remove condition.">
+      <created>1378591541525</created>
+      <updated>1378591541525</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Start of NPC stat parser.&#10;Refactoring.">
+      <created>1378596708681</created>
+      <updated>1378596708681</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Actual Start of NPC stat parser.&#10;Refactoring.">
+      <created>1378596788379</created>
+      <updated>1378596788379</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Parsing Name and Attributes">
+      <created>1378604376647</created>
+      <updated>1378604376647</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Ability rolls now based attribute scores rather than modifiers">
+      <created>1378616697668</created>
+      <updated>1378616697668</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Parsing first 5 lines.">
+      <created>1378619090046</created>
+      <updated>1378619090046</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added flying, swimming, burrowing speeds.">
+      <created>1378676033294</created>
+      <updated>1378676033294</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Parses for speed.&#10;Trims keys and values.">
+      <created>1378677371772</created>
+      <updated>1378677371772</updated>
+    </task>
+    <task id="LOCAL-00023" summary="In Sheet changed saves to misc.&#10;In Sheet moved Init from kills to misc.&#10;Parsing skills.">
+      <created>1378679334395</created>
+      <updated>1378679334395</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="0" width="1319" height="1160" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32701895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2562313" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901296" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23070803" sideWeight="0.6729811" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23070803" sideWeight="0.670987" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901296" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901296" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -717,7 +809,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create char sheet with secret rolls for saves &amp; skills" />
+    <option name="LAST_COMMIT_MESSAGE" value="In Sheet changed saves to misc.&#10;In Sheet moved Init from kills to misc.&#10;Parsing skills." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -739,37 +831,30 @@
     <MESSAGE value="Moved DavoutUtils into DavoutConditions to avoid weird identifer" />
     <MESSAGE value="Moved DavoutUtils into DavoutConditions to avoid weird &quot;identifier var&quot;&#10; Used AlexL's updated ChatCommandHandler that passes the entire chat message." />
     <MESSAGE value="Create char sheet with secret rolls for saves &amp; skills" />
+    <MESSAGE value="Added Init attribute and ability.&#10;Commented out logging" />
+    <MESSAGE value="Added back DavoutUtils. Problem was not have semi colon after ending function curly bracket. &quot;}&quot; should be &quot;};&quot;" />
+    <MESSAGE value="Message sent on successful add/remove condition." />
+    <MESSAGE value="Start of NPC stat parser.&#10;Refactoring." />
+    <MESSAGE value="Actual Start of NPC stat parser.&#10;Refactoring." />
+    <MESSAGE value="Parsing Name and Attributes" />
+    <MESSAGE value="Ability rolls now based attribute scores rather than modifiers" />
+    <MESSAGE value="Parsing first 5 lines." />
+    <MESSAGE value="Added flying, swimming, burrowing speeds." />
+    <MESSAGE value="Parses for speed.&#10;Trims keys and values." />
+    <MESSAGE value="In Sheet changed saves to misc.&#10;In Sheet moved Init from kills to misc.&#10;Parsing skills." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/othersScripts/Josh-DarokinB/AssistanceInEquipping.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="28" selection-start="1375" selection-end="1375" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/othersScripts/Josh-DarokinB/StatusTracker.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="356" column="0" selection-start="12542" selection-end="12542" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="40" selection-start="2784" selection-end="2784" vertical-scroll-proportion="0.8329718">
-          <folding />
-        </state>
+        <state line="47" column="40" selection-start="2784" selection-end="2784" vertical-scroll-proportion="0.8329718" />
       </provider>
     </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavascriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DOMCore.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="871" column="26" selection-start="15745" selection-end="15745" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
+        <state line="871" column="26" selection-start="15745" selection-end="15745" vertical-scroll-proportion="0.33333334" />
       </provider>
     </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavascriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript5.js">
@@ -782,28 +867,12 @@
         <state line="44" column="4" selection-start="1457" selection-end="1457" vertical-scroll-proportion="1.6225597" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="15" selection-start="924" selection-end="924" vertical-scroll-proportion="0.48973143">
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libs/underscore-min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/myScripts/Utils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="47" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -814,30 +883,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
+    <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="20" selection-start="0" selection-end="5142" vertical-scroll-proportion="0.0">
+        <state line="158" column="33" selection-start="5554" selection-end="5559" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/ChatCommandHandler.js">
+    <entry file="file://$PROJECT_DIR$/myScripts/FcConditions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="88" selection-start="6643" selection-end="6643" vertical-scroll-proportion="0.0">
+        <state line="62" column="40" selection-start="2500" selection-end="2500" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myScripts/Utils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="12" selection-start="50" selection-end="50" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/othersScripts/KevinK- kkragenbrink/StringFormatter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="15" selection-start="924" selection-end="924" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/othersScripts/AlexL-pigalot/4eHelper/character.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="69" selection-start="1799" selection-end="1799" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myScripts/temp2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="13" selection-start="307" selection-end="307" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/othersScripts/Malikai-mgruel/CreatePathfinderCharacterSheet.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="19" selection-start="155" selection-end="155" vertical-scroll-proportion="2.2295082">
+        <state line="116" column="62" selection-start="10598" selection-end="10598" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myScripts/FcNpcStatParser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="190" column="40" selection-start="6980" selection-end="6980" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myScripts/temp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="30" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.5029412">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/myScripts/CreateFcSheet.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="181" column="37" selection-start="9991" selection-end="9991" vertical-scroll-proportion="0.7785088">
+        <state line="45" column="69" selection-start="3219" selection-end="3219" vertical-scroll-proportion="0.4586331">
           <folding />
         </state>
       </provider>
