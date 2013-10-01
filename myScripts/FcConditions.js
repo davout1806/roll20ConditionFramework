@@ -63,7 +63,7 @@ DavoutConditions.addConditionToChar = function (charId, conditionName) {
 DavoutConditions.removeConditionFromChar = function (name, charId, conditionName) {
     log("DEL prestate = " + conditionName + " " + state["davoutFcCharConds"][charId]);
     if (state["davoutFcCharConds"][charId].indexOf(conditionName) > -1 ) {
-        state["davoutFcCharConds"][charId] = DavoutUtils.removeFromArrayFirstOcccurOf(state["davoutFcCharConds"][charId],conditionName);
+        state["davoutFcCharConds"][charId] = DavoutUtils.removeFromArrayFirstOccurOf(state["davoutFcCharConds"][charId],conditionName);
         log("Delete poststate = " + state["davoutFcCharConds"][charId]);
         return true;
     } else {

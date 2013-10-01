@@ -17,3 +17,13 @@ DavoutUtils.checkForSelectionAndSendIfNothing = function(selected, msgToSend){
 
     return true;
 };
+
+DavoutUtils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
+    var workingArray = array;
+    var index = workingArray.indexOf(itemToRemove);
+    if (index > -1) {
+        workingArray.splice(index, 1);
+    }
+
+    return workingArray;
+};
