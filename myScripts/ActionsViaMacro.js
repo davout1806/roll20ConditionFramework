@@ -17,7 +17,7 @@ DavoutActions.command._action = function (msg, actionName) {
         log(actionName + " is an unknown action");
         sendChat("API", "/w gm " + actionName + " is an unknown action");
     }
-}
+};
 
 DavoutActions.command._setTargets = function (playerId, selected) {
     var tokenObjR20;
@@ -34,7 +34,7 @@ DavoutActions.command._setTargets = function (playerId, selected) {
     });
 
     log("state.davoutTargetsOfAction = " + state.davoutTargetsOfAction[playerId]);
-}
+};
 
 on("ready", function () {
     if (community == undefined || !("command" in community)) {
