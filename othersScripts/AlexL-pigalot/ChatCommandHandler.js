@@ -276,3 +276,6 @@ on("chat:message", function(msg) {
         community.command.parse(msg.content, msg);
     }
 });
+
+//ChatCommandHandler
+
