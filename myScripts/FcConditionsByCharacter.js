@@ -121,10 +121,6 @@ on("destroy:character", function (character) {
         state.davoutFcCharConds[character] = null;
 });
 
-on('chat:message', function(msg) {
-
-});
-
 on("ready", function () {     // Requires community.command
     if (community == undefined || !("command" in community)) {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
