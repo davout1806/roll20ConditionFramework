@@ -152,7 +152,7 @@ DavoutNpcStatParser.insertIntoSheet = function (charStats) {
 };
 
 DavoutNpcStatParser.command._parse = function (selected, npcType, isGm, msg){
-    if (!DavoutUtils.checkForSelectionAndSendIfNothing(selected, "/w gm nothing is selected") && isGm) {
+    if (!DavoutUtils.checkForSelectionAndMsgIfNot(selected, "/w gm nothing is selected") && isGm) {
         return;
     }
 
