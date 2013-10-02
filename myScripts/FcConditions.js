@@ -1,5 +1,6 @@
 /**
  In order for each token to have individual conditions, each token requires its own character.
+ state.davoutFcTokenConds[id] where id is character id
 
  Alternative is to not adjust the ratings but only apply effects on rolls.
  */
@@ -120,6 +121,10 @@ on("destroy:character", function (character) {
         state.davoutFcCharConds[character] = null;
 });
 
+on('chat:message', function(msg) {
+
+});
+
 on("ready", function () {     // Requires community.command
     if (community == undefined || !("command" in community)) {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
@@ -137,7 +142,7 @@ on("ready", function () {     // Requires community.command
     addCommand.typeList = ["str"];
     addCommand.syntax = "!cond_add ConditionName";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndSendIfNothing(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
             DavoutConditions.command._manageCondition("ADD", msg.selected, args[0].value);
         }
     };
@@ -150,7 +155,7 @@ on("ready", function () {     // Requires community.command
     removeCommand.typeList = ["str"];
     removeCommand.syntax = "!cond_del ConditionName";
     removeCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndSendIfNothing(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
             DavoutConditions.command._manageCondition("DEL", msg.selected, args[0].value);
         }
     };
@@ -163,7 +168,7 @@ on("ready", function () {     // Requires community.command
     showCommand.typeList = ["str"];
     showCommand.syntax = "!cond_show";
     showCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndSendIfNothing(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
             DavoutConditions.command._manageCondition("SHOW", msg.selected);
         }
     };

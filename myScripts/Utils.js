@@ -9,7 +9,7 @@ DavoutUtils.adjustAttributeForChar = function(characterId, attributeName, modifi
     attrib.set("current", parseInt(attrib.get("current")) + modifier);
 };
 
-DavoutUtils.checkForSelectionAndSendIfNothing = function(selected, msgToSend){
+DavoutUtils.checkForSelectionAndMsgIfNot = function(selected, msgToSend){
     if (selected == undefined) {
         sendChat("API", msgToSend);
         return false;
