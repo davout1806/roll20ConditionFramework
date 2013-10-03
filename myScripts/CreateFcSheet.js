@@ -51,7 +51,7 @@ DavoutSheet.saves["fort"] = { name: "Fort-Save", attribute: "Con", bonus: Davout
 DavoutSheet.saves["ref"] = { name: "Ref-Save", attribute: "Dex", bonus: DavoutSheet.attribs["ref"].name };
 DavoutSheet.saves["will"] = { name: "Will-Save", attribute: "Wis", bonus: DavoutSheet.attribs["will"].name };
 
-// TODO create code to generate ability rolls
+
 DavoutSheet.combat = [];
 DavoutSheet.combat["initiative"] = { name: "Initiative", attribute: "Dex", bonus: DavoutSheet.attribs["initBase"].name };
 DavoutSheet.combat["attackMelee"] = { name: "Attack-Melee", attribute: "Str", bonus: DavoutSheet.attribs["attMeleeBase"].name };
@@ -155,7 +155,7 @@ DavoutSheet.createSeparator = function createSeparator(character, label) {
     }
 };
 
-DavoutSheet.processSkills = function processSkills(character, charType) {
+DavoutSheet.processAbilities = function processAbilities(character, charType) {
     for (var save in DavoutSheet.saves) {
         var saveAction = DavoutSheet.createSaveAction(DavoutSheet.saves[save]);
             createObj("ability", {
@@ -194,7 +194,7 @@ DavoutSheet.processSkills = function processSkills(character, charType) {
 on("ready", function() {
     on("add:character", function(char) {
         DavoutSheet.processAttribs(char);
-        DavoutSheet.processSkills(char, 'all');
+        DavoutSheet.processAbilities(char, 'all');
     });
 });
 
