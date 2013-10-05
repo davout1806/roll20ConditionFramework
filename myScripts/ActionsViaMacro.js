@@ -1,24 +1,51 @@
+/*
+ Required design specifications:
+ 1. Allow multiple tokens to use the same character.
+ 2. Allow conditions to be assigned individually to tokens even if they share the same character.
+ Desired design specifications:
+ 1. Quickly perform action of a token, preferably without having to open character sheet (ALT+double click)
+ */
+
 var DavoutActions = DavoutActions || [];
 DavoutActions.command = DavoutActions.command || {};
 
 state.davoutTargetsOfAction = state.davoutTargetsOfAction || [];
 
 DavoutActions.actions = DavoutActions.actions || [];
-DavoutActions.actions["FortSave"] = {};
+DavoutActions.actions["FortSave"] = {
+    ability: "Fort-Save"
+//    functionName: DavoutSheet.createSaveAction,
+//    parameter: DavoutSheet.saves["fort"]
+};
 
 DavoutActions.command._action = function (msg, actionName) {
-    _.each(msg.selected, function (obj) {
-        log("obj.who = " + getObj("graphic", obj._id).get("name"));
-    });
 
-    if (DavoutActions.actions[actionName] != undefined) {
-        log("actionName = " + actionName);
+    if (DavoutActions.actions[actionName] !== undefined) {
+        var actionObj = DavoutActions.actions[actionName];
+//        log("chat= " + "%{selected|" + actionObj.ability + "}")
+//        sendChat("API", "/w %{selected|" + actionObj.ability + "}");
+
+        var tokenObjR20 = DavoutUtils.selectedToToken(msg.selected[0]);
+        if (tokenObjR20) {
+            var charId = DavoutUtils.tokenToCharId(tokenObjR20);
+            log("charId = " + charId);
+                log("tokenObjR20 = " + tokenObjR20);
+            var actionObj = DavoutActions.actions[actionName];
+            var actionStr = "%{" + actionObj.ability();
+            log("actionStr = " + actionStr);
+            var actionStrReplacedName = actionStr.replace("@{Name}", tokenObjR20.get("name"));
+            log("actionStrReplacedName = " + actionStrReplacedName);
+
+            //w gm @{Name} Fort-Save: [[floor(@{Con}/2-5)+@{Fortitude-Mod}+1d20]]
+            log("actionName = " + actionName);
+        }
     } else {
         log(actionName + " is an unknown action");
         sendChat("API", "/w gm " + actionName + " is an unknown action");
     }
 };
 
+// TODO add target image around targets.
 DavoutActions.command._setTargets = function (playerId, selected) {
     var tokenObjR20;
     if (state.davoutTargetsOfAction == undefined) {
@@ -53,7 +80,7 @@ on("ready", function () {
     addCommand.typeList = ["str"];
     addCommand.syntax = "!DavoutAction action";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected")) {
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
             DavoutActions.command._action(msg, args[0].value);
         }
     };
@@ -66,7 +93,7 @@ on("ready", function () {
     addCommand.typeList = ["str"];
     addCommand.syntax = "!DavoutSetTarget";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected")) {
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
             DavoutActions.command._setTargets(msg.playerid, msg.selected);
         }
     };

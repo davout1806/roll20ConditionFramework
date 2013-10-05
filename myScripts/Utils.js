@@ -9,9 +9,32 @@ DavoutUtils.adjustAttributeForChar = function(characterId, attributeName, modifi
     attrib.set("current", parseInt(attrib.get("current")) + modifier);
 };
 
-DavoutUtils.checkForSelectionAndMsgIfNot = function(selected, msgToSend){
+DavoutUtils.selectedToToken = function (singleSelectedObject){
+    if (singleSelectedObject == undefined) return false;
+
+    var tokenObjR20 = getObj("graphic", singleSelectedObject._id);
+    if (tokenObjR20 == undefined) return false;
+    if (tokenObjR20.get("subtype") != "token") return false;
+    return tokenObjR20;
+}
+
+DavoutUtils.tokenToCharId = function (tokenObject){
+    if (tokenObject == undefined) return false;
+
+    var charId = tokenObject.get("represents");
+    if (charId == undefined) return false;
+    if (charId == "") return false;
+    return
+}
+
+DavoutUtils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
     if (selected == undefined) {
         sendChat("API", msgToSend);
+        return false;
+    }
+
+    if (onlyOne && selected.length != 1){
+        sendChat("API", msgIfMoreThanOne);
         return false;
     }
 

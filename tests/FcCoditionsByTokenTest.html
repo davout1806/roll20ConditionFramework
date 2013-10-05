@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Fc Conditions By Token Test</title>
+    <link rel="stylesheet" href="lib/qunit.css">
+    <script src="lib/qunit.js"></script>
+    <script src="lib/underscore-min.js"></script>
+    <script src="../myScripts/ConditionsByToken.js"></script>
+    <script src="../myScripts/ConditionsFc.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <script>
+        var testFlag = 1;
+        state.davoutTokenConditions = [];
+
+        var tokenId = "1";
+        var token = new DavoutCond.TokenWithConditions();
+    </script>
+
+</div>
+<script>
+    token.addCondition(state.davoutConditions["Fatigued I"]);
+
+    test("getModifier", function () {
+        equal(token.getModifierFor("Str"), -2);
+    });
+</script>
+</body>
+</html>

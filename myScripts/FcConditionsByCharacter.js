@@ -1,71 +1,71 @@
 /**
  In order for each token to have individual conditions, each token requires its own character.
- state.davoutFcTokenConds[id] where id is character id
+ state.davoutTokenConds[id] where id is character id
 
  Alternative is to not adjust the ratings but only apply effects on rolls.
  */
 var DavoutConditions = DavoutConditions || {};
 DavoutConditions.command = DavoutConditions.command || {};
 
-state.davoutFcConditions = state.davoutFcConditions || [];
-state.davoutFcCharConds = state.davoutFcCharConds || [];
-state.davoutFcConditions.graded = state.davoutFcConditions.graded || [];
+state.davoutConditions = state.davoutConditions || [];
+state.davoutCharConds = state.davoutCharConds || [];
+state.davoutConditions.graded = state.davoutConditions.graded || [];
 
-state.davoutFcConditions.graded["fatigued"] = ["fatiguedI", "fatiguedII", "fatiguedIII", "fatiguedIV", "unconscious"];
+state.davoutConditions.graded["fatigued"] = ["fatiguedI", "fatiguedII", "fatiguedIII", "fatiguedIV", "unconscious"];
 
-state.davoutFcConditions["fatiguedI"] = {effects: [
+state.davoutConditions["fatiguedI"] = {effects: [
     {attrib: "str", modifier: -2},
     {attrib: "dex", modifier: -2},
     {attrib: "speed", modifier: -5}
 ] };
-state.davoutFcConditions["fatiguedII"] = {effects: [
+state.davoutConditions["fatiguedII"] = {effects: [
     {attrib: "str", modifier: -2},
     {attrib: "dex", modifier: -2},
     {attrib: "speed", modifier: -5}
 ] };
-state.davoutFcConditions["fatiguedIII"] = {effects: [
+state.davoutConditions["fatiguedIII"] = {effects: [
     {attrib: "str", modifier: -2},
     {attrib: "dex", modifier: -2},
     {attrib: "speed", modifier: -5}
 ] };
-state.davoutFcConditions["fatiguedIV"] = {effects: [
+state.davoutConditions["fatiguedIV"] = {effects: [
     {attrib: "str", modifier: -2},
     {attrib: "dex", modifier: -2},
     {attrib: "speed", modifier: -5}
 ] };
-state.davoutFcConditions["deafened"] = {effects: [
+state.davoutConditions["deafened"] = {effects: [
     {attrib: "str", modifier: -2},
     {attrib: "dex", modifier: -2},
     {attrib: "speed", modifier: -5}
 ]};
 
 DavoutConditions.getConditionsOnChar = function (charId) {
-    return state["davoutFcCharConds"][charId];
+    return state["davoutCharConds"][charId];
 };
 
 DavoutConditions.addConditionToChar = function (charId, conditionName) {
     log("conditionName = " + conditionName);
-    if (state["davoutFcCharConds"] == undefined){
-        state["davoutFcCharConds"] = [];
+    if (state["davoutCharConds"] == undefined){
+        state["davoutCharConds"] = [];
     }
-    if (state["davoutFcCharConds"][charId] == undefined){
-        state["davoutFcCharConds"][charId] = [];
+    if (state["davoutCharConds"][charId] == undefined){
+        state["davoutCharConds"][charId] = [];
     }
 
-    if (state["davoutFcCharConds"][charId].indexOf(conditionName) > -1 ) {
+    if (state["davoutCharConds"][charId].indexOf(conditionName) > -1 ) {
         return false;
     } else {
-        state["davoutFcCharConds"][charId].push(conditionName);
-        log("ADD poststate = " + state["davoutFcCharConds"][charId]);
+        state["davoutCharConds"][charId].push(conditionName);
+        log("ADD poststate = " + state["davoutCharConds"][charId]);
         return true;
     }
 };
 
 DavoutConditions.removeConditionFromChar = function (name, charId, conditionName) {
-    log("DEL prestate = " + conditionName + " " + state["davoutFcCharConds"][charId]);
-    if (state["davoutFcCharConds"][charId].indexOf(conditionName) > -1 ) {
-        state["davoutFcCharConds"][charId] = DavoutUtils.removeFromArrayFirstOccurOf(state["davoutFcCharConds"][charId],conditionName);
-        log("Delete poststate = " + state["davoutFcCharConds"][charId]);
+    log("DEL prestate = " + conditionName + " " + state["davoutCharConds"][charId]);
+    if (state["davoutCharConds"][charId].indexOf(conditionName) > -1 ) {
+        state["davoutCharConds"][charId] = DavoutUtils.removeFromArrayFirstOccurOf(state["davoutCharConds"][charId],conditionName);
+        log("Delete poststate = " + state["davoutCharConds"][charId]);
         return true;
     } else {
         sendChat("API", "Selected Token " + name + " does not have condition: " + conditionName);
@@ -76,7 +76,7 @@ DavoutConditions.removeConditionFromChar = function (name, charId, conditionName
 DavoutConditions.addEffects = function addEffects(characterId, condition, tokenObjR20) {
     if (DavoutConditions.addConditionToChar(characterId, condition)) {
         // For each effect of added condition
-        _.each(state.davoutFcConditions[condition].effects, function (obj) {
+        _.each(state.davoutConditions[condition].effects, function (obj) {
             DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, obj.modifier);
         });
         sendChat("API", "/w gm Condition " + condition + " was added to " + tokenObjR20.get("name"));
@@ -86,7 +86,7 @@ DavoutConditions.addEffects = function addEffects(characterId, condition, tokenO
 DavoutConditions.removeEffects = function removeEffects(characterId, condition, tokenObjR20) {
     if (DavoutConditions.removeConditionFromChar(tokenObjR20.get("name"), characterId, condition)) {
         // For each effect of removed condition
-        _.each(state.davoutFcConditions[condition].effects, function (obj) {
+        _.each(state.davoutConditions[condition].effects, function (obj) {
             DavoutUtils.adjustAttributeForChar(characterId, obj.attrib, -1 * obj.modifier);
         });
         sendChat("API", "/w gm Condition " + condition + " was removed from " + tokenObjR20.get("name"));
@@ -117,8 +117,8 @@ DavoutConditions.command._manageCondition = function (actionType, selected, cond
 };
 
 on("destroy:character", function (character) {
-        log("Deleted state.davoutFcCharConds for " + character.get("name")) ;
-        state.davoutFcCharConds[character] = null;
+        log("Deleted state.davoutCharConds for " + character.get("name")) ;
+        state.davoutCharConds[character] = null;
 });
 
 on("ready", function () {     // Requires community.command
@@ -138,7 +138,7 @@ on("ready", function () {     // Requires community.command
     addCommand.typeList = ["str"];
     addCommand.syntax = "!cond_add ConditionName";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm){
             DavoutConditions.command._manageCondition("ADD", msg.selected, args[0].value);
         }
     };
@@ -151,7 +151,7 @@ on("ready", function () {     // Requires community.command
     removeCommand.typeList = ["str"];
     removeCommand.syntax = "!cond_del ConditionName";
     removeCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm){
             DavoutConditions.command._manageCondition("DEL", msg.selected, args[0].value);
         }
     };
@@ -164,7 +164,7 @@ on("ready", function () {     // Requires community.command
     showCommand.typeList = ["str"];
     showCommand.syntax = "!cond_show";
     showCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected") && isGm){
+        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm){
             DavoutConditions.command._manageCondition("SHOW", msg.selected);
         }
     };
