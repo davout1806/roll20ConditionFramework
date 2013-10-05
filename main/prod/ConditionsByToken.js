@@ -22,14 +22,14 @@ Davout.Conditions.TokenWithConditions = function (tokenName) {
 Davout.Conditions.TokenWithConditions.prototype = {
     addCondition: function (condition) {
         this.conditions.push(condition);
-        sendChat("API", "/w gm Condition " + condition + " was added to " + this.tokenName);
-        log("Added: condition = " + condition);
+        sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
+        log("Added: condition = " + condition.name);
     },
     removeCondition: function (condition) {
         var index = this.conditions.indexOf(condition);
         if (index > -1){
             this.conditions = this.conditions.splice(index, 1);
-            sendChat("API", "/w gm Condition " + condition + " was removed from " + this.tokenName);
+            sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
             log("Removed: condition = " + condition);
         } else {
             sendChat("API", "Selected Token " + name + " does not have condition: " + condition.name);
