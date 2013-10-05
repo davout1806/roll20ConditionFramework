@@ -10,6 +10,11 @@ Davout.Conditions = Davout.Conditions || {};
 state.Davout = state.Davout || {};
 state.Davout.TokensWithConditions = state.Davout.TokensWithConditions || [];
 
+Davout.Conditions.command = Davout.Conditions.command || {};
+
+state.Davout.Conditions = state.Davout.Conditions || [];
+state.Davout.TokensWithConditions = state.Davout.TokensWithConditions || [];
+
 /******************************************************************************************
     Class Declarations
 *******************************************************************************************/
@@ -83,11 +88,9 @@ Davout.Conditions.ActionFormula = function () {
     // list that contains attributes (operands) and operators.
 };
 
-Davout.Conditions.command = Davout.Conditions.command || {};
-
-state.Davout.Conditions = state.Davout.Conditions || [];
-state.Davout.TokensWithConditions = state.Davout.TokensWithConditions || [];
-
+/******************************************************************************************
+ Function Declarations
+ *******************************************************************************************/
 Davout.Conditions.onTokenDestroyedEvent = function () {
     log("Deleted state.Davout.TokensWithConditions for " + token.get("name"));
     state.Davout.TokensWithConditions[token] = null;
