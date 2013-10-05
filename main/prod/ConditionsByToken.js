@@ -158,9 +158,9 @@ on("ready", function () {     // Requires community.command
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";
     }
-    if (DavoutUtils == undefined) {
-        log("You must have DavoutUtils installed in a script tab before the tab this script is in to use.");
-        throw "Can't find DavoutUtils!";
+    if (Davout.Utils == undefined) {
+        log("You must have Davout.Utils installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Davout.Utils!";
     }
 
     var addCommand = {};
@@ -170,7 +170,7 @@ on("ready", function () {     // Requires community.command
     addCommand.typeList = ["str"];
     addCommand.syntax = "!cond_add ConditionName";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
+        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
             DavoutConditions.command._manageCondition("ADD", msg.selected, args[0].value);
         }
     };
@@ -183,7 +183,7 @@ on("ready", function () {     // Requires community.command
     removeCommand.typeList = ["str"];
     removeCommand.syntax = "!cond_del ConditionName";
     removeCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
+        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
             DavoutConditions.command._manageCondition("DEL", msg.selected, args[0].value);
         }
     };
@@ -196,7 +196,7 @@ on("ready", function () {     // Requires community.command
     showCommand.typeList = ["str"];
     showCommand.syntax = "!cond_show";
     showCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
+        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
             DavoutConditions.command._manageCondition("SHOW", msg.selected);
         }
     };
