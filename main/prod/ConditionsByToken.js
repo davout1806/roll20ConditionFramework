@@ -30,9 +30,9 @@ Davout.Conditions.TokenWithConditions.prototype = {
         if (index > -1){
             this.conditions = this.conditions.splice(index, 1);
             sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
-            log("Removed: condition = " + condition);
+            log("Removed: condition = " + condition.name);
         } else {
-            sendChat("API", "Selected Token " + name + " does not have condition: " + condition.name);
+            sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
         }
     },
     getModifierFor: function (affectable) {
