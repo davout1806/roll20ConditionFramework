@@ -1,6 +1,7 @@
-var DavoutUtils = DavoutUtils || {};
+var Davout = Davout || {};
+Davout.Utils = Davout.Utils || {};
 
-DavoutUtils.adjustAttributeForChar = function(characterId, attributeName, modifier){
+Davout.Utils.adjustAttributeForChar = function(characterId, attributeName, modifier){
     var attrib = findObjs({_type: "attribute", name: "cur_" + attributeName, _characterid: characterId})[0];
     if (attrib == undefined){
         return;
@@ -9,7 +10,7 @@ DavoutUtils.adjustAttributeForChar = function(characterId, attributeName, modifi
     attrib.set("current", parseInt(attrib.get("current")) + modifier);
 };
 
-DavoutUtils.selectedToToken = function (singleSelectedObject){
+Davout.Utils.selectedToToken = function (singleSelectedObject){
     if (singleSelectedObject == undefined) return false;
 
     var tokenObjR20 = getObj("graphic", singleSelectedObject._id);
@@ -18,7 +19,7 @@ DavoutUtils.selectedToToken = function (singleSelectedObject){
     return tokenObjR20;
 }
 
-DavoutUtils.tokenToCharId = function (tokenObject){
+Davout.Utils.tokenToCharId = function (tokenObject){
     if (tokenObject == undefined) return false;
 
     var charId = tokenObject.get("represents");
@@ -27,7 +28,7 @@ DavoutUtils.tokenToCharId = function (tokenObject){
     return
 }
 
-DavoutUtils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
+Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
     if (selected == undefined) {
         sendChat("API", msgToSend);
         return false;
@@ -41,7 +42,7 @@ DavoutUtils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOn
     return true;
 };
 
-DavoutUtils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
+Davout.utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
     var workingArray = array;
     var index = workingArray.indexOf(itemToRemove);
     if (index > -1) {

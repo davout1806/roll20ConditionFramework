@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="lib/qunit.css">
     <script src="lib/qunit.js"></script>
     <script src="lib/underscore-min.js"></script>
+    <script src="../main/testing/Roll20MockServer.js"></script>
     <script src="../main/prod/ConditionsByToken.js"></script>
     <script src="../main/prod/ConditionsFc.js"></script>
 </head>
@@ -13,16 +14,16 @@
 <div id="qunit"></div>
 <div id="qunit-fixture">
     <script>
-        var testFlag = 1;
-        state.davoutTokenConditions = [];
+//        var testFlag = 1;
+        state.Davout.TokenConditions = [];
 
         var tokenId = "1";
-        var token = new DavoutCond.TokenWithConditions();
+        var token = new Davout.Conditions.TokenWithConditions();
     </script>
 
 </div>
 <script>
-    token.addCondition(state.davoutConditions["Fatigued I"]);
+    token.addCondition(state.Davout.Conditions["Fatigued I"]);
 
     test("getModifier", function () {
         equal(token.getModifierFor("Str"), -2);

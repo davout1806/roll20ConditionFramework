@@ -9,7 +9,7 @@
 var DavoutActions = DavoutActions || [];
 DavoutActions.command = DavoutActions.command || {};
 
-state.davoutTargetsOfAction = state.davoutTargetsOfAction || [];
+state.Davout.TargetsOfAction = state.Davout.TargetsOfAction || [];
 
 DavoutActions.actions = DavoutActions.actions || [];
 DavoutActions.actions["FortSave"] = {
@@ -25,9 +25,9 @@ DavoutActions.command._action = function (msg, actionName) {
 //        log("chat= " + "%{selected|" + actionObj.ability + "}")
 //        sendChat("API", "/w %{selected|" + actionObj.ability + "}");
 
-        var tokenObjR20 = DavoutUtils.selectedToToken(msg.selected[0]);
+        var tokenObjR20 = Davout.Utils.selectedToToken(msg.selected[0]);
         if (tokenObjR20) {
-            var charId = DavoutUtils.tokenToCharId(tokenObjR20);
+            var charId = Davout.Utils.tokenToCharId(tokenObjR20);
             log("charId = " + charId);
                 log("tokenObjR20 = " + tokenObjR20);
             var actionObj = DavoutActions.actions[actionName];
@@ -48,19 +48,19 @@ DavoutActions.command._action = function (msg, actionName) {
 // TODO add target image around targets.
 DavoutActions.command._setTargets = function (playerId, selected) {
     var tokenObjR20;
-    if (state.davoutTargetsOfAction == undefined) {
-        state.davoutTargetsOfAction = [];
+    if (state.Davout.TargetsOfAction == undefined) {
+        state.Davout.TargetsOfAction = [];
     }
-    state.davoutTargetsOfAction[playerId] = [];
+    state.Davout.TargetsOfAction[playerId] = [];
 
     _.each(selected, function (obj) {
         tokenObjR20 = getObj("graphic", obj._id);
         if (tokenObjR20.get("_subtype") == "token") {
-            state.davoutTargetsOfAction[playerId].push(tokenObjR20.get("id"));
+            state.Davout.TargetsOfAction[playerId].push(tokenObjR20.get("id"));
         }
     });
 
-    log("state.davoutTargetsOfAction = " + state.davoutTargetsOfAction[playerId]);
+    log("state.Davout.TargetsOfAction = " + state.Davout.TargetsOfAction[playerId]);
 };
 
 on("ready", function () {
@@ -68,9 +68,9 @@ on("ready", function () {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";
     }
-    if (DavoutUtils == undefined) {
-        log("You must have DavoutUtils installed in a script tab before the tab this script is in to use.");
-        throw "Can't find DavoutUtils!";
+    if (Davout.Utils == undefined) {
+        log("You must have Davout.Utils installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Davout.Utils!";
     }
 
     var addCommand = {};
@@ -80,7 +80,7 @@ on("ready", function () {
     addCommand.typeList = ["str"];
     addCommand.syntax = "!DavoutAction action";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
+        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
             DavoutActions.command._action(msg, args[0].value);
         }
     };
@@ -93,7 +93,7 @@ on("ready", function () {
     addCommand.typeList = ["str"];
     addCommand.syntax = "!DavoutSetTarget";
     addCommand.handle = function (args, who, isGm, msg) {
-        if (DavoutUtils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
+        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
             DavoutActions.command._setTargets(msg.playerid, msg.selected);
         }
     };

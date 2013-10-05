@@ -152,7 +152,7 @@ DavoutNpcStatParser.insertIntoSheet = function (charStats) {
 };
 
 DavoutNpcStatParser.command._parse = function (selected, npcType, isGm, msg){
-    if (!DavoutUtils.checkForSelectionAndMsgIfNot(selected, "/w gm nothing is selected", false, "") && isGm) {
+    if (!Davout.Utils.checkForSelectionAndMsgIfNot(selected, "/w gm nothing is selected", false, "") && isGm) {
         return;
     }
 
@@ -181,9 +181,9 @@ on("ready", function () {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";
     }
-    if (DavoutUtils == undefined) {
-        log("You must have DavoutUtils installed in a script tab before the tab this script is in to use.");
-        throw "Can't find DavoutUtils!";
+    if (Davout.Utils == undefined) {
+        log("You must have Davout.Utils installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Davout.Utils!";
     }
     if (DavoutSheet == undefined) {
         log("You must have DavoutSheet installed in a script tab before the tab this script is in to use.");
