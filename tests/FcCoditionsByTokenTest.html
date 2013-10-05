@@ -16,14 +16,14 @@
         JsMockito.Integration.QUnit();
         test("getModifier", function () {
             var mockSendChat = spy(sendChat);
-            mockSendChat("API", "/w gm Condition FatiguedI was added to ");
+            mockSendChat("API", "/w gm Condition FatiguedI was added to Orc");
             var mockLog = spy(log);
             mockLog("condition = FatiguedI");
 
-            equal(token.getModifierFor("Str"), 0);
-            token.addCondition(state.Davout.Conditions["FatiguedI"]);
-            equal(token.getModifierFor("Str"), -2);
-            verify(mockSendChat)("API", "/w gm Condition FatiguedI was added to ");
+            equal(Davout.Conditions.getModifierFor(tokenId, "Str"), 0);
+            Davout.Conditions.addEffects(tokenId, state.Davout.Conditions["FatiguedI"], "Orc");
+            equal(Davout.Conditions.getModifierFor(tokenId, "Str"), -2);
+            verify(mockSendChat)("API", "/w gm Condition FatiguedI was added to Orc");
             verify(mockLog)("condition = FatiguedI");
         });
     </script>
@@ -34,10 +34,10 @@
     <script>
         state.Davout = state.Davout || {};
         state.Davout.Conditions = state.Davout.Conditions || {};
-        state.Davout.TokenConditions = [];
+        state.Davout.TokensWithConditions = [];
 
         var tokenId = "1";
-        var token = new Davout.Conditions.TokenWithConditions();
+//        var token = new Davout.Conditions.TokenWithConditions("Orcxxx");
     </script>
 
 </div>
