@@ -18,7 +18,6 @@ Davout.Conditions.TokenWithConditions.prototype = {
     addCondition: function (condition) {
         log("condition = " + condition);
         this.conditions.push(condition);
-//        alert(JSON.stringify(token.conditions));
     },
     removeCondition: function (condition) {
         this.conditions = Davout.Utils.removeFromArrayFirstOccurOf(this.conditions, condition);
