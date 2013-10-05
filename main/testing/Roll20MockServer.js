@@ -1,7 +1,13 @@
+var state = {};
+
 Davout.Roll20MockServer = function(){
 
 };
 
-on = function(eventCondition, func){
+function on(eventCondition, func){
+
+};
+
+function log(str){
 
 };

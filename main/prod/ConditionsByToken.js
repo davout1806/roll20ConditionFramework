@@ -4,6 +4,8 @@
  * Since tokens might be associated to 0, 1, or more characters, it is not possible to adjust the ratings.
  * Therefore, must apply effects on rolls.
  */
+
+var Davout = Davout || {};
 Davout.Conditions = Davout.Conditions || {};
 state.Davout = state.Davout || {};
 state.Davout.TokenConds = state.Davout.TokenConds || [];
@@ -13,21 +15,25 @@ Davout.Conditions.TokenWithConditions = function () {
 };
 
 Davout.Conditions.TokenWithConditions.prototype = {
-    addCondition: function (condition){
+    addCondition: function (condition) {
         log("condition = " + condition);
         this.conditions.push(condition);
+//        alert(JSON.stringify(token.conditions));
     },
-    removeCondition: function(condition){
+    removeCondition: function (condition) {
         this.conditions = Davout.Utils.removeFromArrayFirstOccurOf(this.conditions, condition);
     },
     getModifierFor: function (affectable) {
         var modifier = 0;
-        _.each(this.conditions, function (condition) {
-            modifier += condition.getModifierFor(affectable);
-        });
+        if (this.conditions != undefined) {
+            _.each(this.conditions, function (condition) {
+                modifier += condition.getModifierFor(affectable);
+            });
+        }
         return modifier;
     }
-};
+}
+;
 
 Davout.Conditions.Condition = function (name, effects) {
     this.name = name;
@@ -67,12 +73,10 @@ Davout.Conditions.ActionFormula = function () {
 
 Davout.Conditions.command = Davout.Conditions.command || {};
 
-var state = []; // for testing only
-
 state.Davout.Conditions = state.Davout.Conditions || [];
 state.Davout.TokenConds = state.Davout.TokenConds || [];
 
-Davout.Conditions.onTokenDestroyedEvent = function (){
+Davout.Conditions.onTokenDestroyedEvent = function () {
     log("Deleted state.Davout.TokenConds for " + token.get("name"));
     state.Davout.TokenConds[token] = null;
 };
@@ -93,10 +97,10 @@ Davout.Conditions.addEffects = function addEffects(tokenId, condition) {
 //    if (Davout.Conditions.addConditionToToken(tokenId, condition)) {
 //        sendChat("API", "/w gm Condition " + condition + " was added to " + tokenName);
 //    }
-    if (state.Davout.TokenConds == undefined){
+    if (state.Davout.TokenConds == undefined) {
         state.Davout.TokenConds = [];
     }
-    if (state.Davout.TokenConds[tokenId] == undefined){
+    if (state.Davout.TokenConds[tokenId] == undefined) {
         var tokenWithConditions = new Davout.Conditions.TokenWithConditions();
         tokenWithConditions.addCondition(condition);
         state.Davout.TokenConds[tokenId] = tokenWithConditions;
