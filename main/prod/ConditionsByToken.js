@@ -16,8 +16,10 @@ Davout.Conditions.TokenWithConditions = function () {
 
 Davout.Conditions.TokenWithConditions.prototype = {
     addCondition: function (condition) {
-        log("condition = " + condition);
         this.conditions.push(condition);
+        sendChat("API", "/w gm Condition " + condition + " was added to ");
+//        sendChat("API", "/w gm Condition " + condition + " was added to " + tokenName);
+        log("condition = " + condition);
     },
     removeCondition: function (condition) {
         this.conditions = Davout.Utils.removeFromArrayFirstOccurOf(this.conditions, condition);
@@ -80,21 +82,8 @@ Davout.Conditions.onTokenDestroyedEvent = function () {
     state.Davout.TokenConds[token] = null;
 };
 
-Davout.Conditions.removeConditionFromToken = function (name, tokenId, conditionName) {
-//    log("DEL prestate = " + conditionName + " " + state["davoutFcTokenConds"][tokenId]);
-//    if (state["davoutFcTokenConds"][tokenId] != undefined && state["davoutFcTokenConds"][tokenId].indexOf(conditionName) > -1) {
-//        state["davoutFcTokenConds"][tokenId] = Davout.Utils.removeFromArrayFirstOccurOf(state["davoutFcTokenConds"][tokenId], conditionName);
-//        log("Delete poststate = " + state["davoutFcTokenConds"][tokenId]);
-//        return true;
-//    } else {
-//        sendChat("API", "Selected Token " + name + " does not have condition: " + conditionName);
-//        return false;
-//    }
-};
-
 Davout.Conditions.addEffects = function addEffects(tokenId, condition) {
 //    if (Davout.Conditions.addConditionToToken(tokenId, condition)) {
-//        sendChat("API", "/w gm Condition " + condition + " was added to " + tokenName);
 //    }
     if (state.Davout.TokenConds == undefined) {
         state.Davout.TokenConds = [];
@@ -103,6 +92,7 @@ Davout.Conditions.addEffects = function addEffects(tokenId, condition) {
         var tokenWithConditions = new Davout.Conditions.TokenWithConditions();
         tokenWithConditions.addCondition(condition);
         state.Davout.TokenConds[tokenId] = tokenWithConditions;
+
     } else {
         state.Davout.TokenConds[tokenId].addCondition(condition);
     }

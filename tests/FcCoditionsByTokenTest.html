@@ -5,14 +5,26 @@
     <title>Fc Conditions By Token Test</title>
     <link rel="stylesheet" href="lib/qunit.css">
     <script src="lib/qunit.js"></script>
+    <script src="lib/jshamcrest.js"></script>
+    <script src="lib/jsmockito-1.0.4.js"></script>
     <script src="../libs/underscore.js"></script>
-    <script src="../main/testing/Roll20MockServer.js"></script>
+    <script src="../main/testing/Roll20Mock.js"></script>
     <script src="../main/prod/ConditionsByToken.js"></script>
     <script src="../main/prod/ConditionsFc.js"></script>
     <script>
+        JsHamcrest.Integration.QUnit();
+        JsMockito.Integration.QUnit();
         test("getModifier", function () {
+            var mockSendChat = spy(sendChat);
+            mockSendChat("API", "/w gm Condition FatiguedI was added to ");
+            var mockLog = spy(log);
+            mockLog("condition = FatiguedI");
+
+            equal(token.getModifierFor("Str"), 0);
             token.addCondition(state.Davout.Conditions["FatiguedI"]);
             equal(token.getModifierFor("Str"), -2);
+            verify(mockSendChat)("API", "/w gm Condition FatiguedI was added to ");
+            verify(mockLog)("condition = FatiguedI");
         });
     </script>
 </head>
