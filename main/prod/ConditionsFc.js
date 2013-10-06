@@ -1,7 +1,7 @@
-fatigued = new Davout.Conditions.Effect("Str", -2);
-var array = new Array();
-array[0] = fatigued;
-state.Davout.Conditions["FatiguedI"] = new Davout.Conditions.Condition("FatiguedI", array);
+fatigueEffectOne = new Davout.ConditionObj.Effect("Str", -2);
+var array = new Array(fatigueEffectOne);
+var condition = new Davout.ConditionObj.Condition("FatiguedI", array);
+state.Davout.ConditionObj["FatiguedI"] = condition;
 
 // ConditionsFc
 

@@ -17,7 +17,7 @@ Davout.Utils.selectedToToken = function (singleSelectedObject){
     if (tokenObjR20 == undefined) return false;
     if (tokenObjR20.get("subtype") != "token") return false;
     return tokenObjR20;
-}
+};
 
 Davout.Utils.tokenToCharId = function (tokenObject){
     if (tokenObject == undefined) return false;
@@ -25,8 +25,8 @@ Davout.Utils.tokenToCharId = function (tokenObject){
     var charId = tokenObject.get("represents");
     if (charId == undefined) return false;
     if (charId == "") return false;
-    return
-}
+    return charId;
+};
 
 Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
     if (selected == undefined) {
@@ -42,7 +42,7 @@ Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyO
     return true;
 };
 
-Davout.utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
+Davout.Utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
     var workingArray = array;
     var index = workingArray.indexOf(itemToRemove);
     if (index > -1) {
@@ -51,3 +51,13 @@ Davout.utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
 
     return workingArray;
 };
+
+Davout.Utils.assertTrueObject = function(parameter, throwMsg){
+    if (_.isUndefined(parameter)) throw throwMsg + " parameter: undefined";
+    if (_.isArray(parameter)) throw throwMsg + " parameter: array";
+    if (_.isFunction(parameter)) throw throwMsg + " parameter: function";
+    if (!_.isObject(parameter)) throw throwMsg + " parameter: other";
+};
+
+//Utils
+
