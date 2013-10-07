@@ -3,7 +3,10 @@
  *
  * Since tokens might be associated to 0, 1, or more characters, it is not possible to adjust the ratings.
  * Therefore, must apply effects on rolls.
+ *
  */
+
+// TODO prevent adding duplicate conditions unless they are stackable.
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
@@ -23,35 +26,34 @@ Davout.ConditionObj.TokenWithConditions = function (tokenName) {
     this.conditions = [];
 };
 
-Davout.ConditionObj.TokenWithConditions.prototype = {
-    addCondition: function (condition) {
-        Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
-//        if (Davout.Utils.isTrueObject(condition) == false) throw "Davout.ConditionObj.TokenWithConditions.addCondition invalid parameter type";
-        this.conditions.push(condition);
-        sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
-        log("Added: condition = " + condition.name);
-    },
-    removeCondition: function (condition) {
-        Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.removeCondition condition");
-        var index = this.conditions.indexOf(condition);
-        if (index > -1) {
-            this.conditions = this.conditions.splice(index, 1);
-            sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
-            log("Removed: condition = " + condition.name);
-        } else {
-            sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
-        }
-    },
-    getModifierFor: function (affectable) {
-        if (!_.isString(affectable)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectable invalid parameter type";
-        var modifier = 0;
-        if (this.conditions != undefined) {
-            _.each(this.conditions, function (condition) {
-                modifier += condition.getModifierFor(affectable);
-            });
-        }
-        return modifier;
+Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function () {
+    Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
+    this.conditions.push(condition);
+    sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
+    log("Added: condition " + condition.name + " to " + this.tokenName);
+};
+
+Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (condition) {
+    Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.removeCondition condition");
+    var index = this.conditions.indexOf(condition);
+    if (index > -1) {
+        this.conditions.splice(index, 1);
+        sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
+        log("Removed: condition " + condition.name + " removed from " + this.tokenName);
+    } else {
+        sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
     }
+};
+
+Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (affectable) {
+    if (!_.isString(affectable)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectable invalid parameter type";
+    var modifier = 0;
+    if (this.conditions != undefined) {
+        _.each(this.conditions, function (condition) {
+            modifier += condition.getModifierFor(affectable);
+        });
+    }
+    return modifier;
 };
 
 Davout.ConditionObj.Condition = function (name, effects) {
@@ -61,15 +63,13 @@ Davout.ConditionObj.Condition = function (name, effects) {
     this.effects = effects;
 };
 
-Davout.ConditionObj.Condition.prototype = {
-    getModifierFor: function (affectable) {
-        if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
-        var modifier = 0;
-        _.each(this.effects, function (effect) {
-            modifier += effect.getModifierFor(affectable);
-        });
-        return modifier;
-    }
+Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
+    if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
+    var modifier = 0;
+    _.each(this.effects, function (effect) {
+        modifier += effect.getModifierFor(affectable);
+    });
+    return modifier;
 };
 
 Davout.ConditionObj.Effect = function (affectable, modifier) {
@@ -79,14 +79,12 @@ Davout.ConditionObj.Effect = function (affectable, modifier) {
     this.modifier = modifier;
 };
 
-Davout.ConditionObj.Effect.prototype = {
-    getModifierFor: function (affectable) {
-        if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
-        if (this.affectable == affectable) {
-            return this.modifier;
-        }
-        return 0;
+Davout.ConditionObj.Effect.prototype.getModifierFor = function (affectable) {
+    if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
+    if (this.affectable == affectable) {
+        return this.modifier;
     }
+    return 0;
 };
 
 Davout.ConditionObj.Action = function () {
@@ -105,10 +103,10 @@ Davout.ConditionObj.onTokenDestroyedEvent = function () {
     state.Davout.TokensWithConditionObj[token] = null;
 };
 
-Davout.ConditionObj.addEffects = function addEffects(tokenId, conditionName, tokenName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.addEffects tokenId invalid parameter type";
-    if (!_.isString(conditionName)) throw "Davout.ConditionObj.addEffects conditionName invalid parameter type";
-    if (!_.isString(tokenName)) throw "Davout.ConditionObj.addEffects tokenName invalid parameter type";
+Davout.ConditionObj.addConditionTo = function addConditionTo(tokenId, conditionName, tokenName) {
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.addConditionTo tokenId invalid parameter type";
+    if (!_.isString(conditionName)) throw "Davout.ConditionObj.addConditionTo conditionName invalid parameter type";
+    if (!_.isString(tokenName)) throw "Davout.ConditionObj.addConditionTo tokenName invalid parameter type";
     if (state.Davout.TokensWithConditionObj == undefined) {
         state.Davout.TokensWithConditionObj = {};
     }
@@ -118,15 +116,19 @@ Davout.ConditionObj.addEffects = function addEffects(tokenId, conditionName, tok
         tokenWithConditions.addCondition(condition);
         state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
     } else {
-        state.Davout.TokensWithConditionObj[tokenId].addCondition(condition);
+        var tokenWithConditions = state.Davout.TokensWithConditionObj[tokenId];
+        tokenWithConditions.addCondition(condition);
+        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
     }
 };
 
-Davout.ConditionObj.removeEffects = function removeEffects(tokenId, conditionName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.removeEffects tokenId invalid parameter type";
-    if (!_.isString(conditionName)) throw "Davout.ConditionObj.removeEffects conditionName invalid parameter type";
+Davout.ConditionObj.removeConditionFrom = function removeConditionFrom(tokenId, conditionName) {
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.removeConditionFrom tokenId invalid parameter type";
+    if (!_.isString(conditionName)) throw "Davout.ConditionObj.removeConditionFrom conditionName invalid parameter type";
     if (state.Davout.TokensWithConditionObj[tokenId] != undefined) {
-        state.Davout.TokensWithConditionObj[tokenId].removeCondition(state.Davout.ConditionObj[conditionName]);
+        var tokenWithConditions = state.Davout.TokensWithConditionObj[tokenId];
+        tokenWithConditions.removeCondition(state.Davout.ConditionObj[conditionName]);
+        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
     }
 };
 
@@ -154,10 +156,10 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
             if (tokenId != "") {
                 switch (actionType) {
                     case "ADD":
-                        Davout.ConditionObj.addEffects(tokenId, conditionName, tokenObjR20.get("name"));
+                        Davout.ConditionObj.addConditionTo(tokenId, conditionName, tokenObjR20.get("name"));
                         break;
                     case "DEL":
-                        Davout.ConditionObj.removeEffects(tokenId, conditionName);
+                        Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
                         break;
                     case "SHOW":
                         sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions " + Davout.ConditionObj.getConditionsOnToken(tokenId));

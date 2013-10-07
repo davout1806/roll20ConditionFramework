@@ -13,13 +13,19 @@
     <script>
         test("getModifier", function () {
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
-            Davout.ConditionObj.addEffects(tokenId, "FatiguedI", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "FatiguedI", "Orc");
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -2);
             equal(mock.logCallCount(), 1);
             equal(mock.sendChatCount(), 1);
-            equal(mock.getLogCall(0), "Added: condition = FatiguedI");
+            equal(mock.getLogCall(0), "Added: condition FatiguedI to Orc");
             equal(mock.getSendChat(0), "API:/w gm Condition FatiguedI was added to Orc");
+
+            Davout.ConditionObj.removeConditionFrom(tokenId, "FatiguedI");
+//            equal(mock.logCallCount(), 2);
+            equal(mock.sendChatCount(), 2);
+            equal(mock.getLogCall(1), "Removed: condition FatiguedI removed from Orc");
+            equal(mock.getSendChat(1), "API:/w gm Condition FatiguedI was removed from Orc");
         });
     </script>
 </head>
