@@ -22,7 +22,7 @@
             equal(mock.getSendChat(0), "API:/w gm Condition FatiguedI was added to Orc");
 
             Davout.ConditionObj.removeConditionFrom(tokenId, "FatiguedI");
-//            equal(mock.logCallCount(), 2);
+            equal(mock.logCallCount(), 2);
             equal(mock.sendChatCount(), 2);
             equal(mock.getLogCall(1), "Removed: condition FatiguedI removed from Orc");
             equal(mock.getSendChat(1), "API:/w gm Condition FatiguedI was removed from Orc");
