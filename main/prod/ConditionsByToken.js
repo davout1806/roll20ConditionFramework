@@ -7,6 +7,9 @@
  */
 
 // TODO prevent adding duplicate conditions unless they are stackable.
+// TODO Non-modifier conditions
+// TODO Scene conditions: conditions that exist throughout the area of the current scene.
+// TODO locational conditions
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
