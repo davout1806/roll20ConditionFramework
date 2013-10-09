@@ -54,6 +54,7 @@ Davout.Utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
 
 Davout.Utils.assertTrueObject = function(parameter, throwMsg){
     if (_.isUndefined(parameter)) throw throwMsg + " parameter: undefined";
+    if (parameter == null) throw throwMsg + " parameter: null";
     if (_.isArray(parameter)) throw throwMsg + " parameter: array";
     if (_.isFunction(parameter)) throw throwMsg + " parameter: function";
     if (!_.isObject(parameter)) throw throwMsg + " parameter: other";

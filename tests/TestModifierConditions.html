@@ -11,7 +11,10 @@
     <script src="../main/prod/ConditionsByToken.js"></script>
     <script src="../main/prod/ConditionsFc.js"></script>
     <script>
-        test("getModifier", function () {
+
+        test("Test: modifier, add condition, modifier, remove condition, modifier", function () {
+            var tokenId = "1";
+
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
             Davout.ConditionObj.addConditionTo(tokenId, "FatiguedI", "Orc");
 
@@ -26,19 +29,14 @@
             equal(mock.sendChatCount(), 2);
             equal(mock.getLogCall(1), "Removed: condition FatiguedI removed from Orc");
             equal(mock.getSendChat(1), "API:/w gm Condition FatiguedI was removed from Orc");
+
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
         });
     </script>
 </head>
 <body>
 <div id="qunit"></div>
 <div id="qunit-fixture">
-    <script>
-        state.Davout = state.Davout || {};
-        state.Davout.ConditionObj = state.Davout.ConditionObj || {};
-        state.Davout.TokensWithConditionObj = {};
-
-        var tokenId = "1";
-    </script>
 
 </div>
 </body>

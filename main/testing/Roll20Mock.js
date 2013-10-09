@@ -19,6 +19,11 @@ mock.getSendChat = function(index){
     return sendChatCalls[index];
 };
 
+mock.clearCalls = function (){
+    logCalls = [];
+    sendChatCalls = [];
+};
+
 /*
  * These methods are needed for mocking framework.
  */

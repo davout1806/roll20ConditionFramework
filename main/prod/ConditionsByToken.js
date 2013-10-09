@@ -10,6 +10,7 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
+// TODO display list of modifiers for each applicable condition.
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
@@ -29,7 +30,7 @@ Davout.ConditionObj.TokenWithConditions = function (tokenName) {
     this.conditions = [];
 };
 
-Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function () {
+Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condition) {
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
     this.conditions.push(condition);
     sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
@@ -52,11 +53,24 @@ Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (aff
     if (!_.isString(affectable)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectable invalid parameter type";
     var modifier = 0;
     if (this.conditions != undefined) {
-        _.each(this.conditions, function (condition) {
-            modifier += condition.getModifierFor(affectable);
-        });
+        for (var i=0;i<this.conditions.length;i++){
+            modifier += this.conditions[i].getModifierFor(affectable);
+        }
     }
     return modifier;
+};
+
+Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affectable) {
+    var isProhibited = false;
+    if (this.conditions != undefined) {
+        for (var i=0;i<this.conditions.length && ! isProhibited;i++){
+            if (this.conditions[i].isProhibited(affectable)){
+                isProhibited = true;
+            }
+        }
+    }
+
+    return isProhibited;
 };
 
 Davout.ConditionObj.Condition = function (name, effects) {
@@ -69,17 +83,44 @@ Davout.ConditionObj.Condition = function (name, effects) {
 Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
     var modifier = 0;
-    _.each(this.effects, function (effect) {
-        modifier += effect.getModifierFor(affectable);
-    });
+    for(var i=0; i<this.effects.length; i++){
+        if (this.effects[i].hasModifier){
+            modifier += this.effects[i].getModifierFor(affectable);
+        }
+    }
     return modifier;
 };
 
-Davout.ConditionObj.Effect = function (affectable, modifier) {
+Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
+    var isProhibited = false;
+    if (this.effects != undefined) {
+        for (var i=0;i<this.effects.length && ! isProhibited;i++){
+            if (this.effects[i].isProhibited(affectable)){
+                isProhibited = true;
+            }
+        }
+    }
+
+    return isProhibited;
+};
+
+Davout.ConditionObj.Effect = function (affectable, note, modifier, prohibitive) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
-    if (!_.isNumber(modifier)) throw "Davout.ConditionObj.Effect modifier invalid parameter type";
+
+    this.modifier = false;
     this.affectable = affectable;
-    this.modifier = modifier;
+    this.note = note;
+    this.prohibitive = prohibitive;
+
+    if (!prohibitive) {
+        if (modifier != null) {
+            this.modifier = modifier;
+            this.hasModifier = true;
+        } else {
+            this.modifier = NaN;
+            this.hasModifier = false;
+        }
+    }
 };
 
 Davout.ConditionObj.Effect.prototype.getModifierFor = function (affectable) {
@@ -88,6 +129,12 @@ Davout.ConditionObj.Effect.prototype.getModifierFor = function (affectable) {
         return this.modifier;
     }
     return 0;
+};
+
+Davout.ConditionObj.Effect.prototype.isProhibited = function (affectable) {
+    if (!_.isString(affectable)) throw "Davout.ConditionObj.isProhibited affectable invalid parameter type";
+    return this.affectable == affectable && this.prohibitive;
+
 };
 
 Davout.ConditionObj.Action = function () {
@@ -138,14 +185,21 @@ Davout.ConditionObj.removeConditionFrom = function removeConditionFrom(tokenId, 
 Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectedName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
     if (!_.isString(affectedName)) throw "Davout.ConditionObj.getModifierFor affectedName invalid parameter type";
-    if (state.Davout.TokensWithConditionObj == undefined) {
-        return 0;
-    }
 
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) {
-        return 0;
-    }
+    if (state.Davout.TokensWithConditionObj == undefined) return 0;
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return 0;
+
     return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectedName);
+};
+
+Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectedName){
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
+    if (!_.isString(affectedName)) throw "Davout.ConditionObj.getModifierFor affectedName invalid parameter type";
+
+    if (state.Davout.TokensWithConditionObj == undefined) return false;
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return false;
+
+    return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectedName);
 };
 
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
