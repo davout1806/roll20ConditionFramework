@@ -11,8 +11,14 @@
     <script src="../main/prod/ConditionsByToken.js"></script>
     <script src="../main/prod/ConditionsFc.js"></script>
     <script>
+        module ("Conditions",{
+            setup: function() {
+                state.Davout.TokensWithConditionObj = {};
+                mock.clearCalls();
+            }
+        });
 
-        test("Test: modifier, add condition, modifier, remove condition, modifier", function () {
+        test("Test: modifier with add & remove condition", function () {
             var tokenId = "1";
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
@@ -31,6 +37,27 @@
             equal(mock.getSendChat(1), "API:/w gm Condition FatiguedI was removed from Orc");
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
+        });
+
+        test("Prohibited action+condition combo", function () {
+            var tokenId = "1";
+
+            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
+            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
+            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true);
+
+            equal(mock.logCallCount(), 1);
+            equal(mock.sendChatCount(), 1);
+            equal(mock.getLogCall(0), "Added: condition Blinded to Orc");
+            equal(mock.getSendChat(0), "API:/w gm Condition Blinded was added to Orc");
+
+            Davout.ConditionObj.removeConditionFrom(tokenId, "Blinded");
+            equal(mock.logCallCount(), 2);
+            equal(mock.sendChatCount(), 2);
+            equal(mock.getLogCall(1), "Removed: condition Blinded removed from Orc");
+            equal(mock.getSendChat(1), "API:/w gm Condition Blinded was removed from Orc");
+
+            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
         });
     </script>
 </head>

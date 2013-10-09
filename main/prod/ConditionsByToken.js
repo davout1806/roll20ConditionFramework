@@ -11,6 +11,7 @@
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
 // TODO display list of modifiers for each applicable condition.
+// TODO action where character vs character ex: attack where each may have a condition.
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
