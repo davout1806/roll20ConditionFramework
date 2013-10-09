@@ -6,7 +6,7 @@
  *
  */
 
-// TODO prevent adding duplicate conditions unless they are stackable.
+// TODO test char has Unconscious condition, removing Fatigued does not drop condition to Fatigued-IV
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
