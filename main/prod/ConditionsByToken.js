@@ -33,20 +33,55 @@ Davout.ConditionObj.TokenWithConditions = function (tokenName) {
 
 Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condition) {
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
-    this.conditions.push(condition);
-    sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
-    log("Added: condition " + condition.name + " to " + this.tokenName);
+    if (Davout.Utils.contains(this.conditions, condition)) {
+        if (condition.nextConditionNameIfStackable != null) {
+            var nextCondition = state.Davout.ConditionObj[condition.nextConditionNameIfStackable];
+            this.conditions.push(nextCondition);
+            sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName + " causing condition: " + nextCondition.name);
+            log("Added: condition " + nextCondition.name + " to " + this.tokenName);
+        } else {
+            sendChat("API", "/w gm " + this.tokenName + " already has the non-stackable condition " + condition.name);
+        }
+    } else {
+        this.conditions.push(condition);
+        sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
+        log("Added: condition " + condition.name + " to " + this.tokenName);
+    }
 };
 
 Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (condition) {
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.removeCondition condition");
+    var followedNextCondition = false;
     var index = this.conditions.indexOf(condition);
+    var gotoNextCondition = true;
+    var conditionNameRemoved;
     if (index > -1) {
-        this.conditions.splice(index, 1);
-        sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
-        log("Removed: condition " + condition.name + " removed from " + this.tokenName);
+        console.log("condition = " + JSON.stringify(condition));
+        var workCondition = condition;
+        var nextCondition;
+        while (workCondition.nextConditionNameIfStackable != null && gotoNextCondition) {
+            nextCondition = state.Davout.ConditionObj[workCondition.nextConditionNameIfStackable];
+            if (nextCondition.isReversableByName) {
+                conditionNameRemoved = workCondition.name;
+                workCondition = nextCondition;
+                if (Davout.Utils.contains(this.conditions,nextCondition)) {
+                    followedNextCondition = true;
+                } else {
+                    gotoNextCondition = false;
+                }
+            }
+        }
+
+        if (followedNextCondition) {
+            this.conditions.splice(this.conditions.indexOf(workCondition), 1);
+        } else {
+            conditionNameRemoved = condition.name;
+            this.conditions.splice(index, 1);
+        }
+        sendChat("API", "/w gm Condition " + conditionNameRemoved + " was removed from " + this.tokenName);
+        log("Removed: condition " + conditionNameRemoved + " removed from " + this.tokenName);
     } else {
-        sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
+        sendChat("API", "Selected Token " + this.tokenName + " does not have condition: " + condition.name);
     }
 };
 
@@ -54,7 +89,7 @@ Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (aff
     if (!_.isString(affectable)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectable invalid parameter type";
     var modifier = 0;
     if (this.conditions != undefined) {
-        for (var i=0;i<this.conditions.length;i++){
+        for (var i = 0; i < this.conditions.length; i++) {
             modifier += this.conditions[i].getModifierFor(affectable);
         }
     }
@@ -64,8 +99,8 @@ Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (aff
 Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affectable) {
     var isProhibited = false;
     if (this.conditions != undefined) {
-        for (var i=0;i<this.conditions.length && ! isProhibited;i++){
-            if (this.conditions[i].isProhibited(affectable)){
+        for (var i = 0; i < this.conditions.length && !isProhibited; i++) {
+            if (this.conditions[i].isProhibited(affectable)) {
                 isProhibited = true;
             }
         }
@@ -79,13 +114,32 @@ Davout.ConditionObj.Condition = function (name, effects) {
     if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
     this.name = name;
     this.effects = effects;
+    this.nextConditionNameIfStackable = null;
+    this.isReversableByName = false;
+};
+
+/**
+ *
+ * @param name                      Name of Condition
+ * @param effects                   Array of Effects
+ * @param nextConditionNameIfStackable  If not null, then Condition is stackable.
+ * @param isReversableByName        If true then using initial condition word in remove command will "pop" the off the nextConditionNameIfStackable of the stack.
+ * @constructor
+ */
+Davout.ConditionObj.Condition = function (name, effects, nextConditionNameIfStackable, isReversableByName) {
+    if (!_.isString(name)) throw "Davout.ConditionObj.Condition name invalid parameter type";
+    if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
+    this.name = name;
+    this.effects = effects;
+    this.nextConditionNameIfStackable = nextConditionNameIfStackable;
+    this.isReversableByName = isReversableByName;
 };
 
 Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
     var modifier = 0;
-    for(var i=0; i<this.effects.length; i++){
-        if (this.effects[i].hasModifier){
+    for (var i = 0; i < this.effects.length; i++) {
+        if (this.effects[i].hasModifier) {
             modifier += this.effects[i].getModifierFor(affectable);
         }
     }
@@ -95,8 +149,8 @@ Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
 Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
     var isProhibited = false;
     if (this.effects != undefined) {
-        for (var i=0;i<this.effects.length && ! isProhibited;i++){
-            if (this.effects[i].isProhibited(affectable)){
+        for (var i = 0; i < this.effects.length && !isProhibited; i++) {
+            if (this.effects[i].isProhibited(affectable)) {
                 isProhibited = true;
             }
         }
@@ -193,7 +247,7 @@ Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectedNa
     return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectedName);
 };
 
-Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectedName){
+Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectedName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
     if (!_.isString(affectedName)) throw "Davout.ConditionObj.getModifierFor affectedName invalid parameter type";
 

@@ -60,5 +60,9 @@ Davout.Utils.assertTrueObject = function(parameter, throwMsg){
     if (!_.isObject(parameter)) throw throwMsg + " parameter: other";
 };
 
+Davout.Utils.contains = function(array, obj) {
+    return array.indexOf(obj) > -1;
+};
+
 //Utils
 

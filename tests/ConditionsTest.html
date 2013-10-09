@@ -22,19 +22,19 @@
             var tokenId = "1";
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
-            Davout.ConditionObj.addConditionTo(tokenId, "FatiguedI", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -2);
             equal(mock.logCallCount(), 1);
             equal(mock.sendChatCount(), 1);
-            equal(mock.getLogCall(0), "Added: condition FatiguedI to Orc");
-            equal(mock.getSendChat(0), "API:/w gm Condition FatiguedI was added to Orc");
+            equal(mock.getLogCall(0), "Added: condition Fatigued to Orc");
+            equal(mock.getSendChat(0), "API:/w gm Condition Fatigued was added to Orc");
 
-            Davout.ConditionObj.removeConditionFrom(tokenId, "FatiguedI");
+            Davout.ConditionObj.removeConditionFrom(tokenId, "Fatigued");
             equal(mock.logCallCount(), 2);
             equal(mock.sendChatCount(), 2);
-            equal(mock.getLogCall(1), "Removed: condition FatiguedI removed from Orc");
-            equal(mock.getSendChat(1), "API:/w gm Condition FatiguedI was removed from Orc");
+            equal(mock.getLogCall(1), "Removed: condition Fatigued removed from Orc");
+            equal(mock.getSendChat(1), "API:/w gm Condition Fatigued was removed from Orc");
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
         });
@@ -58,6 +58,36 @@
             equal(mock.getSendChat(1), "API:/w gm Condition Blinded was removed from Orc");
 
             equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
+        });
+
+        test("Stackable", function (){
+            var tokenId = "1";
+            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -4);
+            equal(mock.logCallCount(), 2);
+            equal(mock.sendChatCount(), 2);
+            equal(mock.getLogCall(0), "Added: condition Fatigued to Orc");
+            equal(mock.getSendChat(0), "API:/w gm Condition Fatigued was added to Orc");
+            equal(mock.getLogCall(1), "Added: condition Fatigued-II to Orc");
+            equal(mock.getSendChat(1), "API:/w gm Condition Fatigued was added to Orc causing condition: Fatigued-II");
+
+            Davout.ConditionObj.removeConditionFrom(tokenId, "Fatigued");
+            equal(mock.getLogCall(2), "Removed: condition Fatigued-II removed from Orc");
+            equal(mock.getSendChat(2), "API:/w gm Condition Fatigued-II was removed from Orc");
+        });
+
+        test("Prevent duplicate condition if not stackable.", function(){
+            var tokenId = "1";
+            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
+
+            equal(mock.logCallCount(), 1);
+            equal(mock.sendChatCount(), 2);
+            equal(mock.getLogCall(0), "Added: condition Blinded to Orc");
+            equal(mock.getSendChat(0), "API:/w gm Condition Blinded was added to Orc");
+            equal(mock.getSendChat(1), "API:/w gm Orc already has the non-stackable condition Blinded");
         });
     </script>
 </head>
