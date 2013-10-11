@@ -110,14 +110,21 @@
             equal(mock.getSendChat(1), "API:/w gm Orc already has the non-stackable condition Blinded");
         });
 
-        test("Remove fatigue condition on token with Unconscious condition will not reduce condition to Fatigued-IV", function(){
+        test("From last level of a stackable condition to a next condition", function(){
             var tokenId = "1";
 
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -8);
+
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -8);
+            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true)
+
             equal(mock.sendChatCount(), 5);
             equal(mock.logCallCount(), 5);
 
@@ -127,6 +134,10 @@
             equal(mock.getLogCall(1), "Added: condition Fatigued: 2 to Orc");
             equal(mock.getSendChat(2), "API:/w gm Condition Fatigued: 3 was added to Orc");
             equal(mock.getLogCall(2), "Added: condition Fatigued: 3 to Orc");
+            equal(mock.getSendChat(3), "API:/w gm Condition Fatigued: 4 was added to Orc");
+            equal(mock.getLogCall(3), "Added: condition Fatigued: 4 to Orc");
+            equal(mock.getSendChat(4), "API:/w gm Condition Unconscious was added to Orc");
+            equal(mock.getLogCall(4), "Added: condition Unconscious to Orc");
         });
     </script>
 </head>

@@ -1,5 +1,5 @@
 var condition;
-unconsciousEffect = new Davout.ConditionObj.Effect("Str", "", -2, false);
+unconsciousEffect = new Davout.ConditionObj.Effect("Craft", "Unconscious: Cannot perform craft skill.", 0, true);
 condition = new Davout.ConditionObj.Condition("Unconscious", new Array(unconsciousEffect));
 state.Davout.ConditionObj["Unconscious"] = condition;
 
