@@ -33,55 +33,42 @@ Davout.ConditionObj.TokenWithConditions = function (tokenName) {
 
 Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condition) {
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
-    if (Davout.Utils.contains(this.conditions, condition)) {
-        if (condition.nextConditionNameIfStackable != null) {
-            var nextCondition = state.Davout.ConditionObj[condition.nextConditionNameIfStackable];
-            this.conditions.push(nextCondition);
-            sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName + " causing condition: " + nextCondition.name);
-            log("Added: condition " + nextCondition.name + " to " + this.tokenName);
+    if (condition.maxStackSize > 1) {
+        var conditionCount = _.where(this.conditions, {name: condition.name}).length;
+        if (condition.maxStackSize > conditionCount) {
+            this.conditions.push(condition);
+            var displayCount = conditionCount + 1;
+            sendChat("API", "/w gm Condition " + condition.name + ": " + displayCount + " was added to " + this.tokenName);
+            log("Added: condition " + condition.name + ": " + displayCount + " to " + this.tokenName);
+        } else {
+            if (condition.nextConditionName != null) {
+                this.conditions.push(state.Davout.ConditionObj[condition.nextConditionName]);
+                sendChat("API", "/w gm Condition " + condition.nextConditionName + " was added to " + this.tokenName);
+                log("Added: condition " + condition.nextConditionName + " to " + this.tokenName);
+            } else {
+                sendChat("API", "/w gm " + this.tokenName + " already has reached the stack limit for " + condition.name);
+            }
+        }
+    } else {
+        if (!_.findWhere(this.conditions, {name: condition.name})) {
+            this.conditions.push(condition);
+            sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
+            log("Added: condition " + condition.name + " to " + this.tokenName);
         } else {
             sendChat("API", "/w gm " + this.tokenName + " already has the non-stackable condition " + condition.name);
         }
-    } else {
-        this.conditions.push(condition);
-        sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
-        log("Added: condition " + condition.name + " to " + this.tokenName);
     }
 };
 
 Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (condition) {
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.removeCondition condition");
-    var followedNextCondition = false;
     var index = this.conditions.indexOf(condition);
-    var gotoNextCondition = true;
-    var conditionNameRemoved;
     if (index > -1) {
-        console.log("condition = " + JSON.stringify(condition));
-        var workCondition = condition;
-        var nextCondition;
-        while (workCondition.nextConditionNameIfStackable != null && gotoNextCondition) {
-            nextCondition = state.Davout.ConditionObj[workCondition.nextConditionNameIfStackable];
-            if (nextCondition.isReversableByName) {
-                conditionNameRemoved = workCondition.name;
-                workCondition = nextCondition;
-                if (Davout.Utils.contains(this.conditions,nextCondition)) {
-                    followedNextCondition = true;
-                } else {
-                    gotoNextCondition = false;
-                }
-            }
-        }
-
-        if (followedNextCondition) {
-            this.conditions.splice(this.conditions.indexOf(workCondition), 1);
-        } else {
-            conditionNameRemoved = condition.name;
-            this.conditions.splice(index, 1);
-        }
-        sendChat("API", "/w gm Condition " + conditionNameRemoved + " was removed from " + this.tokenName);
-        log("Removed: condition " + conditionNameRemoved + " removed from " + this.tokenName);
+        this.conditions.splice(index, 1);
+        sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
+        log("Removed: condition " + condition.name + " removed from " + this.tokenName);
     } else {
-        sendChat("API", "Selected Token " + this.tokenName + " does not have condition: " + condition.name);
+        sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
     }
 };
 
@@ -109,15 +96,6 @@ Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affec
     return isProhibited;
 };
 
-Davout.ConditionObj.Condition = function (name, effects) {
-    if (!_.isString(name)) throw "Davout.ConditionObj.Condition name invalid parameter type";
-    if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
-    this.name = name;
-    this.effects = effects;
-    this.nextConditionNameIfStackable = null;
-    this.isReversableByName = false;
-};
-
 /**
  *
  * @param name                      Name of Condition
@@ -126,13 +104,17 @@ Davout.ConditionObj.Condition = function (name, effects) {
  * @param isReversableByName        If true then using initial condition word in remove command will "pop" the off the nextConditionNameIfStackable of the stack.
  * @constructor
  */
-Davout.ConditionObj.Condition = function (name, effects, nextConditionNameIfStackable, isReversableByName) {
+Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextCondition) {
     if (!_.isString(name)) throw "Davout.ConditionObj.Condition name invalid parameter type";
     if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
     this.name = name;
     this.effects = effects;
-    this.nextConditionNameIfStackable = nextConditionNameIfStackable;
-    this.isReversableByName = isReversableByName;
+    if (maxStackSize == undefined) {
+        this.maxStackSize = 1;
+    } else {
+        this.maxStackSize = maxStackSize;
+    }
+    this.nextConditionName = nextCondition;
 };
 
 Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
@@ -221,9 +203,9 @@ Davout.ConditionObj.addConditionTo = function addConditionTo(tokenId, conditionN
         tokenWithConditions.addCondition(condition);
         state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
     } else {
-        var tokenWithConditions = state.Davout.TokensWithConditionObj[tokenId];
-        tokenWithConditions.addCondition(condition);
-        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
+        state.Davout.TokensWithConditionObj[tokenId].addCondition(condition);
+//        tokenWithConditions.addCondition(condition);
+//        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
     }
 };
 
@@ -257,6 +239,21 @@ Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectedName) 
     return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectedName);
 };
 
+Davout.ConditionObj.listConditions = function listConditions(tokenId) {
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
+
+    if (state.Davout.TokensWithConditionObj == undefined) return "";
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
+
+    var conditions = state.Davout.TokensWithConditionObj[tokenId].conditions;
+    var str = "";
+    for (var i = 0; i < conditions.length; i++) {
+        str += conditions[i].name + "<br>";
+    }
+
+    return str;
+};
+
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
     var tokenObjR20;
     var tokenId;
@@ -274,7 +271,7 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
                         Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
                         break;
                     case "SHOW":
-                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions " + Davout.ConditionObj.getConditionsOnToken(tokenId));
+                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listConditions(tokenId));
                         break;
                 }
             }

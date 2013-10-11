@@ -28,16 +28,11 @@ DavoutActions.command._action = function (msg, actionName) {
         var tokenObjR20 = Davout.Utils.selectedToToken(msg.selected[0]);
         if (tokenObjR20) {
             var charId = Davout.Utils.tokenToCharId(tokenObjR20);
-            log("charId = " + charId);
-                log("tokenObjR20 = " + tokenObjR20);
             var actionObj = DavoutActions.actions[actionName];
             var actionStr = "%{" + actionObj.ability();
-            log("actionStr = " + actionStr);
             var actionStrReplacedName = actionStr.replace("@{Name}", tokenObjR20.get("name"));
-            log("actionStrReplacedName = " + actionStrReplacedName);
 
             //w gm @{Name} Fort-Save: [[floor(@{Con}/2-5)+@{Fortitude-Mod}+1d20]]
-            log("actionName = " + actionName);
         }
     } else {
         log(actionName + " is an unknown action");
