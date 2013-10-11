@@ -138,6 +138,9 @@
             equal(mock.getLogCall(3), "Added: condition Fatigued: 4 to Orc");
             equal(mock.getSendChat(4), "API:/w gm Condition Unconscious was added to Orc");
             equal(mock.getLogCall(4), "Added: condition Unconscious to Orc");
+
+            equal(Davout.ConditionObj.listConditions(tokenId), "Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
+
         });
     </script>
 </head>
