@@ -9,7 +9,7 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO display list of modifiers for each applicable condition for a given action/attribute.
+// TODO display list of notes for each applicable condition for a given action/attribute.
 // TODO action where character vs character ex: attack where each may have a condition.
 
 var Davout = Davout || {};
