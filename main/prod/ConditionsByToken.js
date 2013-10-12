@@ -16,7 +16,7 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO display list of modifiers & notes when action is executed.
+// TODO apply & display list of modifiers & notes when action is executed.
 // TODO action where character vs character ex: attack where each may have a condition.
 // TODO remove condition based on timer.
 
