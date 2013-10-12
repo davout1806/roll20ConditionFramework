@@ -73,7 +73,7 @@ on("ready", function () {
     addCommand.maxArgs = 1;
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
-    addCommand.syntax = "!DavoutAction action";
+    addCommand.syntax = "!action action";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
             DavoutActions.command._action(msg, args[0].value);
@@ -86,7 +86,7 @@ on("ready", function () {
     addCommand.maxArgs = 0;
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
-    addCommand.syntax = "!DavoutSetTarget";
+    addCommand.syntax = "!target";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
             DavoutActions.command._setTargets(msg.playerid, msg.selected);
