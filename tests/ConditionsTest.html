@@ -65,6 +65,7 @@
             equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
             Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
             equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true);
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Blinded: 0. Cannot perform craft skill.<br>");
 
             equal(mock.sendChatCount(), 1);
             equal(mock.logCallCount(), 1);
@@ -78,6 +79,7 @@
             equal(mock.getLogCall(1), "Removed: condition Blinded removed from Orc");
 
             equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "");
         });
 
         test("Stackable", function (){
@@ -141,7 +143,7 @@
 
             equal(Davout.ConditionObj.listAllConditions(tokenId), "Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
             equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Str"), "Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
-            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Unconscious: 0<br>");
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Unconscious: 0. Cannot perform craft skill.<br>");
         });
 
         test("Multiple conditions where effects combine", function(){

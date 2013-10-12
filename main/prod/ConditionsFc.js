@@ -8,7 +8,7 @@ var effects = new Array(
 condition = new Davout.ConditionObj.Condition("Baffled", effects);
 state.Davout.ConditionObj["Baffled"] = condition;
 
-condition = new Davout.ConditionObj.Condition("Blinded", new Array(new Davout.ConditionObj.Effect("Craft", "Blinded: Cannot perform craft skill.", 0, true)));
+condition = new Davout.ConditionObj.Condition("Blinded", new Array(new Davout.ConditionObj.Effect("Craft", "Cannot perform craft skill.", 0, true)));
 state.Davout.ConditionObj["Blinded"] = condition;
 
 effects = new Array(
@@ -24,7 +24,7 @@ effects = new Array(new Davout.ConditionObj.Effect("Str", "", -2, false));
 condition = new Davout.ConditionObj.Condition("Fatigued", effects, 4, "Unconscious");
 state.Davout.ConditionObj["Fatigued"] = condition;
 
-condition = new Davout.ConditionObj.Condition("Unconscious", new Array(new Davout.ConditionObj.Effect("Craft", "Unconscious: Cannot perform craft skill.", 0, true)));
+condition = new Davout.ConditionObj.Condition("Unconscious", new Array(new Davout.ConditionObj.Effect("Craft", "Cannot perform craft skill.", 0, true)));
 state.Davout.ConditionObj["Unconscious"] = condition;
 
 

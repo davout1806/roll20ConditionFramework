@@ -9,7 +9,7 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO display list of notes for each applicable condition for a given action/attribute.
+// TODO display list of modifiers & notes when action is executed.
 // TODO action where character vs character ex: attack where each may have a condition.
 
 var Davout = Davout || {};
@@ -101,7 +101,12 @@ Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = func
     for (var i = 0; i < this.conditions.length; i++) {
         if (this.conditions[i].getAffects(affectable) != undefined) {
             if (this.conditions[i].getAffects(affectable).length > 0) {
-                str += this.conditions[i].name + ": " + this.conditions[i].getModifierFor(affectable) + "<br>";
+                str += this.conditions[i].name + ": " + this.conditions[i].getModifierFor(affectable);
+                var notes = this.conditions[i].getNotes(affectable);
+                if (notes != undefined && notes != ""){
+                    str += ". " + notes;
+                }
+                str += "<br>";
             }
         }
     }
@@ -145,11 +150,25 @@ Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
     if (effectsAffecting != undefined) {
         for (var i = 0; i < effectsAffecting.length; i++) {
             if (effectsAffecting[i].hasModifier) {
-                modifier += effectsAffecting[i].getModifierFor(affectable);
+                modifier += effectsAffecting[i].modifier;
             }
         }
     }
     return modifier;
+};
+
+Davout.ConditionObj.Condition.prototype.getNotes = function (affectable) {
+    if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getNotes affectable invalid parameter type";
+    var notes = "";
+    var effectsAffecting = this.effects[affectable];
+    if (effectsAffecting != undefined) {
+        for (var i = 0; i < effectsAffecting.length; i++) {
+            if (effectsAffecting[i].notes != undefined && effectsAffecting[i].notes != "") {
+                notes += effectsAffecting[i].notes;
+            }
+        }
+    }
+    return notes;
 };
 
 Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
@@ -170,13 +189,13 @@ Davout.ConditionObj.Condition.prototype.getAffects = function (affectable) {
     return this.effects[affectable];
 };
 
-Davout.ConditionObj.Effect = function (affectable, note, modifier, prohibitive) {
+Davout.ConditionObj.Effect = function (affectable, notes, modifier, prohibitive) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
 
     this.modifier = NaN;
     this.hasModifier = false;
     this.affectable = affectable;
-    this.note = note;
+    this.notes = notes;
     this.prohibitive = prohibitive;
 
     if (!prohibitive) {
@@ -187,13 +206,13 @@ Davout.ConditionObj.Effect = function (affectable, note, modifier, prohibitive) 
     }
 };
 
-Davout.ConditionObj.Effect.prototype.getModifierFor = function (affectable) {
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
-    if (this.affectable == affectable) {
-        return this.modifier;
-    }
-    return 0;
-};
+//Davout.ConditionObj.Effect.prototype.getModifierFor = function (affectable) {
+//    if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
+//    if (this.affectable == affectable) {
+//        return this.modifier;
+//    }
+//    return 0;
+//};
 
 Davout.ConditionObj.Effect.prototype.isProhibited = function (affectable) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.isProhibited affectable invalid parameter type";
