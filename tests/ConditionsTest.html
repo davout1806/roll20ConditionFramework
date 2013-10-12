@@ -144,13 +144,13 @@
             equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Unconscious: 0<br>");
         });
 
-//        test("Multiple conditions where effects combine", function(){
-//            var tokenId = "1";
-//            Davout.ConditionObj.addConditionTo(tokenId, "Baffled", "Orc");
-//            Davout.ConditionObj.addConditionTo(tokenId, "Entangled", "Orc");
-//
-//            equal(Davout.ConditionObj.getModifierFor(tokenId, "Tumble"), -6);
-//        });
+        test("Multiple conditions where effects combine", function(){
+            var tokenId = "1";
+            Davout.ConditionObj.addConditionTo(tokenId, "Baffled", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "Entangled", "Orc");
+
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "Tumble"), -6);
+        });
     </script>
 </head>
 <body>
