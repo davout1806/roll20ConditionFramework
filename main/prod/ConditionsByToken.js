@@ -6,11 +6,10 @@
  *
  */
 
-// TODO test char has Unconscious condition, removing Fatigued does not drop condition to Fatigued-IV
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO display list of modifiers for each applicable condition.
+// TODO display list of modifiers for each applicable condition for a given action/attribute.
 // TODO action where character vs character ex: attack where each may have a condition.
 
 var Davout = Davout || {};
@@ -96,6 +95,20 @@ Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affec
     return isProhibited;
 };
 
+Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = function (affectable) {
+    var str = "";
+
+    for (var i = 0; i < this.conditions.length; i++) {
+        if (this.conditions[i].getAffects(affectable) != undefined) {
+            if (this.conditions[i].getAffects(affectable).length > 0) {
+                str += this.conditions[i].name + ": " + this.conditions[i].getModifierFor(affectable) + "<br>";
+            }
+        }
+    }
+
+    return str;
+};
+
 /**
  *
  * @param name                      Name of Condition
@@ -104,25 +117,36 @@ Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affec
  * @param isReversableByName        If true then using initial condition word in remove command will "pop" the off the nextConditionNameIfStackable of the stack.
  * @constructor
  */
-Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextCondition) {
+Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextConditionName) {
     if (!_.isString(name)) throw "Davout.ConditionObj.Condition name invalid parameter type";
     if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
     this.name = name;
-    this.effects = effects;
     if (maxStackSize == undefined) {
         this.maxStackSize = 1;
     } else {
         this.maxStackSize = maxStackSize;
     }
-    this.nextConditionName = nextCondition;
+    this.nextConditionName = nextConditionName;
+
+    this.effects = {};
+    for (var i = 0; i < effects.length; i++) {
+        var affectable = effects[i].affectable;
+        if (this.effects[affectable] == undefined) {
+            this.effects[affectable] = [];
+        }
+        this.effects[affectable].push(effects[i]);
+    }
 };
 
 Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
     var modifier = 0;
-    for (var i = 0; i < this.effects.length; i++) {
-        if (this.effects[i].hasModifier) {
-            modifier += this.effects[i].getModifierFor(affectable);
+    var effectsAffecting = this.effects[affectable];
+    if (effectsAffecting != undefined) {
+        for (var i = 0; i < effectsAffecting.length; i++) {
+            if (effectsAffecting[i].hasModifier) {
+                modifier += effectsAffecting[i].getModifierFor(affectable);
+            }
         }
     }
     return modifier;
@@ -130,9 +154,10 @@ Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
 
 Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
     var isProhibited = false;
-    if (this.effects != undefined) {
-        for (var i = 0; i < this.effects.length && !isProhibited; i++) {
-            if (this.effects[i].isProhibited(affectable)) {
+    var effectsAffecting = this.effects[affectable];
+    if (effectsAffecting != undefined) {
+        for (var i = 0; i < effectsAffecting.length && !isProhibited; i++) {
+            if (effectsAffecting[i].isProhibited(affectable)) {
                 isProhibited = true;
             }
         }
@@ -141,10 +166,15 @@ Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
     return isProhibited;
 };
 
+Davout.ConditionObj.Condition.prototype.getAffects = function (affectable) {
+    return this.effects[affectable];
+};
+
 Davout.ConditionObj.Effect = function (affectable, note, modifier, prohibitive) {
     if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
 
-    this.modifier = false;
+    this.modifier = NaN;
+    this.hasModifier = false;
     this.affectable = affectable;
     this.note = note;
     this.prohibitive = prohibitive;
@@ -153,9 +183,6 @@ Davout.ConditionObj.Effect = function (affectable, note, modifier, prohibitive) 
         if (modifier != null) {
             this.modifier = modifier;
             this.hasModifier = true;
-        } else {
-            this.modifier = NaN;
-            this.hasModifier = false;
         }
     }
 };
@@ -239,7 +266,16 @@ Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectedName) 
     return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectedName);
 };
 
-Davout.ConditionObj.listConditions = function listConditions(tokenId) {
+Davout.ConditionObj.listConditionsAffecting = function listConditionsAffecting(tokenId, affectableName) {
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
+
+    if (state.Davout.TokensWithConditionObj == undefined) return "";
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
+
+    return state.Davout.TokensWithConditionObj[tokenId].listConditionsAffecting(affectableName);
+};
+
+Davout.ConditionObj.listAllConditions = function listAllConditions(tokenId) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
 
     if (state.Davout.TokensWithConditionObj == undefined) return "";
@@ -271,7 +307,7 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
                         Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
                         break;
                     case "SHOW":
-                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listConditions(tokenId));
+                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
                         break;
                 }
             }

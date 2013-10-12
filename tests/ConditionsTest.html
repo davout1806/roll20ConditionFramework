@@ -123,7 +123,7 @@
             Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
 
             equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -8);
-            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true)
+            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true);
 
             equal(mock.sendChatCount(), 5);
             equal(mock.logCallCount(), 5);
@@ -139,9 +139,18 @@
             equal(mock.getSendChat(4), "API:/w gm Condition Unconscious was added to Orc");
             equal(mock.getLogCall(4), "Added: condition Unconscious to Orc");
 
-            equal(Davout.ConditionObj.listConditions(tokenId), "Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
-
+            equal(Davout.ConditionObj.listAllConditions(tokenId), "Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Str"), "Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Unconscious: 0<br>");
         });
+
+//        test("Multiple conditions where effects combine", function(){
+//            var tokenId = "1";
+//            Davout.ConditionObj.addConditionTo(tokenId, "Baffled", "Orc");
+//            Davout.ConditionObj.addConditionTo(tokenId, "Entangled", "Orc");
+//
+//            equal(Davout.ConditionObj.getModifierFor(tokenId, "Tumble"), -6);
+//        });
     </script>
 </head>
 <body>
