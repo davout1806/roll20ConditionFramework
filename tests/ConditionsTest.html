@@ -21,31 +21,31 @@
         test("Test: modifier with add & remove condition", function () {
             var tokenId = "1";
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), 0);
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -2);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), -2);
             equal(mock.sendChatCount(), 1);
             equal(mock.logCallCount(), 1);
             equal(mock.getSendChat(0), "API:/w gm Condition Fatigued: 1 was added to Orc");
             equal(mock.getLogCall(0), "Added: condition Fatigued: 1 to Orc");
 
-            Davout.ConditionObj.removeConditionFrom(tokenId, "Fatigued");
+            Davout.ConditionObj.removeConditionFrom(tokenId, "fatigued");
             equal(mock.sendChatCount(), 2);
             equal(mock.logCallCount(), 2);
             equal(mock.getSendChat(1), "API:/w gm Condition Fatigued was removed from Orc");
             equal(mock.getLogCall(1), "Removed: condition Fatigued removed from Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), 0);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), 0);
         });
 
         test("Test: add, add, remove, add", function () {
             var tokenId = "1";
 
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.removeConditionFrom(tokenId, "Fatigued");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.removeConditionFrom(tokenId, "fatigued");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
 
             equal(mock.sendChatCount(), 4);
             equal(mock.logCallCount(), 4);
@@ -62,32 +62,32 @@
         test("Prohibited action+condition combo", function () {
             var tokenId = "1";
 
-            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
-            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
-            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true);
-            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Blinded: 0. Cannot perform craft skill.<br>");
+            equal(Davout.ConditionObj.isProhibited(tokenId, "improvise"), false);
+            Davout.ConditionObj.addConditionTo(tokenId, "blinded", "Orc");
+            equal(Davout.ConditionObj.isProhibited(tokenId, "improvise"), true);
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "improvise"), "Blinded: 0. Cannot perform craft skill.<br>");
 
             equal(mock.sendChatCount(), 1);
             equal(mock.logCallCount(), 1);
             equal(mock.getSendChat(0), "API:/w gm Condition Blinded was added to Orc");
             equal(mock.getLogCall(0), "Added: condition Blinded to Orc");
 
-            Davout.ConditionObj.removeConditionFrom(tokenId, "Blinded");
+            Davout.ConditionObj.removeConditionFrom(tokenId, "blinded");
             equal(mock.sendChatCount(), 2);
             equal(mock.logCallCount(), 2);
             equal(mock.getSendChat(1), "API:/w gm Condition Blinded was removed from Orc");
             equal(mock.getLogCall(1), "Removed: condition Blinded removed from Orc");
 
-            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), false);
-            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "");
+            equal(Davout.ConditionObj.isProhibited(tokenId, "improvise"), false);
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "improvise"), "");
         });
 
         test("Stackable", function (){
             var tokenId = "1";
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -4);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), -4);
             equal(mock.sendChatCount(), 2);
             equal(mock.logCallCount(), 2);
             equal(mock.getSendChat(0), "API:/w gm Condition Fatigued: 1 was added to Orc");
@@ -95,15 +95,15 @@
             equal(mock.getSendChat(1), "API:/w gm Condition Fatigued: 2 was added to Orc");
             equal(mock.getLogCall(1), "Added: condition Fatigued: 2 to Orc");
 
-            Davout.ConditionObj.removeConditionFrom(tokenId, "Fatigued");
+            Davout.ConditionObj.removeConditionFrom(tokenId, "fatigued");
             equal(mock.getSendChat(2), "API:/w gm Condition Fatigued was removed from Orc");
             equal(mock.getLogCall(2), "Removed: condition Fatigued removed from Orc");
         });
 
         test("Prevent duplicate condition if not stackable.", function(){
             var tokenId = "1";
-            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Blinded", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "blinded", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "blinded", "Orc");
 
             equal(mock.sendChatCount(), 2);
             equal(mock.logCallCount(), 1);
@@ -115,17 +115,17 @@
         test("From last level of a stackable condition to a next condition", function(){
             var tokenId = "1";
 
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -8);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), -8);
 
-            Davout.ConditionObj.addConditionTo(tokenId, "Fatigued", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "fatigued", "Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Str"), -8);
-            equal(Davout.ConditionObj.isProhibited(tokenId, "Craft"), true);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "str"), -8);
+            equal(Davout.ConditionObj.isProhibited(tokenId, "improvise"), true);
 
             equal(mock.sendChatCount(), 5);
             equal(mock.logCallCount(), 5);
@@ -142,16 +142,16 @@
             equal(mock.getLogCall(4), "Added: condition Unconscious to Orc");
 
             equal(Davout.ConditionObj.listAllConditions(tokenId), "Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
-            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Str"), "Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
-            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "Craft"), "Unconscious: 0. Cannot perform craft skill.<br>");
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "str"), "Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
+            equal(Davout.ConditionObj.listConditionsAffecting(tokenId, "improvise"), "Unconscious: 0. Cannot perform craft skill.<br>");
         });
 
         test("Multiple conditions where effects combine", function(){
             var tokenId = "1";
-            Davout.ConditionObj.addConditionTo(tokenId, "Baffled", "Orc");
-            Davout.ConditionObj.addConditionTo(tokenId, "Entangled", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "baffled", "Orc");
+            Davout.ConditionObj.addConditionTo(tokenId, "entangled", "Orc");
 
-            equal(Davout.ConditionObj.getModifierFor(tokenId, "Tumble"), -6);
+            equal(Davout.ConditionObj.getModifierFor(tokenId, "tumble"), -6);
         });
     </script>
 </head>

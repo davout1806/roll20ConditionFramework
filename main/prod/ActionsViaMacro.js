@@ -1,38 +1,24 @@
-/*
- Required design specifications:
- 1. Allow multiple tokens to use the same character.
- 2. Allow conditions to be assigned individually to tokens even if they share the same character.
- Desired design specifications:
- 1. Quickly perform action of a token, preferably without having to open character sheet (ALT+double click)
- */
-
 var DavoutActions = DavoutActions || [];
 DavoutActions.command = DavoutActions.command || {};
 
 state.Davout.TargetsOfAction = state.Davout.TargetsOfAction || [];
 
 DavoutActions.actions = DavoutActions.actions || [];
-DavoutActions.actions["FortSave"] = {
-    ability: "Fort-Save"
-//    functionName: DavoutSheet.createSaveAction,
-//    parameter: DavoutSheet.saves["fort"]
-};
+DavoutActions.actions["fort-save"] = { ability: "Fort-Save" };
+
+DavoutActions.actions["improvise"] = { ability: "Crafting" };
 
 DavoutActions.command._action = function (msg, actionName) {
 
-    if (DavoutActions.actions[actionName] !== undefined) {
+    if (DavoutActions.actions[actionName] != undefined) {
         var actionObj = DavoutActions.actions[actionName];
-//        log("chat= " + "%{selected|" + actionObj.ability + "}")
-//        sendChat("API", "/w %{selected|" + actionObj.ability + "}");
 
-        var tokenObjR20 = Davout.Utils.selectedToToken(msg.selected[0]);
+        var tokenObjR20 = Davout.Utils.selectedToTokenObj(msg.selected[0]);
         if (tokenObjR20) {
-            var charId = Davout.Utils.tokenToCharId(tokenObjR20);
+            var charObj = Davout.Utils.tokenObjToCharObj(tokenObjR20);
             var actionObj = DavoutActions.actions[actionName];
-            var actionStr = "%{" + actionObj.ability();
-            var actionStrReplacedName = actionStr.replace("@{Name}", tokenObjR20.get("name"));
-
-            //w gm @{Name} Fort-Save: [[floor(@{Con}/2-5)+@{Fortitude-Mod}+1d20]]
+            var actionStr = "%{" + charObj.get("name") + "|" + actionObj.ability + "}";
+            sendChat("API", "/w gm " + actionStr);
         }
     } else {
         log(actionName + " is an unknown action");
@@ -79,7 +65,7 @@ on("ready", function () {
             DavoutActions.command._action(msg, args[0].value);
         }
     };
-    community.command.add("DavoutAction", addCommand);
+    community.command.add("action", addCommand);
 
     var addCommand = {};
     addCommand.minArgs = 0;
@@ -92,7 +78,7 @@ on("ready", function () {
             DavoutActions.command._setTargets(msg.playerid, msg.selected);
         }
     };
-    community.command.add("DavoutSetTarget", addCommand);
+    community.command.add("target", addCommand);
 });
 
 // ActionsViaMacro

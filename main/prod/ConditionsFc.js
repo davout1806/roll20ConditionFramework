@@ -1,31 +1,31 @@
 var condition;
 var effects = new Array(
-    new Davout.ConditionObj.Effect("Balance", "", -2, false)
-    , new Davout.ConditionObj.Effect("Break-Fall", "", -2, false)
-    , new Davout.ConditionObj.Effect("Jump", "", -2, false)
-    , new Davout.ConditionObj.Effect("Tumble", "", -2, false)
+    new Davout.ConditionObj.Effect("balance", "", -2, false)
+    , new Davout.ConditionObj.Effect("break-fall", "", -2, false)
+    , new Davout.ConditionObj.Effect("jump", "", -2, false)
+    , new Davout.ConditionObj.Effect("tumble", "", -2, false)
 );
-condition = new Davout.ConditionObj.Condition("Baffled", effects);
-state.Davout.ConditionObj["Baffled"] = condition;
+condition = new Davout.ConditionObj.Condition("baffled", effects);
+state.Davout.ConditionObj["baffled"] = condition;
 
-condition = new Davout.ConditionObj.Condition("Blinded", new Array(new Davout.ConditionObj.Effect("Craft", "Cannot perform craft skill.", 0, true)));
-state.Davout.ConditionObj["Blinded"] = condition;
+condition = new Davout.ConditionObj.Condition("blinded", new Array(new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)));
+state.Davout.ConditionObj["blinded"] = condition;
 
 effects = new Array(
-    new Davout.ConditionObj.Effect("Balance", "", -4, false)
-    , new Davout.ConditionObj.Effect("Break-Fall", "", -4, false)
-    , new Davout.ConditionObj.Effect("Jump", "", -4, false)
-    , new Davout.ConditionObj.Effect("Tumble", "", -4, false)
+    new Davout.ConditionObj.Effect("balance", "", -4, false)
+    , new Davout.ConditionObj.Effect("break-fall", "", -4, false)
+    , new Davout.ConditionObj.Effect("jump", "", -4, false)
+    , new Davout.ConditionObj.Effect("tumble", "", -4, false)
 );
-condition = new Davout.ConditionObj.Condition("Entangled", effects);
-state.Davout.ConditionObj["Entangled"] = condition;
+condition = new Davout.ConditionObj.Condition("entangled", effects);
+state.Davout.ConditionObj["entangled"] = condition;
 
-effects = new Array(new Davout.ConditionObj.Effect("Str", "", -2, false));
-condition = new Davout.ConditionObj.Condition("Fatigued", effects, 4, "Unconscious");
-state.Davout.ConditionObj["Fatigued"] = condition;
+effects = new Array(new Davout.ConditionObj.Effect("str", "", -2, false));
+condition = new Davout.ConditionObj.Condition("fatigued", effects, 4, "unconscious");
+state.Davout.ConditionObj["fatigued"] = condition;
 
-condition = new Davout.ConditionObj.Condition("Unconscious", new Array(new Davout.ConditionObj.Effect("Craft", "Cannot perform craft skill.", 0, true)));
-state.Davout.ConditionObj["Unconscious"] = condition;
+condition = new Davout.ConditionObj.Condition("unconscious", new Array(new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)));
+state.Davout.ConditionObj["unconscious"] = condition;
 
 
 // ConditionsFc

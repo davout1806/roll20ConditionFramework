@@ -267,7 +267,7 @@ community.command.parse = function(message, roll20Object) {
             log("Command is there but has no function to handle it.");
         }
     } else {
-        community.command.whisper(who, "Unknown Command");
+        community.command.whisper("GM", "Unknown Command");
     }
 };
 

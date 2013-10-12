@@ -10,7 +10,7 @@ Davout.Utils.adjustAttributeForChar = function(characterId, attributeName, modif
     attrib.set("current", parseInt(attrib.get("current")) + modifier);
 };
 
-Davout.Utils.selectedToToken = function (singleSelectedObject){
+Davout.Utils.selectedToTokenObj = function (singleSelectedObject){
     if (singleSelectedObject == undefined) return false;
 
     var tokenObjR20 = getObj("graphic", singleSelectedObject._id);
@@ -19,13 +19,13 @@ Davout.Utils.selectedToToken = function (singleSelectedObject){
     return tokenObjR20;
 };
 
-Davout.Utils.tokenToCharId = function (tokenObject){
+Davout.Utils.tokenObjToCharObj = function (tokenObject){
     if (tokenObject == undefined) return false;
 
     var charId = tokenObject.get("represents");
     if (charId == undefined) return false;
     if (charId == "") return false;
-    return charId;
+    return getObj("character", charId);
 };
 
 Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
@@ -62,6 +62,10 @@ Davout.Utils.assertTrueObject = function(parameter, throwMsg){
 
 Davout.Utils.contains = function(array, obj) {
     return array.indexOf(obj) > -1;
+};
+
+Davout.Utils.capitaliseFirstLetter = function(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 //Utils

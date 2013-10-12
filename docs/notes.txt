@@ -1,0 +1,4 @@
+Error:
+{"who":"error","type":"error","content":"Unable to find a player or character with name: undefined"}
+Problem:
+CommandHandler: Line 289 who is undefined. community.command.whisper(who, "Unknown Command");

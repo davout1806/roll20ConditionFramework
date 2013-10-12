@@ -1,4 +1,11 @@
 /**
+    Required design specifications:
+    1. Allow multiple tokens to use the same character.
+    2. Allow conditions to be assigned individually to tokens even if they share the same character.
+
+    Desired design specifications:
+    1. Quickly perform action of a token, preferably without having to open character sheet (ALT+double click)
+
  * state.Davout.TokensWithConditionObj[id] where id is token id
  *
  * Since tokens might be associated to 0, 1, or more characters, it is not possible to adjust the ratings.
@@ -11,6 +18,7 @@
 // TODO locational conditions
 // TODO display list of modifiers & notes when action is executed.
 // TODO action where character vs character ex: attack where each may have a condition.
+// TODO remove condition based on timer.
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
@@ -48,26 +56,26 @@ Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condi
         if (condition.maxStackSize > conditionCount) {
             this.conditions.push(condition);
             var displayCount = conditionCount + 1;
-            sendChat("API", "/w gm Condition " + condition.name + ": " + displayCount + " was added to " + this.tokenName);
-            log("Added: condition " + condition.name + ": " + displayCount + " to " + this.tokenName);
+            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " was added to " + this.tokenName);
+            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " to " + this.tokenName);
         } else { // if max level of condition has been reached.
             // if the max level of condition causes a different condition to be applied.
             if (condition.nextConditionName != null) {
                 this.conditions.push(state.Davout.ConditionObj[condition.nextConditionName]);
-                sendChat("API", "/w gm Condition " + condition.nextConditionName + " was added to " + this.tokenName);
-                log("Added: condition " + condition.nextConditionName + " to " + this.tokenName);
+                sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " was added to " + this.tokenName);
+                log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " to " + this.tokenName);
             } else {
-                sendChat("API", "/w gm " + this.tokenName + " already has reached the stack limit for " + condition.name);
+                sendChat("API", "/w gm " + this.tokenName + " already has reached the stack limit for " + Davout.Utils.capitaliseFirstLetter(condition.name));
             }
         }
     } else {
         // if token does not already have condition
         if (!_.findWhere(this.conditions, {name: condition.name})) {
             this.conditions.push(condition);
-            sendChat("API", "/w gm Condition " + condition.name + " was added to " + this.tokenName);
-            log("Added: condition " + condition.name + " to " + this.tokenName);
+            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was added to " + this.tokenName);
+            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " to " + this.tokenName);
         } else {
-            sendChat("API", "/w gm " + this.tokenName + " already has the non-stackable condition " + condition.name);
+            sendChat("API", "/w gm " + this.tokenName + " already has the non-stackable condition " + Davout.Utils.capitaliseFirstLetter(condition.name));
         }
     }
 };
@@ -81,10 +89,10 @@ Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (co
     var index = this.conditions.indexOf(condition);
     if (index > -1) {
         this.conditions.splice(index, 1);
-        sendChat("API", "/w gm Condition " + condition.name + " was removed from " + this.tokenName);
-        log("Removed: condition " + condition.name + " removed from " + this.tokenName);
+        sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was removed from " + this.tokenName);
+        log("Removed: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " removed from " + this.tokenName);
     } else {
-        sendChat("API", "Selected Token " + condition.name + " does not have condition: " + condition.name);
+        sendChat("API", "Selected Token " + Davout.Utils.capitaliseFirstLetter(condition.name) + " does not have condition: " + Davout.Utils.capitaliseFirstLetter(condition.name));
     }
 };
 
@@ -132,7 +140,7 @@ Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = func
     for (var i = 0; i < this.conditions.length; i++) {
         if (this.conditions[i].getAffects(affectable) != undefined) {
             if (this.conditions[i].getAffects(affectable).length > 0) {
-                str += this.conditions[i].name + ": " + this.conditions[i].getModifierFor(affectable);
+                str += Davout.Utils.capitaliseFirstLetter(this.conditions[i].name) + ": " + this.conditions[i].getModifierFor(affectable);
                 var notes = this.conditions[i].getNotes(affectable);
                 if (notes != undefined && notes != ""){
                     str += ". " + notes;
@@ -385,7 +393,7 @@ Davout.ConditionObj.listAllConditions = function listAllConditions(tokenId) {
     var conditions = state.Davout.TokensWithConditionObj[tokenId].conditions;
     var str = "";
     for (var i = 0; i < conditions.length; i++) {
-        str += conditions[i].name + "<br>";
+        str += Davout.Utils.capitaliseFirstLetter(conditions[i].name) + "<br>";
     }
 
     return str;
