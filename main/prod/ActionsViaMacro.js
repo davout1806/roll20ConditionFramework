@@ -6,7 +6,6 @@ state.Davout.TargetsOfAction = state.Davout.TargetsOfAction || [];
 DavoutActions.command._action = function (msg, actionName) {
     if (DavoutActions.actions[actionName] != undefined) {
         var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
-        console.log("tokenObjR20 = " + JSON.stringify(tokenObjR20));
         if (!Davout.ConditionObj.isProhibited(tokenObjR20.get("id"), actionName)) {
             if (tokenObjR20) {
                 var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
