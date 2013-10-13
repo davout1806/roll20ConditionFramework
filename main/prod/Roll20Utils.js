@@ -27,3 +27,6 @@ Davout.R20Utils.tokenObjToCharObj = function (tokenObject){
     if (charId == "") return false;
     return getObj("character", charId);
 };
+
+// Roll20Utils
+
