@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Fc Conditions By Token Test</title>
+    <link rel="stylesheet" href="lib/qunit.css">
+    <script src="lib/qunit.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="../main/testing/Roll20Mock.js"></script>
+    <script src="../main/prod/Utils.js"></script>
+    <script src="../main/prod/ConditionsByToken.js"></script>
+    <script src="../main/prod/ActionsViaMacro.js"></script>
+    <script src="../main/prod/ActionsFc.js"></script>
+    <script src="../main/prod/ConditionsFc.js"></script>
+    <script>
+        module ("Actions",{
+            setup: function() {
+                state.Davout.TokensWithConditionObj = {};
+                mock.clearCalls();
+            }
+        });
+        test("Prevent action execution based on prohibited condition", function(){
+            var tokenId = "1";
+            var charId = "c1";
+
+            var mockToken = new MockToken(tokenId, "Orc", charId);
+            var mockCharacter = new MockCharacter("Orc (Char)");
+            var mockMessage = new MockMessage("", "", new Array(mockToken));
+            Davout.R20Utils.selectedToTokenObjReturn = mockToken;
+            Davout.R20Utils.tokenObjToCharObjReturn = mockCharacter
+
+            DavoutActions.command._action(mockMessage, "improvise");
+
+            equal(mock.sendChatCount(), 1);
+            equal(mock.logCallCount(), 0);
+            equal(mock.getSendChat(0), "API:/w gm %{Orc (Char)|Crafting}");
+
+            Davout.ConditionObj.addConditionTo(tokenId, "blinded", "Orc");
+            DavoutActions.command._action(mockMessage, "improvise");
+
+            equal(mock.sendChatCount(), 3);
+            equal(mock.logCallCount(), 1);
+            equal(mock.getSendChat(1), "API:/w gm Condition Blinded was added to Orc");
+            equal(mock.getSendChat(2), "API:/w gm Orc is prohibited from performing Improvise.<br>Blinded: 0. Cannot perform craft skill.<br>");
+            equal(mock.getLogCall(0), "Added: condition Blinded to Orc");
+
+            Davout.ConditionObj.removeConditionFrom(tokenId, "blinded");
+            DavoutActions.command._action(mockMessage, "improvise");
+
+            equal(mock.sendChatCount(), 5);
+            equal(mock.logCallCount(), 2);
+            equal(mock.getSendChat(3), "API:/w gm Condition Blinded was removed from Orc");
+            equal(mock.getSendChat(4), "API:/w gm %{Orc (Char)|Crafting}");
+            equal(mock.getLogCall(1), "Removed: condition Blinded removed from Orc");
+
+        });
+    </script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+
+</div>
+</body>
+</html>

@@ -3,26 +3,25 @@ DavoutActions.command = DavoutActions.command || {};
 
 state.Davout.TargetsOfAction = state.Davout.TargetsOfAction || [];
 
-DavoutActions.actions = DavoutActions.actions || [];
-DavoutActions.actions["fort-save"] = { ability: "Fort-Save" };
-
-DavoutActions.actions["improvise"] = { ability: "Crafting" };
-
 DavoutActions.command._action = function (msg, actionName) {
-
     if (DavoutActions.actions[actionName] != undefined) {
-        var actionObj = DavoutActions.actions[actionName];
-
-        var tokenObjR20 = Davout.Utils.selectedToTokenObj(msg.selected[0]);
-        if (tokenObjR20) {
-            var charObj = Davout.Utils.tokenObjToCharObj(tokenObjR20);
-            var actionObj = DavoutActions.actions[actionName];
-            var actionStr = "%{" + charObj.get("name") + "|" + actionObj.ability + "}";
-            sendChat("API", "/w gm " + actionStr);
+        var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
+        console.log("tokenObjR20 = " + JSON.stringify(tokenObjR20));
+        if (!Davout.ConditionObj.isProhibited(tokenObjR20.get("id"), actionName)) {
+            if (tokenObjR20) {
+                var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
+                var actionObj = DavoutActions.actions[actionName];
+                var actionStr = "%{" + charObj.get("name") + "|" + actionObj.ability + "}";
+                sendChat("API", "/w gm " + actionStr);
+            }
+        } else {
+            sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
+                + Davout.Utils.capitaliseFirstLetter(actionName) + ".<br>"
+                + Davout.ConditionObj.listConditionsAffecting(tokenObjR20.get("id"), actionName));
         }
     } else {
         log(actionName + " is an unknown action");
-        sendChat("API", "/w gm " + actionName + " is an unknown action");
+        sendChat("API", "/w gm " + Davout.Utils.capitaliseFirstLetter(actionName) + " is an unknown action");
     }
 };
 
