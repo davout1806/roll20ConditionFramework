@@ -80,6 +80,14 @@ on("ready", function () {
         log("You must have Davout.Utils installed in a script tab before the tab this script is in to use.");
         throw "Can't find Davout.Utils!";
     }
+    if (Davout.R20Utils == undefined) {
+        log("You must have Davout.R20Utils installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Davout.R20Utils!";
+    }
+    if (Davout.ConditionObj == undefined) {
+        log("You must have Davout.ConditionObj installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Davout.ConditionObj!";
+    }
 
     var addCommand = {};
     addCommand.minArgs = 1;
