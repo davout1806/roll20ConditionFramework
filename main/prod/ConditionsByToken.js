@@ -297,6 +297,7 @@ Davout.ConditionObj.onTokenDestroyedEvent = function () {
  * @param conditionName
  * @param tokenName
  */
+// TODO remove tokenName use find + tokenId
 Davout.ConditionObj.addConditionTo = function addConditionTo(tokenId, conditionName, tokenName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.addConditionTo tokenId invalid parameter type";
     if (!_.isString(conditionName)) throw "Davout.ConditionObj.addConditionTo conditionName invalid parameter type";

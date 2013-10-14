@@ -1,17 +1,44 @@
-var DavoutActions = DavoutActions || [];
-DavoutActions.command = DavoutActions.command || {};
+var Davout = Davout || {};
+Davout.Actions = Davout.Actions || {};
+Davout.Actions.command = Davout.Actions.command || {};
 
+state.Davout = state.Davout || {};
+state.Davout.ActionObjs = state.Davout.ActionObjs || {};
 state.Davout.TargetsOfAction = state.Davout.TargetsOfAction || [];
 
-DavoutActions.command._action = function (msg, actionName) {
-    if (DavoutActions.actions[actionName] != undefined) {
+Davout.Actions.Action = function (actionName, attribNameOnSheet, baseModNameOnSheet, doesApcPenApply) {
+    this.actionName = actionName;
+    this.chShAttributeName = attribNameOnSheet;
+    this.chShbaseModName = baseModNameOnSheet;
+    this.chShAcpName = "AC-Penalty";
+    this.doesApcPenApply = doesApcPenApply;
+};
+
+Davout.Actions.Action.prototype.execFunc = function (charObj, modifier) {
+    var attributeSheetObj = findObjs({ _type: 'attribute', name: this.chShAttributeName, _characterid: charObj.get("id") })[0];
+    var baseModSheetObj = findObjs({ _type: 'attribute', name: this.chShbaseModName, _characterid: charObj.get("id") })[0];
+
+    var saveAction = "/w gm " + charObj.get("name") + " ";
+    saveAction += this.actionName;
+    saveAction += ": [[floor(" + attributeSheetObj.get("current") + "/2-5)+";
+    saveAction += baseModSheetObj.get("current") + "+ 1d20+ ";
+    saveAction += modifier;
+    if (this.doesApcPenApply) {
+        var acpSheetObj = findObjs({ _type: 'attribute', name: this.chShAcpName, _characterid: charObj.get("id") })[0];
+        saveAction += " - " + acpSheetObj.get("current");
+    }
+    saveAction += "]]";
+    sendChat("API", saveAction);
+};
+
+Davout.Actions.command._action = function (msg, actionName) {
+    if (state.Davout.ActionObjs[actionName] != undefined) {
         var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
         if (!Davout.ConditionObj.isProhibited(tokenObjR20.get("id"), actionName)) {
-            if (tokenObjR20) {
+            if (tokenObjR20 != undefined) {
                 var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
-                var actionObj = DavoutActions.actions[actionName];
-                var actionStr = "%{" + charObj.get("name") + "|" + actionObj.ability + "}";
-                sendChat("API", "/w gm " + actionStr);
+                var actionObj = state.Davout.ActionObjs[actionName];
+                actionObj.execFunc(charObj, Davout.ConditionObj.getModifierFor(tokenObjR20.get("id"), actionName));
             }
         } else {
             sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
@@ -25,7 +52,7 @@ DavoutActions.command._action = function (msg, actionName) {
 };
 
 // TODO add target image around targets.
-DavoutActions.command._setTargets = function (playerId, selected) {
+Davout.Actions.command._setTargets = function (playerId, selected) {
     var tokenObjR20;
     if (state.Davout.TargetsOfAction == undefined) {
         state.Davout.TargetsOfAction = [];
@@ -60,7 +87,7 @@ on("ready", function () {
     addCommand.syntax = "!action action";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
-            DavoutActions.command._action(msg, args[0].value);
+            Davout.Actions.command._action(msg, args[0].value);
         }
     };
     community.command.add("action", addCommand);
@@ -73,7 +100,7 @@ on("ready", function () {
     addCommand.syntax = "!target";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
-            DavoutActions.command._setTargets(msg.playerid, msg.selected);
+            Davout.Actions.command._setTargets(msg.playerid, msg.selected);
         }
     };
     community.command.add("target", addCommand);
