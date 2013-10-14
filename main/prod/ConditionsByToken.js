@@ -98,15 +98,15 @@ Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (co
 
 /**
  * From all this token's conditions, add and return all modifiers from all the effects that affects a given action or attribute
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {number}
  */
-Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (affectable) {
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectable invalid parameter type";
+Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (affectableName) {
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectableName invalid parameter type";
     var modifier = 0;
     if (this.conditions != undefined) {
         for (var i = 0; i < this.conditions.length; i++) {
-            modifier += this.conditions[i].getModifierFor(affectable);
+            modifier += this.conditions[i].getModifierFor(affectableName);
         }
     }
     return modifier;
@@ -114,14 +114,14 @@ Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (aff
 
 /**
  * Check if this token's conditions prevent a given action to be performed
- * @param affectable    The given action
+ * @param affectableName    The given action
  * @returns {boolean}
  */
-Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affectable) {
+Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affectableName) {
     var isProhibited = false;
     if (this.conditions != undefined) {
         for (var i = 0; i < this.conditions.length && !isProhibited; i++) {
-            if (this.conditions[i].isProhibited(affectable)) {
+            if (this.conditions[i].isProhibited(affectableName)) {
                 isProhibited = true;
             }
         }
@@ -131,17 +131,17 @@ Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affec
 
 /**
  * Create string listing any modifiers and notes associated to this token's conditions that affects the given action/attribute
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {string}
  */
-Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = function (affectable) {
+Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = function (affectableName) {
     var str = "";
 
     for (var i = 0; i < this.conditions.length; i++) {
-        if (this.conditions[i].getAffects(affectable) != undefined) {
-            if (this.conditions[i].getAffects(affectable).length > 0) {
-                str += Davout.Utils.capitaliseFirstLetter(this.conditions[i].name) + ": " + this.conditions[i].getModifierFor(affectable);
-                var notes = this.conditions[i].getNotes(affectable);
+        if (this.conditions[i].getAffects(affectableName) != undefined) {
+            if (this.conditions[i].getAffects(affectableName).length > 0) {
+                str += Davout.Utils.capitaliseFirstLetter(this.conditions[i].name) + ": " + this.conditions[i].getModifierFor(affectableName);
+                var notes = this.conditions[i].getNotes(affectableName);
                 if (notes != undefined && notes != ""){
                     str += ". " + notes;
                 }
@@ -173,23 +173,23 @@ Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextCondi
 
     this.effects = {};
     for (var i = 0; i < effects.length; i++) {
-        var affectable = effects[i].affectable;
-        if (this.effects[affectable] == undefined) {
-            this.effects[affectable] = [];
+        var affectableName = effects[i].affectable;
+        if (this.effects[affectableName] == undefined) {
+            this.effects[affectableName] = [];
         }
-        this.effects[affectable].push(effects[i]);
+        this.effects[affectableName].push(effects[i]);
     }
 };
 
 /**
  * From this conditions, add and return all modifiers from all the effects that affect a given action or attribute
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {number}
  */
-Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getModifierFor affectable invalid parameter type";
+Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectableName) {
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.Condition.getModifierFor affectableName invalid parameter type";
     var modifier = 0;
-    var effectsAffecting = this.effects[affectable];
+    var effectsAffecting = this.effects[affectableName];
     if (effectsAffecting != undefined) {
         for (var i = 0; i < effectsAffecting.length; i++) {
             if (effectsAffecting[i].hasModifier) {
@@ -202,13 +202,13 @@ Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectable) {
 
 /**
  * From this conditions, build return all notess from all the effects that affect a given action or attribute
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {string}
  */
-Davout.ConditionObj.Condition.prototype.getNotes = function (affectable) {
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.Condition.getNotes affectable invalid parameter type";
+Davout.ConditionObj.Condition.prototype.getNotes = function (affectableName) {
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.Condition.getNotes affectableName invalid parameter type";
     var notes = "";
-    var effectsAffecting = this.effects[affectable];
+    var effectsAffecting = this.effects[affectableName];
     if (effectsAffecting != undefined) {
         for (var i = 0; i < effectsAffecting.length; i++) {
             if (effectsAffecting[i].notes != undefined && effectsAffecting[i].notes != "") {
@@ -221,12 +221,12 @@ Davout.ConditionObj.Condition.prototype.getNotes = function (affectable) {
 
 /**
  * Check if this condition has an effect that prevent a given action to be performed
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {boolean}
  */
-Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
+Davout.ConditionObj.Condition.prototype.isProhibited = function (affectableName) {
     var isProhibited = false;
-    var effectsAffecting = this.effects[affectable];
+    var effectsAffecting = this.effects[affectableName];
     if (effectsAffecting != undefined) {
         for (var i = 0; i < effectsAffecting.length && !isProhibited; i++) {
             isProhibited = effectsAffecting[i].prohibitive;
@@ -238,27 +238,27 @@ Davout.ConditionObj.Condition.prototype.isProhibited = function (affectable) {
 
 /**
  * From this condition, get all the effects that affect a given action or attribute
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {*}
  */
-Davout.ConditionObj.Condition.prototype.getAffects = function (affectable) {
-    return this.effects[affectable];
+Davout.ConditionObj.Condition.prototype.getAffects = function (affectableName) {
+    return this.effects[affectableName];
 };
 
 /**
  * Constructor for Effect object
- * @param affectable    The given action or attribute that this effect affects.
+ * @param affectableName    The given action or attribute that this effect affects.
  * @param notes         Any notes related to how this effect affects the given action or attribute.
  * @param modifier      Modifier this effects applies to the given action or attribute
  * @param prohibitive   Whether or not this effect prevents the given action from being performed.
  * @constructor
  */
-Davout.ConditionObj.Effect = function (affectable, notes, modifier, prohibitive) {
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.Effect affectable invalid parameter type";
+Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibitive) {
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.Effect affectableName invalid parameter type";
 
     this.modifier = NaN;
     this.hasModifier = false;
-    this.affectable = affectable;
+    this.affectable = affectableName;
     this.notes = notes;
     this.prohibitive = prohibitive;
 
@@ -334,50 +334,50 @@ Davout.ConditionObj.removeConditionFrom = function removeConditionFrom(tokenId, 
  * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
  * Calculates modifiers from all conditions that affects given action or attribute.
  * @param tokenId
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {*}
  */
-Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectable) {
+Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectableName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.getModifierFor affectable invalid parameter type";
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.getModifierFor affectableName invalid parameter type";
 
     if (state.Davout.TokensWithConditionObj == undefined) return 0;
     if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return 0;
 
-    return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectable);
+    return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectableName);
 };
 
 /**
  * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
  * Checks all conditions to see if one prevents the given action or attribute
  * @param tokenId
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {*}
  */
-Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectable) {
+Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectableName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-    if (!_.isString(affectable)) throw "Davout.ConditionObj.getModifierFor affectable invalid parameter type";
+    if (!_.isString(affectableName)) throw "Davout.ConditionObj.getModifierFor affectableName invalid parameter type";
 
     if (state.Davout.TokensWithConditionObj == undefined) return false;
     if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return false;
 
-    return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectable);
+    return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectableName);
 };
 
 /**
  * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
  * Return string of all affects on the given action of attribute
  * @param tokenId
- * @param affectable    The given action or attribute
+ * @param affectableName    The given action or attribute
  * @returns {*}
  */
-Davout.ConditionObj.listConditionsAffecting = function listConditionsAffecting(tokenId, affectable) {
+Davout.ConditionObj.listConditionsAffecting = function listConditionsAffecting(tokenId, affectableName) {
     if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
 
     if (state.Davout.TokensWithConditionObj == undefined) return "";
     if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
 
-    return state.Davout.TokensWithConditionObj[tokenId].listConditionsAffecting(affectable);
+    return state.Davout.TokensWithConditionObj[tokenId].listConditionsAffecting(affectableName);
 };
 
 /**
