@@ -16,7 +16,6 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO apply & display list of modifiers & notes when action is executed.
 // TODO action where character vs character ex: attack where each may have a condition.
 // TODO remove condition based on timer.
 
@@ -400,6 +399,10 @@ Davout.ConditionObj.listAllConditions = function listAllConditions(tokenId) {
     return str;
 };
 
+Davout.ConditionObj.sendToGm = function sendToGm(str){
+    sendChat("API", "/w gm " + str);
+};
+
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
     var tokenObjR20;
     var tokenId;
@@ -417,7 +420,7 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
                         Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
                         break;
                     case "SHOW":
-                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
+                        Davout.ConditionObj.sendToGm(tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
                         break;
                 }
             }

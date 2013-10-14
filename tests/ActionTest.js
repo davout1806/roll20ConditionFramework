@@ -52,7 +52,7 @@ describe("A suite", function() {
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Bob the Orc is prohibited from performing Improvise.<br>Blinded: 0. Cannot perform craft skill.<br>");
     });
 
-    xit("send chat message when action is unkown", function(){
+    xit("send chat message when action is unknown", function(){
         Davout.Actions.command._action(mockMessage, "blah");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Blah is an unknown action");
     });
@@ -87,5 +87,6 @@ describe("A suite", function() {
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Baffled was added to Bob the Orc");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Entangled was added to Bob the Orc");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Orc Jump: [[floor(18/2-5)+1+ 1d20+ -6 - 2]]");
+        expect(sendChat).toHaveBeenCalledWith("API", "/w gm Jump:<br>Baffled: -2<br>Entangled: -4<br>");
     });
 });

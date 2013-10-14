@@ -34,11 +34,13 @@ Davout.Actions.Action.prototype.execFunc = function (charObj, modifier) {
 Davout.Actions.command._action = function (msg, actionName) {
     if (state.Davout.ActionObjs[actionName] != undefined) {
         var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
-        if (!Davout.ConditionObj.isProhibited(tokenObjR20.get("id"), actionName)) {
+        var tokenId = tokenObjR20.get("id");
+        if (!Davout.ConditionObj.isProhibited(tokenId, actionName)) {
             if (tokenObjR20 != undefined) {
                 var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
                 var actionObj = state.Davout.ActionObjs[actionName];
-                actionObj.execFunc(charObj, Davout.ConditionObj.getModifierFor(tokenObjR20.get("id"), actionName));
+                actionObj.execFunc(charObj, Davout.ConditionObj.getModifierFor(tokenId, actionName));
+                Davout.ConditionObj.sendToGm(Davout.Utils.capitaliseFirstLetter(actionName) + ":<br>" + Davout.ConditionObj.listConditionsAffecting(tokenId, actionName));
             }
         } else {
             sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
