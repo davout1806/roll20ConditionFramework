@@ -18,6 +18,7 @@
 // TODO locational conditions
 // TODO action where character vs character ex: attack where each may have a condition.
 // TODO remove condition based on timer.
+// TODO add/remove status markers.
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
@@ -399,10 +400,6 @@ Davout.ConditionObj.listAllConditions = function listAllConditions(tokenId) {
     return str;
 };
 
-Davout.ConditionObj.sendToGm = function sendToGm(str){
-    sendChat("API", "/w gm " + str);
-};
-
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
     var tokenObjR20;
     var tokenId;
@@ -420,7 +417,7 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
                         Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
                         break;
                     case "SHOW":
-                        Davout.ConditionObj.sendToGm(tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
+                        Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
                         break;
                 }
             }
@@ -445,7 +442,7 @@ on("ready", function () {
     addCommand.maxArgs = 1;
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
-    addCommand.syntax = "!cond_add ConditionName";
+    addCommand.syntax = "!cond_add <ConditionName><br> ConditionName cannot contain spaces.";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
             Davout.ConditionObj.command._manageCondition("ADD", msg.selected, args[0].value);
@@ -458,7 +455,7 @@ on("ready", function () {
     removeCommand.maxArgs = 1;
     removeCommand.typeList = [];
     removeCommand.typeList = ["str"];
-    removeCommand.syntax = "!cond_del ConditionName";
+    removeCommand.syntax = "!cond_del <ConditionName><br> ConditionName cannot contain spaces.";
     removeCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
             Davout.ConditionObj.command._manageCondition("DEL", msg.selected, args[0].value);

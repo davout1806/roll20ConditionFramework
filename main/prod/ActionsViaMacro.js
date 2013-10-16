@@ -40,7 +40,7 @@ Davout.Actions.command._action = function (msg, actionName) {
                 var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
                 var actionObj = state.Davout.ActionObjs[actionName];
                 actionObj.execFunc(charObj, Davout.ConditionObj.getModifierFor(tokenId, actionName));
-                Davout.ConditionObj.sendToGm(Davout.Utils.capitaliseFirstLetter(actionName) + ":<br>" + Davout.ConditionObj.listConditionsAffecting(tokenId, actionName));
+                Davout.Utils.sendDirectedMsgToChat(true, Davout.Utils.capitaliseFirstLetter(actionName) + ":<br>" + Davout.ConditionObj.listConditionsAffecting(tokenId, actionName));
             }
         } else {
             sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
@@ -94,7 +94,7 @@ on("ready", function () {
     addCommand.maxArgs = 1;
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
-    addCommand.syntax = "!action action";
+    addCommand.syntax = "!action <ActionName><br>ActionName cannot contain spaces.";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
             Davout.Actions.command._action(msg, args[0].value);

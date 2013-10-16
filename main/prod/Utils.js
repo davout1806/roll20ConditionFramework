@@ -1,3 +1,7 @@
+/**
+ * Only place utilities here that interact with Roll20Servers only if communication is one way to the server
+ */
+
 var Davout = Davout || {};
 Davout.Utils = Davout.Utils || {};
 
@@ -13,6 +17,14 @@ Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyO
     }
 
     return true;
+};
+
+Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg){
+    var whisper = "";
+    if (whisperToGm) {
+        whisper = "/w gm ";
+    }
+    sendChat("API", whisper + msg);
 };
 
 Davout.Utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){

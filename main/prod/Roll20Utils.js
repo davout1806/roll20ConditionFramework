@@ -1,3 +1,7 @@
+/**
+ * Utilities that have receives communication from the Roll20Server
+ */
+
 var Davout = Davout || {};
 Davout.R20Utils = Davout.R20Utils || {};
 

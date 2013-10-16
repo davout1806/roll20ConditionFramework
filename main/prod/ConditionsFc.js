@@ -1,3 +1,6 @@
+/**
+ * Note: ConditionName cannot contain spaces.
+ */
 var condition;
 var effects = new Array(
     new Davout.ConditionObj.Effect("balance", "", -2, false)
