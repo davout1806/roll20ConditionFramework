@@ -1,6 +1,8 @@
 /*
  *  roll20 User: https://app.roll20.net/users/84478/josh
  *  git User:    https://gist.github.com/DarokinB
+ *
+ *  Modifier by Me 2013-10-19
  */
 var Combat_Begins = Combat_Begins || {};
 
