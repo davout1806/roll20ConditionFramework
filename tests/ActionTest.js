@@ -6,24 +6,12 @@ describe("Action suite", function() {
     var mockMessage = null;
     var davoutToken = {};
     var mockCharacter = {};
-    var mockAttributeSheetObj =null;
-    var mockBaseModSheetObj =null;
-    var mockApcSheetObj =null;
 
     beforeEach(function(){
         state.Davout.TokensWithConditionObj = {};
         davoutToken = Davout.TokenFactory.getInstance(tokenId, "Bob the Orc");
         spyOn(window, 'sendChat');
         spyOn(window, 'log');
-        mockAttributeSheetObj = {
-            get: function (property){}
-        };
-        mockBaseModSheetObj = {
-            get: function (property){}
-        };
-        mockApcSheetObj = {
-            get: function (property){}
-        };
         mockCharacter = {
             get: function (property){}
         };
