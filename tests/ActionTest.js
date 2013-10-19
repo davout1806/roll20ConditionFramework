@@ -4,7 +4,7 @@ describe("Action suite", function() {
     var tokenId = "1";
     Davout.R20Utils = null;
     var mockMessage = null;
-    var mockToken = {};
+    var davoutToken = {};
     var mockCharacter = {};
     var mockAttributeSheetObj =null;
     var mockBaseModSheetObj =null;
@@ -12,6 +12,7 @@ describe("Action suite", function() {
 
     beforeEach(function(){
         state.Davout.TokensWithConditionObj = {};
+        davoutToken = Davout.TokenFactory.getInstance(tokenId, "Bob the Orc");
         spyOn(window, 'sendChat');
         spyOn(window, 'log');
         mockAttributeSheetObj = {
@@ -30,43 +31,38 @@ describe("Action suite", function() {
 
     it("Action: prevent action when token has prohibited condition effect", function(){
         spyOn(mockCharacter, "get").andReturn("c1");
-        mockToken.get = jasmine.createSpy();
-        mockToken.get.when("id").thenReturn(tokenId);
-        mockToken.get.when("name").thenReturn("Bob the Orc");
+        davoutToken.get = jasmine.createSpy();
+        davoutToken.get.when("id").thenReturn(tokenId);
+        davoutToken.get.when("name").thenReturn("Bob the Orc");
 
         Davout.R20Utils = {
             selectedToTokenObj: function(selectedObj){}
             , tokenObjToCharObj: function(tokenObj){}
         };
-        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(mockToken);
+        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(davoutToken);
         spyOn(Davout.R20Utils, "tokenObjToCharObj").andReturn(mockCharacter);
 
-        mockMessage = {selected: [mockToken]};
+        mockMessage = {selected: [davoutToken]};
 
-        Davout.ConditionObj.addConditionTo(tokenId, "blinded", "Bob the Orc");
+        davoutToken.addCondition(state.Davout.ConditionObj["blinded"]);
         Davout.ActionObj.command._action(mockMessage, "improvise");
-        expect(mockToken.get).toHaveBeenCalledWith("id");
+        expect(davoutToken.get).toHaveBeenCalledWith("id");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Bob the Orc is prohibited from performing Improvise.<br>Blinded: 0. Cannot perform craft skill.<br>");
-    });
-
-    it("send chat message when action is unknown", function(){
-        Davout.ActionObj.command._action(mockMessage, "blah");
-        expect(sendChat).toHaveBeenCalledWith("API", "/w gm Blah is an unknown action");
     });
 
     it("action takes into account condition modifier", function(){
         mockCharacter.get = jasmine.createSpy();
         mockCharacter.get.when("id").thenReturn("c1");
         mockCharacter.get.when("name").thenReturn("Orc");
-        mockToken.get = jasmine.createSpy();
-        mockToken.get.when("id").thenReturn(tokenId);
-        mockToken.get.when("name").thenReturn("Bob the Orc");
+        davoutToken.get = jasmine.createSpy();
+        davoutToken.get.when("id").thenReturn(tokenId);
+        davoutToken.get.when("name").thenReturn("Bob the Orc");
 
         Davout.R20Utils = {
             selectedToTokenObj: function(selectedObj){}
             , tokenObjToCharObj: function(tokenObj){}
         };
-        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(mockToken);
+        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(davoutToken);
         spyOn(Davout.R20Utils, "tokenObjToCharObj").andReturn(mockCharacter);
 
         Davout.R20Utils.getAttribCurrentFor = jasmine.createSpy();
@@ -74,10 +70,10 @@ describe("Action suite", function() {
         Davout.R20Utils.getAttribCurrentFor.when("c1", "Acrobatics-Base").thenReturn("1");
         Davout.R20Utils.getAttribCurrentFor.when("c1", "AC-Penalty").thenReturn("2");
 
-        mockMessage = {selected: [mockToken]};
+        mockMessage = {selected: [davoutToken]};
 
-        Davout.ConditionObj.addConditionTo(tokenId, "baffled", "Bob the Orc");
-        Davout.ConditionObj.addConditionTo(tokenId, "entangled", "Bob the Orc");
+        davoutToken.addCondition(state.Davout.ConditionObj["baffled"]);
+        davoutToken.addCondition(state.Davout.ConditionObj["entangled"]);
         Davout.ActionObj.command._action(mockMessage, "jump");
 
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Baffled was added to Bob the Orc");
@@ -87,19 +83,20 @@ describe("Action suite", function() {
 
     it("condition on target can grant acting player modifier", function(){
         var targetTokenId = "2";
+        targetToken = Davout.TokenFactory.getInstance(targetTokenId, "Target NPC");
 
         mockCharacter.get = jasmine.createSpy();
         mockCharacter.get.when("id").thenReturn("c1");
         mockCharacter.get.when("name").thenReturn("Orc");
-        mockToken.get = jasmine.createSpy();
-        mockToken.get.when("id").thenReturn(tokenId);
-        mockToken.get.when("name").thenReturn("Bob the Orc");
+        davoutToken.get = jasmine.createSpy();
+        davoutToken.get.when("id").thenReturn(tokenId);
+        davoutToken.get.when("name").thenReturn("Bob the Orc");
 
         Davout.R20Utils = {
             selectedToTokenObj: function(selectedObj){},
             tokenObjToCharObj: function(tokenObj){}
         };
-        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(mockToken);
+        spyOn(Davout.R20Utils, "selectedToTokenObj").andReturn(davoutToken);
         spyOn(Davout.R20Utils, "tokenObjToCharObj").andReturn(mockCharacter);
 
         Davout.R20Utils.getAttribCurrentFor = jasmine.createSpy();
@@ -108,9 +105,9 @@ describe("Action suite", function() {
 
         state.Davout.TargetIdsOfAction[tokenId] = [targetTokenId];
 
-        mockMessage = {selected: [mockToken], playerid: tokenId};
+        mockMessage = {selected: [davoutToken], playerid: tokenId};
 
-        Davout.ConditionObj.addConditionTo(targetTokenId, "blinded", "Target NPC");
+        targetToken.addCondition(state.Davout.ConditionObj["blinded"]);
 
         Davout.ActionObj.command._action(mockMessage, "attack-melee");
 

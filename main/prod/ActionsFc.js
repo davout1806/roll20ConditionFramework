@@ -8,9 +8,9 @@ state.Davout.ActionObjs["attack-melee"] = new Davout.ActionObj.Action("Melee Att
 state.Davout.ActionObjs["attack-hurl"] = new Davout.ActionObj.Action("Hurl Attack", "Dex", "Att-Hurl-Base", false);
 state.Davout.ActionObjs["attack-range"] = new Davout.ActionObj.Action("Range Attack", "Dex", "Att-Range-Base", false);
 
-//state.Davout.VsActionObjs["attack-melee"] = new Davout.ActionObj.Action("Melee Attack", "Dex", "Defense", true);
-//state.Davout.VsActionObjs["attack-hurl"] = new Davout.ActionObj.Action("Hurl Attack", "Dex", "Defense", true);
-//state.Davout.VsActionObjs["attack-range"] = new Davout.ActionObj.Action("Range Attack", "Dex", "Defense", true);
+state.Davout.DcActionObjs["attack-melee"] = new Davout.ActionObj.Action("Melee Attack", "Dex", "Defense", true);
+state.Davout.DcActionObjs["attack-hurl"] = new Davout.ActionObj.Action("Hurl Attack", "Dex", "Defense", true);
+state.Davout.DcActionObjs["attack-range"] = new Davout.ActionObj.Action("Range Attack", "Dex", "Defense", true);
 
 // ActionsFC
 

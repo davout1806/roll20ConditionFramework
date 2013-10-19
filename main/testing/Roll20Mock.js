@@ -11,3 +11,5 @@ function log(str){}
 function sendChat(speakingAs, input){}
 
 function findObjs(criteriaObj){}
+
+function getObj(type, id){}

@@ -23,6 +23,7 @@
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
 Davout.ConditionObj.command = Davout.ConditionObj.command || {};
+Davout.TokenFactory = Davout.TokenFactory || {};
 
 state.Davout = state.Davout || {};
 state.Davout.ConditionObj = state.Davout.ConditionObj || {};
@@ -37,8 +38,9 @@ state.Davout.TokensWithConditionObj = state.Davout.TokensWithConditionObj || {};
  * @param tokenName     name of token
  * @constructor
  */
-Davout.ConditionObj.TokenWithConditions = function (tokenName) {
-    if (!_.isString(tokenName)) throw "Davout.ConditionObj.TokenWithConditions tokenName invalid parameter type";
+Davout.ConditionObj.TokenWithConditions = function (tokenId, tokenName) {
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.TokenWithConditions tokenName invalid parameter type";
+    this.tokenId = tokenId;
     this.tokenName = tokenName;
     this.conditions = [];
 };
@@ -112,6 +114,10 @@ Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (aff
     return modifier;
 };
 
+Davout.ConditionObj.TokenWithConditions.prototype.getModifierAsTarget = function (affectableName) {
+    return this.getModifierFor("VS-" + affectableName);
+};
+
 /**
  * Check if this token's conditions prevent a given action to be performed
  * @param affectableName    The given action
@@ -149,6 +155,24 @@ Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = func
             }
         }
     }
+    return str;
+};
+
+Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffectingAsTarget = function (affectableName) {
+    return this.listConditionsAffecting("VS-" + affectableName);
+};
+
+/**
+ * Function that return string of all conditions on the TokensWithConditionObj associated to the roll20 token with the given tokenId.
+ * @returns {string}
+ */
+Davout.ConditionObj.TokenWithConditions.prototype.listAllConditions = function () {
+    var conditions = this.conditions;
+    var str = "";
+    for (var i = 0; i < conditions.length; i++) {
+        str += Davout.Utils.capitaliseFirstLetter(conditions[i].name) + "<br>";
+    }
+
     return str;
 };
 
@@ -273,131 +297,29 @@ Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibit
 /******************************************************************************************
  Function Declarations
  *******************************************************************************************/
+Davout.TokenFactory.getInstance = function(tokenId, tokenName){
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.addConditionTo tokenId invalid parameter type";
+    Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
+    if (state.Davout.TokensWithConditionObj == undefined) {
+        state.Davout.TokensWithConditionObj = {};
+    }
+
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined ){
+//        if (tokenName == undefined){
+//            tokenName = getObj("graphic", tokenId).get("name");
+//        }
+        state.Davout.TokensWithConditionObj[tokenId] = new Davout.ConditionObj.TokenWithConditions(tokenId, tokenName);
+    }
+
+    return state.Davout.TokensWithConditionObj[tokenId];
+};
+
 /**
  * Event: When roll20 token is destroyed and an associated TokenWithConditions exists, destroy it.
  */
 Davout.ConditionObj.onTokenDestroyedEvent = function () {
     log("Deleted state.Davout.TokensWithConditionObj for " + token.get("name"));
     state.Davout.TokensWithConditionObj[token.get("id")] = null;
-};
-
-/**
- * Function that adds given condition to the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- *
- * If a TokensWithConditionObj does not already exists for roll20 token with the given tokenId, create it.
- * @param tokenId
- * @param conditionName
- * @param tokenName
- */
-// TODO remove tokenName use find + tokenId
-Davout.ConditionObj.addConditionTo = function addConditionTo(tokenId, conditionName, tokenName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.addConditionTo tokenId invalid parameter type";
-    if (!_.isString(conditionName)) throw "Davout.ConditionObj.addConditionTo conditionName invalid parameter type";
-    if (!_.isString(tokenName)) throw "Davout.ConditionObj.addConditionTo tokenName invalid parameter type";
-    if (state.Davout.TokensWithConditionObj == undefined) {
-        state.Davout.TokensWithConditionObj = {};
-    }
-    var condition = state.Davout.ConditionObj[conditionName];
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) {
-        var tokenWithConditions = new Davout.ConditionObj.TokenWithConditions(tokenName);
-        tokenWithConditions.addCondition(condition);
-        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
-    } else {
-        state.Davout.TokensWithConditionObj[tokenId].addCondition(condition);
-    }
-};
-
-/**
- * Function that removes given condition from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- * @param tokenId
- * @param conditionName
- */
-Davout.ConditionObj.removeConditionFrom = function removeConditionFrom(tokenId, conditionName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.removeConditionFrom tokenId invalid parameter type";
-    if (!_.isString(conditionName)) throw "Davout.ConditionObj.removeConditionFrom conditionName invalid parameter type";
-    if (state.Davout.TokensWithConditionObj[tokenId] != undefined) {
-        var tokenWithConditions = state.Davout.TokensWithConditionObj[tokenId];
-        tokenWithConditions.removeCondition(state.Davout.ConditionObj[conditionName]);
-        state.Davout.TokensWithConditionObj[tokenId] = tokenWithConditions;
-    }
-};
-
-/**
- * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- * Calculates modifiers from all conditions that affects given action or attribute.
- * @param tokenId
- * @param affectableName    The given action or attribute
- * @returns {*}
- */
-Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectableName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-    if (!_.isString(affectableName)) throw "Davout.ConditionObj.getModifierFor affectableName invalid parameter type";
-
-    if (state.Davout.TokensWithConditionObj == undefined) return 0;
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return 0;
-
-    return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectableName);
-};
-
-Davout.ConditionObj.getModifierForTarget = function getModifierForTarget(tokenId, affectableName) {
-    return Davout.ConditionObj.getModifierFor(tokenId, "VS-" + affectableName);
-}
-
-/**
- * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- * Checks all conditions to see if one prevents the given action or attribute
- * @param tokenId
- * @param affectableName    The given action or attribute
- * @returns {*}
- */
-Davout.ConditionObj.isProhibited = function isProhibited(tokenId, affectableName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-    if (!_.isString(affectableName)) throw "Davout.ConditionObj.getModifierFor affectableName invalid parameter type";
-
-    if (state.Davout.TokensWithConditionObj == undefined) return false;
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return false;
-
-    return state.Davout.TokensWithConditionObj[tokenId].isProhibited(affectableName);
-};
-
-/**
- * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- * Return string of all affects on the given action of attribute
- * @param tokenId
- * @param affectableName    The given action or attribute
- * @returns {*}
- */
-Davout.ConditionObj.listConditionsAffecting = function listConditionsAffecting(tokenId, affectableName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-
-    if (state.Davout.TokensWithConditionObj == undefined) return "";
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
-
-    return state.Davout.TokensWithConditionObj[tokenId].listConditionsAffecting(affectableName);
-};
-
-Davout.ConditionObj.listConditionsAffectingForTarget = function listConditionsAffectingForTarget(tokenId, affectableName) {
-    return Davout.ConditionObj.listConditionsAffecting(tokenId, "VS-" + affectableName);
-};
-
-/**
- * Function that return string of all conditions on the TokensWithConditionObj associated to the roll20 token with the given tokenId.
- * @param tokenId
- * @returns {string}
- */
-Davout.ConditionObj.listAllConditions = function listAllConditions(tokenId) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.getModifierFor tokenId invalid parameter type";
-
-    if (state.Davout.TokensWithConditionObj == undefined) return "";
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
-
-    var conditions = state.Davout.TokensWithConditionObj[tokenId].conditions;
-    var str = "";
-    for (var i = 0; i < conditions.length; i++) {
-        str += Davout.Utils.capitaliseFirstLetter(conditions[i].name) + "<br>";
-    }
-
-    return str;
 };
 
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
@@ -411,10 +333,12 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
             if (tokenId != "") {
                 switch (actionType) {
                     case "ADD":
-                        Davout.ConditionObj.addConditionTo(tokenId, conditionName, tokenObjR20.get("name"));
+                        var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
+                        davoutToken.addCondition(state.Davout.ConditionObj[conditionName]);
                         break;
                     case "DEL":
-                        Davout.ConditionObj.removeConditionFrom(tokenId, conditionName);
+                        var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
+                        davoutToken.removeCondition(state.Davout.ConditionObj[conditionName]);
                         break;
                     case "SHOW":
                         Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));

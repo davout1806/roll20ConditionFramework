@@ -4,7 +4,7 @@ Davout.ActionObj.command = Davout.ActionObj.command || {};
 
 state.Davout = state.Davout || {};
 state.Davout.ActionObjs = state.Davout.ActionObjs || {};
-state.Davout.VsActionObjs = state.Davout.VsActionObjs || {};
+state.Davout.DcActionObjs = state.Davout.DcActionObjs || {};
 state.Davout.TargetIdsOfAction = state.Davout.TargetIdsOfAction || [];  //Array of Arrays of IDs
 
 Davout.ActionObj.Action = function (actionName, attribNameOnSheet, baseModNameOnSheet, doesApcPenApply) {
@@ -29,37 +29,36 @@ Davout.ActionObj.Action.prototype.getActionFormula = function (charObj, modifier
 };
 
 Davout.ActionObj.command._action = function (msg, actionName) {
-    if (state.Davout.ActionObjs[actionName] != undefined) {
-        var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
-        var tokenId = tokenObjR20.get("id");
-        if (!Davout.ConditionObj.isProhibited(tokenId, actionName)) {
-            if (tokenObjR20 != undefined) {
-                var playerModifier = Davout.ConditionObj.getModifierFor(tokenId, actionName);
-                var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
-                var actionObj = state.Davout.ActionObjs[actionName];
-                var targetIdsOfPlayer = state.Davout.TargetIdsOfAction[msg.playerid];
-                if (targetIdsOfPlayer == undefined || targetIdsOfPlayer.length == 0) {
-                    Davout.Utils.sendDirectedMsgToChat(true, actionObj.getActionFormula(charObj, playerModifier) + ":<br>" + Davout.ConditionObj.listConditionsAffecting(tokenId, actionName));
-                } else {
-                    for (var i=0; i<targetIdsOfPlayer.length; i++ ){
-                        var targetTokenId = targetIdsOfPlayer[i];
-                        var targetModifier = Davout.ConditionObj.getModifierForTarget(targetTokenId, actionName);
-                        Davout.Utils.sendDirectedMsgToChat(true,
-                            actionObj.getActionFormula(charObj, playerModifier + targetModifier)
-                                + ":<br>" + Davout.ConditionObj.listConditionsAffecting(tokenId, actionName)
-                                + "Target:<br>" + Davout.ConditionObj.listConditionsAffectingForTarget(targetTokenId, actionName)
-                        );
-                    }
+    var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
+    var tokenId = tokenObjR20.get("id");
+    var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
+    if (!davoutToken.isProhibited(actionName)) {
+        if (tokenObjR20 != undefined) {
+            var playerModifier = davoutToken.getModifierFor(actionName);
+            var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
+            var actionObj = state.Davout.ActionObjs[actionName];
+            var targetIdsOfPlayer = state.Davout.TargetIdsOfAction[msg.playerid];
+            if (targetIdsOfPlayer == undefined || targetIdsOfPlayer.length == 0) {
+                Davout.Utils.sendDirectedMsgToChat(true, actionObj.getActionFormula(charObj, playerModifier) + ":<br>" + davoutToken.listConditionsAffecting(actionName));
+            } else {
+                for (var i = 0; i < targetIdsOfPlayer.length; i++) {
+                    var targetTokenId = targetIdsOfPlayer[i];
+                    var davoutTargetToken = Davout.TokenFactory.getInstance(targetTokenId);
+                    var targetModifier = davoutTargetToken.getModifierAsTarget(actionName);
+                    var dcObj = state.Davout.DcActionObjs[actionName];
+
+                    Davout.Utils.sendDirectedMsgToChat(true,
+                        actionObj.getActionFormula(charObj, playerModifier + targetModifier)
+                            + ":<br>" + davoutToken.listConditionsAffecting(actionName)
+                            + "Target:<br>" + davoutTargetToken.listConditionsAffectingAsTarget(actionName)
+                    );
                 }
             }
-        } else {
-            sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
-                + Davout.Utils.capitaliseFirstLetter(actionName) + ".<br>"
-                + Davout.ConditionObj.listConditionsAffecting(tokenObjR20.get("id"), actionName));
         }
     } else {
-        log(actionName + " is an unknown action");
-        sendChat("API", "/w gm " + Davout.Utils.capitaliseFirstLetter(actionName) + " is an unknown action");
+        sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
+            + Davout.Utils.capitaliseFirstLetter(actionName) + ".<br>"
+            + davoutToken.listConditionsAffecting(actionName));
     }
 };
 
@@ -107,7 +106,12 @@ on("ready", function () {
     addCommand.syntax = "!action <ActionName><br>ActionName cannot contain spaces.";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
-            Davout.ActionObj.command._action(msg, args[0].value);
+            if (state.Davout.ActionObjs[args[0].value] != undefined) {
+                Davout.ActionObj.command._action(msg, args[0].value);
+            } else {
+                log(args[0].value + " is an unknown action");
+                sendChat("API", "/w gm " + Davout.Utils.capitaliseFirstLetter(args[0].value) + " is an unknown action");
+            }
         }
     };
     community.command.add("action", addCommand);
