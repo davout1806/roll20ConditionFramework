@@ -11,7 +11,13 @@ var effects = new Array(
 condition = new Davout.ConditionObj.Condition("baffled", effects);
 state.Davout.ConditionObj["baffled"] = condition;
 
-condition = new Davout.ConditionObj.Condition("blinded", new Array(new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)));
+var effects = new Array(
+    new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)
+    , new Davout.ConditionObj.Effect("VS-attack-melee", "", 2, false)
+    , new Davout.ConditionObj.Effect("VS-attack-hurl", "", 2, false)
+    , new Davout.ConditionObj.Effect("VS-attack-range", "", 2, false)
+);
+condition = new Davout.ConditionObj.Condition("blinded", effects);
 state.Davout.ConditionObj["blinded"] = condition;
 
 effects = new Array(

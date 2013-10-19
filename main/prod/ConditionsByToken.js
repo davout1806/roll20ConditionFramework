@@ -270,14 +270,6 @@ Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibit
     }
 };
 
-Davout.ConditionObj.Action = function () {
-    //action name -> action formula
-};
-
-Davout.ConditionObj.ActionFormula = function () {
-    // list that contains attributes (operands) and operators.
-};
-
 /******************************************************************************************
  Function Declarations
  *******************************************************************************************/
@@ -347,6 +339,10 @@ Davout.ConditionObj.getModifierFor = function getModifierFor(tokenId, affectable
     return state.Davout.TokensWithConditionObj[tokenId].getModifierFor(affectableName);
 };
 
+Davout.ConditionObj.getModifierForTarget = function getModifierForTarget(tokenId, affectableName) {
+    return Davout.ConditionObj.getModifierFor(tokenId, "VS-" + affectableName);
+}
+
 /**
  * Function, from the TokensWithConditionObj associated to the roll20 token with the given tokenId.
  * Checks all conditions to see if one prevents the given action or attribute
@@ -378,6 +374,10 @@ Davout.ConditionObj.listConditionsAffecting = function listConditionsAffecting(t
     if (state.Davout.TokensWithConditionObj[tokenId] == undefined) return "";
 
     return state.Davout.TokensWithConditionObj[tokenId].listConditionsAffecting(affectableName);
+};
+
+Davout.ConditionObj.listConditionsAffectingForTarget = function listConditionsAffectingForTarget(tokenId, affectableName) {
+    return Davout.ConditionObj.listConditionsAffecting(tokenId, "VS-" + affectableName);
 };
 
 /**

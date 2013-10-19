@@ -14,6 +14,11 @@ Davout.R20Utils.adjustAttributeForChar = function(characterId, attributeName, mo
     attrib.set("current", parseInt(attrib.get("current")) + modifier);
 };
 
+Davout.R20Utils.getAttribCurrentFor = function (charId, attributeName){
+    var attributeSheetObj = findObjs({ _type: 'attribute', name: attributeName, _characterid: charId })[0]
+    return attributeSheetObj.get("current");
+};
+
 Davout.R20Utils.selectedToTokenObj = function (singleSelectedObject){
     if (singleSelectedObject == undefined) return undefined;
 

@@ -1,5 +1,5 @@
 
-describe("A suite", function() {
+describe("Condition suite", function() {
     var tokenId = "1";
 
     beforeEach(function(){
@@ -78,6 +78,13 @@ describe("A suite", function() {
         Davout.ConditionObj.addConditionTo(tokenId, "entangled", "Orc");
 
         expect(Davout.ConditionObj.getModifierFor(tokenId, "tumble")).toEqual(-6);
+    });
+
+    it("get modifier based on target", function(){
+        var targetTokenId = "2";
+        Davout.ConditionObj.addConditionTo(targetTokenId, "blinded", "Target NPC");
+
+        expect(Davout.ConditionObj.getModifierForTarget(targetTokenId, "attack-melee")).toEqual(2);
     });
 });
 
