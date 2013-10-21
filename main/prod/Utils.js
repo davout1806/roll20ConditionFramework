@@ -6,6 +6,7 @@ var Davout = Davout || {};
 Davout.Utils = Davout.Utils || {};
 
 Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyOne, msgIfMoreThanOne){
+    "use strict";
     if (selected == undefined) {
         sendChat("API", msgToSend);
         return false;
@@ -20,6 +21,7 @@ Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyO
 };
 
 Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg){
+    "use strict";
     var whisper = "";
     if (whisperToGm) {
         whisper = "/w gm ";
@@ -28,6 +30,7 @@ Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg){
 };
 
 Davout.Utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
+    "use strict";
     var workingArray = array;
     var index = workingArray.indexOf(itemToRemove);
     if (index > -1) {
@@ -38,6 +41,7 @@ Davout.Utils.removeFromArrayFirstOccurOf = function(array, itemToRemove){
 };
 
 Davout.Utils.assertTrueObject = function(parameter, throwMsg){
+    "use strict";
     if (_.isUndefined(parameter)) throw throwMsg + " parameter: undefined";
     if (parameter == null) throw throwMsg + " parameter: null";
     if (_.isArray(parameter)) throw throwMsg + " parameter: array";
@@ -46,10 +50,12 @@ Davout.Utils.assertTrueObject = function(parameter, throwMsg){
 };
 
 Davout.Utils.contains = function(array, obj) {
+    "use strict";
     return array.indexOf(obj) > -1;
 };
 
 Davout.Utils.capitaliseFirstLetter = function(string){
+    "use strict";
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 

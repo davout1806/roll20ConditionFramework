@@ -10,6 +10,7 @@ DavoutSheet.attribs["con"] = { name: "Con" , current: 10, max: 0 };
 DavoutSheet.attribs["int"] = { name: "Int" , current: 10, max: 0 };
 DavoutSheet.attribs["wis"] = { name: "Wis" , current: 10, max: 0 };
 DavoutSheet.attribs["cha"] = { name: "Cha" , current: 10, max: 0 };
+DavoutSheet.attribs["defBase"] = { name: "Defense-Base" , current: 10, max: 0 };
 DavoutSheet.attribs["fort"] = { name: "Fortitude-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["ref"] = { name: "Reflex-Mod", current: 0, max: 0 };
 DavoutSheet.attribs["will"] = { name: "Will-Mod", current: 0, max: 0 };
@@ -95,7 +96,6 @@ DavoutSheet.processAttribs = function processAttribs(character) {
 };
 
 DavoutSheet.getSkillBonus = function getSkillBonus(skill, charType) {
-//    log("Skill: " + JSON.stringify(skill));
     if (_.indexOf(skill.classSkill, charType) !== -1
         || _.indexOf(skill.classSkill, 'all') !== -1) {
         return "+@{" + DavoutSheet.attribs["csb"].name + "}";
@@ -129,11 +129,8 @@ DavoutSheet.createSkillOrCombatAction = function createSkillOrCombatAction(skill
 
 DavoutSheet.retrieveUserModifiers = function retrieveUserModifiers(currentSkill, actionCommand) {
     var modifier = actionCommand.replace(currentSkill.name+"\n/r " + DavoutSheet.diceType + "+@{" + currentSkill.attribute + "}", "");
-//    log("Modifier - Step 1: " + modifier);
     modifier = modifier.replace("+@{" + DavoutSheet.attribs["csb"].name + "}", "");
-//    log("Modifier - Step 2: " + modifier);
     modifier = modifier.replace("+@{" + DavoutSheet.attribs["acp"].name + "}", "");
-//    log("Modifier - Step 3: " + modifier);
     return modifier;
 };
 
@@ -179,7 +176,7 @@ DavoutSheet.processAbilities = function processAbilities(character, charType) {
     };
 
     DavoutSheet.createSeparator(character, "Skills");
-    
+
     for (var skill in DavoutSheet.skills) {
         var abilityAction = DavoutSheet.createSkillOrCombatAction(DavoutSheet.skills[skill], charType);
             createObj("ability", {

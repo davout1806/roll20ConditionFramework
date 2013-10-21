@@ -1,10 +1,10 @@
 /**
-    Required design specifications:
-    1. Allow multiple tokens to use the same character.
-    2. Allow conditions to be assigned individually to tokens even if they share the same character.
+ Required design specifications:
+ 1. Allow multiple tokens to use the same character.
+ 2. Allow conditions to be assigned individually to tokens even if they share the same character.
 
-    Desired design specifications:
-    1. Quickly perform action of a token, preferably without having to open character sheet (ALT+double click)
+ Desired design specifications:
+ 1. Quickly perform action of a token, preferably without having to open character sheet (ALT+double click)
 
  * state.Davout.TokensWithConditionObj[id] where id is token id
  *
@@ -19,6 +19,8 @@
 // TODO action where character vs character ex: attack where each may have a condition.
 // TODO remove condition based on timer.
 // TODO add/remove status markers.
+// TODO equipment affects.
+// TODO update javascript docs
 
 var Davout = Davout || {};
 Davout.ConditionObj = Davout.ConditionObj || {};
@@ -33,15 +35,82 @@ state.Davout.TokensWithConditionObj = state.Davout.TokensWithConditionObj || {};
  Class Declarations
  *******************************************************************************************/
 
+Davout.ConditionObj.TotalAffectable = function (affectableName) {
+    "use strict";
+    this.affectableName = affectableName;
+    this.condModTotal = 0;
+    this.isProhibited = false;
+    this.modList = [];
+    this.notes = [];
+};
+
+Davout.ConditionObj.TotalAffectable.prototype.add = function (condition) {
+    "use strict";
+    var conditionName = condition.name;
+    var affects = condition.getAffects(this.affectableName);
+
+    if (affects !== undefined) {
+        for (var i = 0; i < affects.length; i++) {
+            var effect = affects[i];
+            if (effect.prohibitive) {
+                this.isProhibited = true;
+            } else {
+                if (effect.hasModifier) {
+                    this.condModTotal += effect.modifier;
+                    this.modList.push({name: Davout.Utils.capitaliseFirstLetter(conditionName), value: effect.modifier});
+                }
+            }
+
+            if (effect.notes != undefined && "" !== effect.notes) {
+                this.notes.push(Davout.Utils.capitaliseFirstLetter(conditionName) + ", " + effect.notes);
+            }
+        }
+    }
+};
+
+Davout.ConditionObj.TotalAffectable.prototype.buildModListString = function () {
+    "use strict";
+    var modListString = "";
+    for (var i = 0; i < this.modList.length; i++) {
+        modListString += this.modList[i].name + ": " + this.modList[i].value + "<br>";
+    }
+
+    return modListString;
+};
+
+Davout.ConditionObj.TotalAffectable.prototype.buildNotesString = function () {
+    "use strict";
+    var notesString = "";
+
+    for (var i = 0; i < this.notes.length; i++) {
+        notesString += this.notes[i] + "<br>";
+    }
+
+    return notesString;
+};
+
+Davout.Character = function (charId) {
+    "use strict";
+    this.charId = charId;
+};
+
+Davout.Character.prototype.getAttribCurrentFor = function (attributeName) {
+    "use strict";
+    var attributeSheetObj = findObjs({ _type: 'attribute', name: attributeName, _characterid: this.charId })[0]
+    return attributeSheetObj.get("current");
+};
+
 /**
  * Constructor for TokenWithConditions object, which represents the conditions on the associated roll20 token.
  * @param tokenName     name of token
  * @constructor
  */
-Davout.ConditionObj.TokenWithConditions = function (tokenId, tokenName) {
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.TokenWithConditions tokenName invalid parameter type";
+Davout.ConditionObj.TokenWithConditions = function (tokenId) {
+    "use strict";
+    if (!_.isString(tokenId)) throw "Davout.ConditionObj.TokenWithConditions tokenId invalid parameter type";
     this.tokenId = tokenId;
-    this.tokenName = tokenName;
+    this.name = getObj("graphic", this.tokenId).get("name");
+    this.charId = Davout.R20Utils.tokenIdToCharId(this.tokenId);
     this.conditions = [];
 };
 
@@ -50,6 +119,7 @@ Davout.ConditionObj.TokenWithConditions = function (tokenId, tokenName) {
  * @param condition
  */
 Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condition) {
+    "use strict";
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
     // condition is stackable
     if (condition.maxStackSize > 1) {
@@ -58,26 +128,26 @@ Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condi
         if (condition.maxStackSize > conditionCount) {
             this.conditions.push(condition);
             var displayCount = conditionCount + 1;
-            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " was added to " + this.tokenName);
-            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " to " + this.tokenName);
+            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " was added to " + this.name);
+            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + ": " + displayCount + " to " + this.name);
         } else { // if max level of condition has been reached.
             // if the max level of condition causes a different condition to be applied.
             if (condition.nextConditionName != null) {
                 this.conditions.push(state.Davout.ConditionObj[condition.nextConditionName]);
-                sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " was added to " + this.tokenName);
-                log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " to " + this.tokenName);
+                sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " was added to " + this.name);
+                log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.nextConditionName) + " to " + this.name);
             } else {
-                sendChat("API", "/w gm " + this.tokenName + " already has reached the stack limit for " + Davout.Utils.capitaliseFirstLetter(condition.name));
+                sendChat("API", "/w gm " + this.name + " already has reached the stack limit for " + Davout.Utils.capitaliseFirstLetter(condition.name));
             }
         }
     } else {
         // if token does not already have condition
         if (!_.findWhere(this.conditions, {name: condition.name})) {
             this.conditions.push(condition);
-            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was added to " + this.tokenName);
-            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " to " + this.tokenName);
+            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was added to " + this.name);
+            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " to " + this.name);
         } else {
-            sendChat("API", "/w gm " + this.tokenName + " already has the non-stackable condition " + Davout.Utils.capitaliseFirstLetter(condition.name));
+            sendChat("API", "/w gm " + this.name + " already has the non-stackable condition " + Davout.Utils.capitaliseFirstLetter(condition.name));
         }
     }
 };
@@ -87,12 +157,13 @@ Davout.ConditionObj.TokenWithConditions.prototype.addCondition = function (condi
  * @param condition
  */
 Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (condition) {
+    "use strict";
     Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.removeCondition condition");
     var index = this.conditions.indexOf(condition);
     if (index > -1) {
         this.conditions.splice(index, 1);
-        sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was removed from " + this.tokenName);
-        log("Removed: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " removed from " + this.tokenName);
+        sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " was removed from " + this.name);
+        log("Removed: condition " + Davout.Utils.capitaliseFirstLetter(condition.name) + " removed from " + this.name);
     } else {
         sendChat("API", "Selected Token " + Davout.Utils.capitaliseFirstLetter(condition.name) + " does not have condition: " + Davout.Utils.capitaliseFirstLetter(condition.name));
     }
@@ -101,65 +172,23 @@ Davout.ConditionObj.TokenWithConditions.prototype.removeCondition = function (co
 /**
  * From all this token's conditions, add and return all modifiers from all the effects that affects a given action or attribute
  * @param affectableName    The given action or attribute
- * @returns {number}
+ * @returns {Davout.ConditionObj.TotalAffectable}
  */
-Davout.ConditionObj.TokenWithConditions.prototype.getModifierFor = function (affectableName) {
+Davout.ConditionObj.TokenWithConditions.prototype.getAffect = function (affectableName) {
+    "use strict";
     if (!_.isString(affectableName)) throw "Davout.ConditionObj.TokenWithConditions.getModifierFor affectableName invalid parameter type";
-    var modifier = 0;
+    var totalAffectable = new Davout.ConditionObj.TotalAffectable(affectableName);
     if (this.conditions != undefined) {
         for (var i = 0; i < this.conditions.length; i++) {
-            modifier += this.conditions[i].getModifierFor(affectableName);
+            totalAffectable.add(this.conditions[i]);
         }
     }
-    return modifier;
+    return totalAffectable;
 };
 
-Davout.ConditionObj.TokenWithConditions.prototype.getModifierAsTarget = function (affectableName) {
-    return this.getModifierFor("VS-" + affectableName);
-};
-
-/**
- * Check if this token's conditions prevent a given action to be performed
- * @param affectableName    The given action
- * @returns {boolean}
- */
-Davout.ConditionObj.TokenWithConditions.prototype.isProhibited = function (affectableName) {
-    var isProhibited = false;
-    if (this.conditions != undefined) {
-        for (var i = 0; i < this.conditions.length && !isProhibited; i++) {
-            if (this.conditions[i].isProhibited(affectableName)) {
-                isProhibited = true;
-            }
-        }
-    }
-    return isProhibited;
-};
-
-/**
- * Create string listing any modifiers and notes associated to this token's conditions that affects the given action/attribute
- * @param affectableName    The given action or attribute
- * @returns {string}
- */
-Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffecting = function (affectableName) {
-    var str = "";
-
-    for (var i = 0; i < this.conditions.length; i++) {
-        if (this.conditions[i].getAffects(affectableName) != undefined) {
-            if (this.conditions[i].getAffects(affectableName).length > 0) {
-                str += Davout.Utils.capitaliseFirstLetter(this.conditions[i].name) + ": " + this.conditions[i].getModifierFor(affectableName);
-                var notes = this.conditions[i].getNotes(affectableName);
-                if (notes != undefined && notes != ""){
-                    str += ". " + notes;
-                }
-                str += "<br>";
-            }
-        }
-    }
-    return str;
-};
-
-Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffectingAsTarget = function (affectableName) {
-    return this.listConditionsAffecting("VS-" + affectableName);
+Davout.ConditionObj.TokenWithConditions.prototype.getAffectAsTarget = function (affectableName) {
+    "use strict";
+    return this.getAffect("VS-" + affectableName);
 };
 
 /**
@@ -167,6 +196,7 @@ Davout.ConditionObj.TokenWithConditions.prototype.listConditionsAffectingAsTarge
  * @returns {string}
  */
 Davout.ConditionObj.TokenWithConditions.prototype.listAllConditions = function () {
+    "use strict";
     var conditions = this.conditions;
     var str = "";
     for (var i = 0; i < conditions.length; i++) {
@@ -185,6 +215,7 @@ Davout.ConditionObj.TokenWithConditions.prototype.listAllConditions = function (
  * @constructor
  */
 Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextConditionName) {
+    "use strict";
     if (!_.isString(name)) throw "Davout.ConditionObj.Condition name invalid parameter type";
     if (!_.isArray(effects)) throw "Davout.ConditionObj.Condition effects invalid parameter type";
     this.name = name;
@@ -206,66 +237,12 @@ Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextCondi
 };
 
 /**
- * From this conditions, add and return all modifiers from all the effects that affect a given action or attribute
- * @param affectableName    The given action or attribute
- * @returns {number}
- */
-Davout.ConditionObj.Condition.prototype.getModifierFor = function (affectableName) {
-    if (!_.isString(affectableName)) throw "Davout.ConditionObj.Condition.getModifierFor affectableName invalid parameter type";
-    var modifier = 0;
-    var effectsAffecting = this.effects[affectableName];
-    if (effectsAffecting != undefined) {
-        for (var i = 0; i < effectsAffecting.length; i++) {
-            if (effectsAffecting[i].hasModifier) {
-                modifier += effectsAffecting[i].modifier;
-            }
-        }
-    }
-    return modifier;
-};
-
-/**
- * From this conditions, build return all notess from all the effects that affect a given action or attribute
- * @param affectableName    The given action or attribute
- * @returns {string}
- */
-Davout.ConditionObj.Condition.prototype.getNotes = function (affectableName) {
-    if (!_.isString(affectableName)) throw "Davout.ConditionObj.Condition.getNotes affectableName invalid parameter type";
-    var notes = "";
-    var effectsAffecting = this.effects[affectableName];
-    if (effectsAffecting != undefined) {
-        for (var i = 0; i < effectsAffecting.length; i++) {
-            if (effectsAffecting[i].notes != undefined && effectsAffecting[i].notes != "") {
-                notes += effectsAffecting[i].notes;
-            }
-        }
-    }
-    return notes;
-};
-
-/**
- * Check if this condition has an effect that prevent a given action to be performed
- * @param affectableName    The given action or attribute
- * @returns {boolean}
- */
-Davout.ConditionObj.Condition.prototype.isProhibited = function (affectableName) {
-    var isProhibited = false;
-    var effectsAffecting = this.effects[affectableName];
-    if (effectsAffecting != undefined) {
-        for (var i = 0; i < effectsAffecting.length && !isProhibited; i++) {
-            isProhibited = effectsAffecting[i].prohibitive;
-        }
-    }
-
-    return isProhibited;
-};
-
-/**
  * From this condition, get all the effects that affect a given action or attribute
  * @param affectableName    The given action or attribute
  * @returns {*}
  */
 Davout.ConditionObj.Condition.prototype.getAffects = function (affectableName) {
+    "use strict";
     return this.effects[affectableName];
 };
 
@@ -278,6 +255,7 @@ Davout.ConditionObj.Condition.prototype.getAffects = function (affectableName) {
  * @constructor
  */
 Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibitive) {
+    "use strict";
     if (!_.isString(affectableName)) throw "Davout.ConditionObj.Effect affectableName invalid parameter type";
 
     this.modifier = NaN;
@@ -297,18 +275,15 @@ Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibit
 /******************************************************************************************
  Function Declarations
  *******************************************************************************************/
-Davout.TokenFactory.getInstance = function(tokenId, tokenName){
-    if (!_.isString(tokenId)) throw "Davout.ConditionObj.addConditionTo tokenId invalid parameter type";
-    Davout.Utils.assertTrueObject(condition, "Davout.ConditionObj.TokenWithConditions.addCondition condition");
+Davout.TokenFactory.getInstance = function (tokenId) {
+    "use strict";
+//    if (!_.isString(tokenId)) throw "Davout.TokenFactory.getInstance tokenId invalid parameter type";
     if (state.Davout.TokensWithConditionObj == undefined) {
         state.Davout.TokensWithConditionObj = {};
     }
 
-    if (state.Davout.TokensWithConditionObj[tokenId] == undefined ){
-//        if (tokenName == undefined){
-//            tokenName = getObj("graphic", tokenId).get("name");
-//        }
-        state.Davout.TokensWithConditionObj[tokenId] = new Davout.ConditionObj.TokenWithConditions(tokenId, tokenName);
+    if (state.Davout.TokensWithConditionObj[tokenId] == undefined) {
+        state.Davout.TokensWithConditionObj[tokenId] = new Davout.ConditionObj.TokenWithConditions(tokenId);
     }
 
     return state.Davout.TokensWithConditionObj[tokenId];
@@ -318,27 +293,29 @@ Davout.TokenFactory.getInstance = function(tokenId, tokenName){
  * Event: When roll20 token is destroyed and an associated TokenWithConditions exists, destroy it.
  */
 Davout.ConditionObj.onTokenDestroyedEvent = function () {
+    "use strict";
     log("Deleted state.Davout.TokensWithConditionObj for " + token.get("name"));
     state.Davout.TokensWithConditionObj[token.get("id")] = null;
 };
 
 Davout.ConditionObj.command._manageCondition = function (actionType, selected, conditionName) {
+    "use strict";
     var tokenObjR20;
     var tokenId;
 
     _.each(selected, function (obj) {
         tokenObjR20 = getObj("graphic", obj._id);
-        if (tokenObjR20.get("_subtype") == "token") {
+        if (tokenObjR20.get("subtype") == "token") {
             tokenId = tokenObjR20.get("id");
             if (tokenId != "") {
                 switch (actionType) {
                     case "ADD":
-                        var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
-                        davoutToken.addCondition(state.Davout.ConditionObj[conditionName]);
+                        var tokenCondition = Davout.TokenFactory.getInstance(tokenId);
+                        tokenCondition.addCondition(state.Davout.ConditionObj[conditionName]);
                         break;
                     case "DEL":
-                        var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
-                        davoutToken.removeCondition(state.Davout.ConditionObj[conditionName]);
+                        var tokenCondition = Davout.TokenFactory.getInstance(tokenId);
+                        tokenCondition.removeCondition(state.Davout.ConditionObj[conditionName]);
                         break;
                     case "SHOW":
                         Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions(tokenId));
@@ -352,6 +329,7 @@ Davout.ConditionObj.command._manageCondition = function (actionType, selected, c
 on("destroy:token", Davout.ConditionObj.onTokenDestroyedEvent);
 
 on("ready", function () {
+    "use strict";
     if (community == undefined || !("command" in community)) {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";

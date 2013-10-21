@@ -5,36 +5,44 @@
 var Davout = Davout || {};
 Davout.R20Utils = Davout.R20Utils || {};
 
-Davout.R20Utils.adjustAttributeForChar = function(characterId, attributeName, modifier){
-    var attrib = findObjs({_type: "attribute", name: "cur_" + attributeName, _characterid: characterId})[0];
-    if (attrib == undefined){
-        return;
-    }
-
-    attrib.set("current", parseInt(attrib.get("current")) + modifier);
-};
-
 Davout.R20Utils.getAttribCurrentFor = function (charId, attributeName){
+    "use strict";
     var attributeSheetObj = findObjs({ _type: 'attribute', name: attributeName, _characterid: charId })[0]
     return attributeSheetObj.get("current");
 };
 
 Davout.R20Utils.selectedToTokenObj = function (singleSelectedObject){
+    "use strict";
     if (singleSelectedObject == undefined) return undefined;
 
-    var tokenObjR20 = getObj("graphic", singleSelectedObject._id);
+    var tokenObjR20 = getObj("graphic", singleSelectedObject.get("id"));
     if (tokenObjR20 == undefined) return undefined;
     if (tokenObjR20.get("subtype") != "token") return undefined;
     return tokenObjR20;
 };
 
-Davout.R20Utils.tokenObjToCharObj = function (tokenObject){
+Davout.R20Utils.tokenIdToCharId = function (tokenId){
+    "use strict";
+    if (tokenId == undefined) return undefined;
+    if (tokenId == "") return undefined;
+    var tokenObjR20 = getObj("graphic", tokenId);
+    if (tokenObjR20.get("subtype") != "token") return undefined;
+    return tokenObjR20.get("represents");
+};
+
+Davout.R20Utils.tokenObjToCharId = function (tokenObject){
+    "use strict";
     if (tokenObject == undefined) return undefined;
 
     var charId = tokenObject.get("represents");
     if (charId == undefined) return undefined;
     if (charId == "") return undefined;
-    return getObj("character", charId);
+    return charId;
+};
+
+Davout.R20Utils.tokenObjToCharObj = function (tokenObject){
+    "use strict";
+    return getObj("character", Davout.R20Utils.tokenObjToCharId(tokenObject));
 };
 
 // Roll20Utils

@@ -2,10 +2,18 @@
 describe("Condition suite", function() {
     var tokenId = "1";
     var davoutToken;
+    var mockToken = {};
 
     beforeEach(function(){
         state.Davout.TokensWithConditionObj = undefined;
-        davoutToken = Davout.TokenFactory.getInstance(tokenId, "Orc");
+        mockToken.get = jasmine.createSpy();
+        mockToken.get.when("name").thenReturn("Orc");
+        mockToken.get.when("represents").thenReturn("c1");
+        mockToken.get.when("subtype").thenReturn("token");
+        window.getObj = jasmine.createSpy();
+        window.getObj.when("graphic", tokenId).thenReturn(mockToken);
+
+        davoutToken = Davout.TokenFactory.getInstance(tokenId);
         spyOn(window, 'sendChat');
         spyOn(window, 'log');
     });
@@ -29,31 +37,33 @@ describe("Condition suite", function() {
         expect(log).toHaveBeenCalledWith("Removed: condition Fatigued removed from Orc");
     });
 
-    it("conditions affects modifiers", function() {
-        expect(davoutToken.getModifierFor("str")).toEqual(0);
+    it ("conditions affects modifiers", function() {
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getModifierFor("str")).toEqual(-2);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(-2);
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getModifierFor("str")).toEqual(-4);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(-4);
         davoutToken.removeCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getModifierFor("str")).toEqual(-2);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(-2);
         davoutToken.removeCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getModifierFor("str")).toEqual(0);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
     });
 
     it ("Condition: prevent action when token has prohibited condition effect", function(){
-        expect(davoutToken.isProhibited("improvise")).toBe(false);
+        expect(davoutToken.getAffect("improvise").isProhibited).toBe(false);
         davoutToken.addCondition(state.Davout.ConditionObj["blinded"]);
-        expect(davoutToken.isProhibited("improvise")).toBe(true);
+        var affect = davoutToken.getAffect("improvise");
+        expect(affect.isProhibited).toBe(true);
 
-        expect(davoutToken.listConditionsAffecting("improvise")).toEqual("Blinded: 0. Cannot perform craft skill.<br>");
+        expect(affect.buildNotesString()).toEqual("Blinded, cannot perform craft skill.<br>");
 
         davoutToken.removeCondition(state.Davout.ConditionObj["blinded"]);
-        expect(davoutToken.isProhibited("improvise")).toBe(false);
-        expect(davoutToken.listConditionsAffecting("improvise")).toEqual("");
+        affect = davoutToken.getAffect("improvise");
+        expect(affect.isProhibited).toBe(false);
+        expect(affect.buildNotesString()).toEqual("");
     });
 
-    it("prevent adding a non-stackable condition when token already has the condition.", function(){
+    it ("prevent adding a non-stackable condition when token already has the condition.", function(){
         davoutToken.addCondition(state.Davout.ConditionObj["blinded"]);
         expect(davoutToken.listAllConditions()).toEqual("Blinded<br>");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Orc");
@@ -70,24 +80,36 @@ describe("Condition suite", function() {
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
 
-        expect(davoutToken.listAllConditions()).toEqual("Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>")
-        expect(davoutToken.listConditionsAffecting("str")).toEqual("Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
-        expect(davoutToken.listConditionsAffecting("improvise")).toEqual("Unconscious: 0. Cannot perform craft skill.<br>");
+        expect(davoutToken.listAllConditions()).toEqual("Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
+
+        var affect = davoutToken.getAffect("str");
+        expect(affect.buildModListString()).toEqual("Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
+        affect = davoutToken.getAffect("improvise");
+        expect(affect.isProhibited).toBe(true);
+        expect(affect.buildNotesString()).toEqual("Unconscious, cannot perform craft skill.<br>");
     });
 
-    it("multiple conditions that affect the same action/attribute will have their modifiers combined", function(){
+    it ("multiple conditions that affect the same action/attribute will have their modifiers combined", function(){
         davoutToken.addCondition(state.Davout.ConditionObj["baffled"]);
         davoutToken.addCondition(state.Davout.ConditionObj["entangled"]);
 
-        expect(davoutToken.getModifierFor("tumble")).toEqual(-6);
+        expect(davoutToken.getAffect("tumble").condModTotal).toEqual(-6);
     });
 
-    it("get modifier based on target", function(){
+    it ("get modifier based on target", function(){
+
+        var mockTargetToken = {};
+        mockTargetToken.get = jasmine.createSpy();
+        mockTargetToken.get.when("name").thenReturn("Troll");
+        mockTargetToken.get.when("represents").thenReturn("c2");
+        mockTargetToken.get.when("subtype").thenReturn("token");
+
         var targetTokenId = "2";
-        var targetToken = Davout.TokenFactory.getInstance(targetTokenId, "Target NPC");
+        window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
+        var targetToken = Davout.TokenFactory.getInstance(targetTokenId);
         targetToken.addCondition(state.Davout.ConditionObj["blinded"]);
 
-        expect(targetToken.getModifierAsTarget("attack-melee")).toEqual(2);
+        expect(targetToken.getAffectAsTarget("attack-melee").condModTotal).toEqual(2);
     });
 });
 

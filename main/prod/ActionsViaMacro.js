@@ -4,66 +4,121 @@ Davout.ActionObj.command = Davout.ActionObj.command || {};
 
 state.Davout = state.Davout || {};
 state.Davout.ActionObjs = state.Davout.ActionObjs || {};
-state.Davout.DcActionObjs = state.Davout.DcActionObjs || {};
+state.Davout.DcChallengeObjs = state.Davout.DcChallengeObjs || {};
 state.Davout.TargetIdsOfAction = state.Davout.TargetIdsOfAction || [];  //Array of Arrays of IDs
 
+
 Davout.ActionObj.Action = function (actionName, attribNameOnSheet, baseModNameOnSheet, doesApcPenApply) {
+    "use strict";
     this.actionName = actionName;
     this.chShAttributeName = attribNameOnSheet;
-    this.chShbaseModName = baseModNameOnSheet;
+    this.chShBaseModName = baseModNameOnSheet;
     this.chShAcpName = "AC-Penalty";
     this.doesApcPenApply = doesApcPenApply;
 };
 
-Davout.ActionObj.Action.prototype.getActionFormula = function (charObj, modifier) {
-    var actionFormula = charObj.get("name") + " ";
-    actionFormula += this.actionName;
-    actionFormula += ": [[floor(" + Davout.R20Utils.getAttribCurrentFor(charObj.get("id"), this.chShAttributeName) + "/2-5)+";
-    actionFormula += Davout.R20Utils.getAttribCurrentFor(charObj.get("id"), this.chShbaseModName) + "+ 1d20+ ";
-    actionFormula += modifier;
-    if (this.doesApcPenApply) {
-        actionFormula += " - " + Davout.R20Utils.getAttribCurrentFor(charObj.get("id"), this.chShAcpName);
+Davout.ActionObj.Action.prototype.buildActionString = function (charObj, totalAffect, dieResult, targetTotalAffectable) {
+    "use strict";
+    if (dieResult === undefined) {
+        dieResult = randomInteger(20);
     }
+
+    var attributeValue = charObj.getAttribCurrentFor(this.chShAttributeName);
+    var baseValue = charObj.getAttribCurrentFor(this.chShBaseModName);
+    var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue) + Number(totalAffect.condModTotal);
+    if (targetTotalAffectable !== undefined){
+        rollTotal += targetTotalAffectable.condModTotal;
+    }
+
+    var actionString = this.actionName;
+    actionString += ": Rolls " + dieResult + " + ";
+    actionString += "(" + this.chShAttributeName + ": " + Math.floor(attributeValue / 2 - 5);
+    actionString += ") + (" + this.chShBaseModName + ": " + baseValue + ")";
+    if (this.doesApcPenApply) {
+        var acpValue = charObj.getAttribCurrentFor(this.chShAcpName);
+        rollTotal -= Number(acpValue);
+        actionString += " + (ACP: -" + acpValue + ")";
+    }
+    if (totalAffect.modList.length > 0){
+        actionString += " + (Conditions: " + totalAffect.condModTotal + ")";
+    }
+    if (targetTotalAffectable !== undefined && targetTotalAffectable.modList.length > 0){
+        actionString += " + (Opp Cond: " + targetTotalAffectable.condModTotal + ")";
+    }
+
+    actionString += " = <b>" + rollTotal + "</b><br>";
+    actionString += totalAffect.buildModListString();
+    if (targetTotalAffectable) {
+        actionString += targetTotalAffectable.buildModListString();
+    }
+
+    actionString += totalAffect.buildNotesString();
+    if (targetTotalAffectable) {
+        actionString += targetTotalAffectable.buildNotesString();
+    }
+
+    return actionString;
+};
+
+Davout.ActionObj.StaticChallenge = function (name, attribNameOnSheet, baseNameOnSheet) {
+    "use strict";
+    this.name = name;
+    this.chShAttributeName = attribNameOnSheet;
+    this.chShBaseModName = baseNameOnSheet;
+};
+
+Davout.ActionObj.StaticChallenge.prototype.buildActionString = function (charObj) {
+    "use strict";
+    var actionFormula = charObj.get("name") + " ";
+    actionFormula += this.name;
+    actionFormula += ": [[" + Davout.R20Utils.getAttribCurrentFor(charObj.get("id"), this.chShAttributeName) + "+";
+    actionFormula += Davout.R20Utils.getAttribCurrentFor(charObj.get("id"), this.chShBaseModName);
     actionFormula += "]]";
     return actionFormula;
 };
 
 Davout.ActionObj.command._action = function (msg, actionName) {
+    "use strict";
     var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
-    var tokenId = tokenObjR20.get("id");
-    var davoutToken = Davout.TokenFactory.getInstance(tokenId, tokenObjR20.get("name"));
-    if (!davoutToken.isProhibited(actionName)) {
-        if (tokenObjR20 != undefined) {
-            var playerModifier = davoutToken.getModifierFor(actionName);
-            var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
-            var actionObj = state.Davout.ActionObjs[actionName];
-            var targetIdsOfPlayer = state.Davout.TargetIdsOfAction[msg.playerid];
-            if (targetIdsOfPlayer == undefined || targetIdsOfPlayer.length == 0) {
-                Davout.Utils.sendDirectedMsgToChat(true, actionObj.getActionFormula(charObj, playerModifier) + ":<br>" + davoutToken.listConditionsAffecting(actionName));
-            } else {
-                for (var i = 0; i < targetIdsOfPlayer.length; i++) {
-                    var targetTokenId = targetIdsOfPlayer[i];
-                    var davoutTargetToken = Davout.TokenFactory.getInstance(targetTokenId);
-                    var targetModifier = davoutTargetToken.getModifierAsTarget(actionName);
-                    var dcObj = state.Davout.DcActionObjs[actionName];
+    if (tokenObjR20 === undefined) {
+        throw "Selected object is not valid token";
+    }
 
-                    Davout.Utils.sendDirectedMsgToChat(true,
-                        actionObj.getActionFormula(charObj, playerModifier + targetModifier)
-                            + ":<br>" + davoutToken.listConditionsAffecting(actionName)
-                            + "Target:<br>" + davoutTargetToken.listConditionsAffectingAsTarget(actionName)
-                    );
+    var tokenId = tokenObjR20.get("id");
+    var tokenCondition = Davout.TokenFactory.getInstance(tokenId);
+    var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
+    var totalAffect = tokenCondition.getAffect(actionName);
+    if (!totalAffect.isProhibited) {
+        var actionObj = state.Davout.ActionObjs[actionName],
+            targetIdsOfPlayer = state.Davout.TargetIdsOfAction[msg.playerid],
+            actionMsg;
+        if (targetIdsOfPlayer === undefined || targetIdsOfPlayer.length === 0) {
+            actionMsg = actionObj.buildActionString(charObj, totalAffect, randomInteger(20));
+        } else {
+            var dieResult = randomInteger(20);
+            for (var i = 0; i < targetIdsOfPlayer.length; i++) {
+                var targetTokenId = targetIdsOfPlayer[i];
+                var targetTokenCondition = Davout.TokenFactory.getInstance(targetTokenId);
+                var targetTotalAffectable = targetTokenCondition.getAffectAsTarget(actionName);
+                actionMsg = actionObj.buildActionString(charObj, totalAffect, dieResult, targetTotalAffectable);
+                var dcObj = state.Davout.DcChallengeObjs[actionName];
+
+                if (dcObj != undefined) {
+
                 }
             }
         }
+        Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " " + actionMsg);
     } else {
         sendChat("API", "/w gm " + tokenObjR20.get("name") + " is prohibited from performing "
             + Davout.Utils.capitaliseFirstLetter(actionName) + ".<br>"
-            + davoutToken.listConditionsAffecting(actionName));
+            + totalAffect.buildNotesString());
     }
 };
 
 // TODO add target image around targets.
 Davout.ActionObj.command._setTargets = function (playerId, targets) {
+    "use strict";
     var tokenObjR20;
     if (state.Davout.TargetIdsOfAction == undefined) {
         state.Davout.TargetIdsOfAction = [];
@@ -72,7 +127,7 @@ Davout.ActionObj.command._setTargets = function (playerId, targets) {
 
     _.each(targets, function (obj) {
         tokenObjR20 = getObj("graphic", obj._id);
-        if (tokenObjR20.get("_subtype") == "token") {
+        if (tokenObjR20.get("subtype") == "token") {
             state.Davout.TargetIdsOfAction[playerId].push(tokenObjR20.get("id"));
         }
     });
@@ -81,6 +136,7 @@ Davout.ActionObj.command._setTargets = function (playerId, targets) {
 };
 
 on("ready", function () {
+    "use strict";
     if (community == undefined || !("command" in community)) {
         log("You must have community.command installed in a script tab before the tab this script is in to use pigalot.requests.phrases.");
         throw "Can't find community.command!";

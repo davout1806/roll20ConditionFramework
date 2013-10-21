@@ -7,10 +7,12 @@ state.Davout.ActionObjs["jump"] = new Davout.ActionObj.Action("Jump", "Dex", "Ac
 state.Davout.ActionObjs["attack-melee"] = new Davout.ActionObj.Action("Melee Attack", "Str", "Att-Melee-Base", false);
 state.Davout.ActionObjs["attack-hurl"] = new Davout.ActionObj.Action("Hurl Attack", "Dex", "Att-Hurl-Base", false);
 state.Davout.ActionObjs["attack-range"] = new Davout.ActionObj.Action("Range Attack", "Dex", "Att-Range-Base", false);
+state.Davout.ActionObjs["haggle"] = new Davout.ActionObj.Action("Haggle", "Wis", "Haggle-Base", false);
 
-state.Davout.DcActionObjs["attack-melee"] = new Davout.ActionObj.Action("Melee Attack", "Dex", "Defense", true);
-state.Davout.DcActionObjs["attack-hurl"] = new Davout.ActionObj.Action("Hurl Attack", "Dex", "Defense", true);
-state.Davout.DcActionObjs["attack-range"] = new Davout.ActionObj.Action("Range Attack", "Dex", "Defense", true);
+state.Davout.DcChallengeObjs["attack-melee"] = new Davout.ActionObj.StaticChallenge("Melee Defense", "Dex", "Defense");
+state.Davout.DcChallengeObjs["attack-hurl"] = new Davout.ActionObj.StaticChallenge("Hurl Defense", "Dex", "Defense");
+state.Davout.DcChallengeObjs["attack-range"] = new Davout.ActionObj.StaticChallenge("Range Defense", "Dex", "Defense");
+state.Davout.DcChallengeObjs["haggle"] = new Davout.ActionObj.Action("Haggle", "Wis", "Haggle-Base", false);
 
 // ActionsFC
 

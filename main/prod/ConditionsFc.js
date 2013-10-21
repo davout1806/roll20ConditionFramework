@@ -12,7 +12,7 @@ condition = new Davout.ConditionObj.Condition("baffled", effects);
 state.Davout.ConditionObj["baffled"] = condition;
 
 var effects = new Array(
-    new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)
+    new Davout.ConditionObj.Effect("improvise", "cannot perform craft skill.", 0, true)
     , new Davout.ConditionObj.Effect("VS-attack-melee", "", 2, false)
     , new Davout.ConditionObj.Effect("VS-attack-hurl", "", 2, false)
     , new Davout.ConditionObj.Effect("VS-attack-range", "", 2, false)
@@ -33,7 +33,7 @@ effects = new Array(new Davout.ConditionObj.Effect("str", "", -2, false));
 condition = new Davout.ConditionObj.Condition("fatigued", effects, 4, "unconscious");
 state.Davout.ConditionObj["fatigued"] = condition;
 
-condition = new Davout.ConditionObj.Condition("unconscious", new Array(new Davout.ConditionObj.Effect("improvise", "Cannot perform craft skill.", 0, true)));
+condition = new Davout.ConditionObj.Condition("unconscious", new Array(new Davout.ConditionObj.Effect("improvise", "cannot perform craft skill.", 0, true)));
 state.Davout.ConditionObj["unconscious"] = condition;
 
 
