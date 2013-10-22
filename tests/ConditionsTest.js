@@ -39,14 +39,19 @@ describe("Condition suite", function() {
 
     it ("conditions affects modifiers", function() {
         expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
+        expect(davoutToken.getAffect("str").attributeMod).toEqual(0);
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getAffect("str").condModTotal).toEqual(-2);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
+        expect(davoutToken.getAffect("str").attributeMod).toEqual(-2);
         davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getAffect("str").condModTotal).toEqual(-4);
-        davoutToken.removeCondition(state.Davout.ConditionObj["fatigued"]);
-        expect(davoutToken.getAffect("str").condModTotal).toEqual(-2);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
+        expect(davoutToken.getAffect("str").attributeMod).toEqual(-4);
         davoutToken.removeCondition(state.Davout.ConditionObj["fatigued"]);
         expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
+        expect(davoutToken.getAffect("str").attributeMod).toEqual(-2);
+        davoutToken.removeCondition(state.Davout.ConditionObj["fatigued"]);
+        expect(davoutToken.getAffect("str").condModTotal).toEqual(0);
+        expect(davoutToken.getAffect("str").attributeMod).toEqual(0);
     });
 
     it ("Condition: prevent action when token has prohibited condition effect", function(){
@@ -83,7 +88,7 @@ describe("Condition suite", function() {
         expect(davoutToken.listAllConditions()).toEqual("Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
 
         var affect = davoutToken.getAffect("str");
-        expect(affect.buildModListString()).toEqual("Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>Fatigued: -2<br>");
+        expect(affect.buildModListString()).toEqual("(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>");
         affect = davoutToken.getAffect("improvise");
         expect(affect.isProhibited).toBe(true);
         expect(affect.buildNotesString()).toEqual("Unconscious, cannot perform craft skill.<br>");

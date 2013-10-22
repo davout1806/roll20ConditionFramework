@@ -39,8 +39,10 @@ Davout.ConditionObj.TotalAffectable = function (affectableName) {
     "use strict";
     this.affectableName = affectableName;
     this.condModTotal = 0;
+    this.attributeMod = 0;
     this.isProhibited = false;
     this.modList = [];
+//    this.attribModList = [];
     this.notes = [];
 };
 
@@ -56,8 +58,13 @@ Davout.ConditionObj.TotalAffectable.prototype.add = function (condition) {
                 this.isProhibited = true;
             } else {
                 if (effect.hasModifier) {
-                    this.condModTotal += effect.modifier;
-                    this.modList.push({name: Davout.Utils.capitaliseFirstLetter(conditionName), value: effect.modifier});
+                    if (effect.isAttribute) {
+                        this.attributeMod += effect.modifier;
+                        this.modList.push({name: "(" + Davout.Utils.capitaliseFirstLetter(this.affectableName) + ") " + Davout.Utils.capitaliseFirstLetter(conditionName), value: effect.modifier});
+                    } else {
+                        this.condModTotal += effect.modifier;
+                        this.modList.push({name: Davout.Utils.capitaliseFirstLetter(conditionName), value: effect.modifier});
+                    }
                 }
             }
 
@@ -228,7 +235,7 @@ Davout.ConditionObj.Condition = function (name, effects, maxStackSize, nextCondi
 
     this.effects = {};
     for (var i = 0; i < effects.length; i++) {
-        var affectableName = effects[i].affectable;
+        var affectableName = effects[i].affectableName;
         if (this.effects[affectableName] == undefined) {
             this.effects[affectableName] = [];
         }
@@ -254,15 +261,19 @@ Davout.ConditionObj.Condition.prototype.getAffects = function (affectableName) {
  * @param prohibitive   Whether or not this effect prevents the given action from being performed.
  * @constructor
  */
-Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibitive) {
+Davout.ConditionObj.Effect = function (affectableName, notes, modifier, prohibitive, isAttribute) {
     "use strict";
     if (!_.isString(affectableName)) throw "Davout.ConditionObj.Effect affectableName invalid parameter type";
 
     this.modifier = NaN;
     this.hasModifier = false;
-    this.affectable = affectableName;
+    this.affectableName = affectableName;
     this.notes = notes;
     this.prohibitive = prohibitive;
+    this.isAttribute = isAttribute;
+    if (isAttribute === undefined) {
+        this.isAttribute = false;
+    }
 
     if (!prohibitive) {
         if (modifier != null) {

@@ -23,7 +23,7 @@ Davout.ActionObj.Action.prototype.buildActionString = function (charObj, totalAf
         dieResult = randomInteger(20);
     }
 
-    var attributeValue = charObj.getAttribCurrentFor(this.chShAttributeName);
+    var attributeValue = charObj.getAttribCurrentFor(this.chShAttributeName) + totalAffect.attributeMod;
     var baseValue = charObj.getAttribCurrentFor(this.chShBaseModName);
     var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue) + Number(totalAffect.condModTotal);
     if (targetTotalAffectable !== undefined){
@@ -87,6 +87,7 @@ Davout.ActionObj.command._action = function (msg, actionName) {
     var tokenId = tokenObjR20.get("id");
     var tokenCondition = Davout.TokenFactory.getInstance(tokenId);
     var charObj = Davout.R20Utils.tokenObjToCharObj(tokenObjR20);
+    // TODO problem: actionName is not the attribute therefore conditions affecting the attribute are not included in totalAffect.
     var totalAffect = tokenCondition.getAffect(actionName);
     if (!totalAffect.isProhibited) {
         var actionObj = state.Davout.ActionObjs[actionName],

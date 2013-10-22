@@ -35,7 +35,7 @@ effects = new Array(
 condition = new Davout.ConditionObj.Condition("entangled", effects);
 state.Davout.ConditionObj["entangled"] = condition;
 
-effects = new Array(new Davout.ConditionObj.Effect("str", "", -2, false));
+effects = new Array(new Davout.ConditionObj.Effect("str", "", -2, false, true));
 condition = new Davout.ConditionObj.Condition("fatigued", effects, 4, "unconscious");
 state.Davout.ConditionObj["fatigued"] = condition;
 
