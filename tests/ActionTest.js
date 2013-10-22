@@ -77,15 +77,15 @@ describe("Action suite", function () {
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
+        davoutToken.addCondition(state.Davout.ConditionObj["entangled"]);
         targetToken.addCondition(state.Davout.ConditionObj["blinded"]);
 
         Davout.ActionObj.command._action(mockMessage, "attack-melee");
 
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Jack the Target");
         expect(sendChat).toHaveBeenCalledWith("API"
-            , "/w gm Bob the Orc Melee Attack: Rolls 5 + (Str: 1) + (Att-Melee-Base: 0) + (Opp Cond: 2) = <b>8</b><br>Blinded: 2<br>");
+            , "/w gm Bob the Orc Melee Attack: Rolls 5 + (Str: 1) + (Att-Melee-Base: 0) + (Conditions: -2) + (Opp Cond: 2) = <b>6</b><br>Entangled: -2<br>Blinded: 2<br>");
     });
 
     //TODO test with condition affecting attribute ex: Str
-    //TODO test with acting and target conditions
 });

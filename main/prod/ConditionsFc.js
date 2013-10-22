@@ -16,6 +16,9 @@ var effects = new Array(
     , new Davout.ConditionObj.Effect("VS-attack-melee", "", 2, false)
     , new Davout.ConditionObj.Effect("VS-attack-hurl", "", 2, false)
     , new Davout.ConditionObj.Effect("VS-attack-range", "", 2, false)
+    , new Davout.ConditionObj.Effect("attack-melee", "", -8, false)
+    , new Davout.ConditionObj.Effect("attack-hurl", "", -8, false)
+    , new Davout.ConditionObj.Effect("attack-range", "", -8, false)
 );
 condition = new Davout.ConditionObj.Condition("blinded", effects);
 state.Davout.ConditionObj["blinded"] = condition;
@@ -25,6 +28,9 @@ effects = new Array(
     , new Davout.ConditionObj.Effect("break-fall", "", -4, false)
     , new Davout.ConditionObj.Effect("jump", "", -4, false)
     , new Davout.ConditionObj.Effect("tumble", "", -4, false)
+    , new Davout.ConditionObj.Effect("attack-melee", "", -2, false)
+    , new Davout.ConditionObj.Effect("attack-hurl", "", -2, false)
+    , new Davout.ConditionObj.Effect("attack-range", "", -2, false)
 );
 condition = new Davout.ConditionObj.Condition("entangled", effects);
 state.Davout.ConditionObj["entangled"] = condition;
