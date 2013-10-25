@@ -3,44 +3,45 @@
  */
 var condition;
 var effects = new Array(
-    new Davout.ConditionObj.Effect("balance", "", -2, false)
-    , new Davout.ConditionObj.Effect("break-fall", "", -2, false)
-    , new Davout.ConditionObj.Effect("jump", "", -2, false)
-    , new Davout.ConditionObj.Effect("tumble", "", -2, false)
+    new Davout.ConditionFW.Effect("Balance", false, false, -2)
+    , new Davout.ConditionFW.Effect("Break-fall", false, false, -2)
+    , new Davout.ConditionFW.Effect("Jump", false, false, -2)
+    , new Davout.ConditionFW.Effect("Tumble", false, false, -2)
 );
-condition = new Davout.ConditionObj.Condition("baffled", effects);
-state.Davout.ConditionObj["baffled"] = condition;
-
-var effects = new Array(
-    new Davout.ConditionObj.Effect("improvise", "cannot perform craft skill.", 0, true)
-    , new Davout.ConditionObj.Effect("VS-attack-melee", "", 2, false)
-    , new Davout.ConditionObj.Effect("VS-attack-hurl", "", 2, false)
-    , new Davout.ConditionObj.Effect("VS-attack-range", "", 2, false)
-    , new Davout.ConditionObj.Effect("attack-melee", "", -8, false)
-    , new Davout.ConditionObj.Effect("attack-hurl", "", -8, false)
-    , new Davout.ConditionObj.Effect("attack-range", "", -8, false)
-);
-condition = new Davout.ConditionObj.Condition("blinded", effects);
-state.Davout.ConditionObj["blinded"] = condition;
+condition = new Davout.ConditionFW.Condition("baffled", effects);
+state.Davout.ConditionFW.ConditionLookup["baffled"] = condition;
 
 effects = new Array(
-    new Davout.ConditionObj.Effect("balance", "", -4, false)
-    , new Davout.ConditionObj.Effect("break-fall", "", -4, false)
-    , new Davout.ConditionObj.Effect("jump", "", -4, false)
-    , new Davout.ConditionObj.Effect("tumble", "", -4, false)
-    , new Davout.ConditionObj.Effect("attack-melee", "", -2, false)
-    , new Davout.ConditionObj.Effect("attack-hurl", "", -2, false)
-    , new Davout.ConditionObj.Effect("attack-range", "", -2, false)
+    new Davout.ConditionFW.Effect("Improvise", false, true, 0, "cannot perform craft skill.")
+    , new Davout.ConditionFW.Effect("VS-Melee Attack", false, false, -2)
+    , new Davout.ConditionFW.Effect("VS-Hurl Attack", false, false, -2)
+    , new Davout.ConditionFW.Effect("VS-Range Attack", false, false, -2)
+    , new Davout.ConditionFW.Effect("Melee Attack", false, false, -8)
+    , new Davout.ConditionFW.Effect("Hurl Attack", false, false, -8)
+    , new Davout.ConditionFW.Effect("Range Attack", false, false, -8)
 );
-condition = new Davout.ConditionObj.Condition("entangled", effects);
-state.Davout.ConditionObj["entangled"] = condition;
+condition = new Davout.ConditionFW.Condition("blinded", effects);
+state.Davout.ConditionFW.ConditionLookup["blinded"] = condition;
 
-effects = new Array(new Davout.ConditionObj.Effect("str", "", -2, false, true));
-condition = new Davout.ConditionObj.Condition("fatigued", effects, 4, "unconscious");
-state.Davout.ConditionObj["fatigued"] = condition;
+effects = new Array(
+    new Davout.ConditionFW.Effect("Balance", false, false, -4)
+    , new Davout.ConditionFW.Effect("Break-fall", false, false, -4)
+    , new Davout.ConditionFW.Effect("Jump", false, false, -4)
+    , new Davout.ConditionFW.Effect("Tumble", false, false, -4)
+    , new Davout.ConditionFW.Effect("Melee Attack", false, false, -2)
+    , new Davout.ConditionFW.Effect("Hurl Attack", false, false, -2)
+    , new Davout.ConditionFW.Effect("Range Attack", false, false, -2)
+);
+condition = new Davout.ConditionFW.Condition("entangled", effects);
+state.Davout.ConditionFW.ConditionLookup["entangled"] = condition;
 
-condition = new Davout.ConditionObj.Condition("unconscious", new Array(new Davout.ConditionObj.Effect("improvise", "cannot perform craft skill.", 0, true)));
-state.Davout.ConditionObj["unconscious"] = condition;
+effects = [new Davout.ConditionFW.Effect("Str", true, false, -2)];
+condition = new Davout.ConditionFW.Condition("fatigued", effects, 4, "unconscious");
+state.Davout.ConditionFW.ConditionLookup["fatigued"] = condition;
+
+effects = [new Davout.ConditionFW.Effect("Improvise", false, true, 0, "cannot perform craft skill.")];
+condition = new Davout.ConditionFW.Condition("unconscious", effects);
+state.Davout.ConditionFW.ConditionLookup["unconscious"] = condition;
 
 
 // ConditionsFc

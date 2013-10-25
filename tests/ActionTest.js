@@ -6,7 +6,7 @@ describe("Action suite", function () {
     var mockCharacter = {};
 
     beforeEach(function () {
-        state.Davout.TokensWithConditionObj = {};
+        state.Davout.ConditionFW.TokensWithConditionObj = {};
         mockToken.get = jasmine.createSpy();
         mockToken.get.when("name").thenReturn("Bob the Orc");
         mockToken.get.when("represents").thenReturn("c1");
@@ -15,7 +15,7 @@ describe("Action suite", function () {
         window.getObj = jasmine.createSpy();
         window.getObj.when("graphic", tokenId).thenReturn(mockToken);
 
-        davoutToken = Davout.TokenFactory.getInstance(tokenId);
+        davoutToken = Davout.ConditionFW.getTokenInstance(tokenId);
         spyOn(window, 'sendChat');
         spyOn(window, 'log');
     });
@@ -24,8 +24,8 @@ describe("Action suite", function () {
         mockMessage = {selected: [mockToken]};
         window.getObj.when("character", "c1").thenReturn(mockCharacter);
 
-        davoutToken.addCondition(state.Davout.ConditionObj["blinded"]);
-        Davout.ActionObj.command._action(mockMessage, "improvise");
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
+        Davout.ConditionFW.command._action(mockMessage, "improvise");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Bob the Orc");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Bob the Orc is prohibited from performing Improvise.<br>Blinded, cannot perform craft skill.<br>");
     });
@@ -44,9 +44,9 @@ describe("Action suite", function () {
 
         mockMessage = {selected: [mockToken]};
 
-        davoutToken.addCondition(state.Davout.ConditionObj["baffled"]);
-        davoutToken.addCondition(state.Davout.ConditionObj["entangled"]);
-        Davout.ActionObj.command._action(mockMessage, "jump");
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["baffled"]);
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
+        Davout.ConditionFW.command._action(mockMessage, "jump");
 
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Baffled was added to Bob the Orc");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Entangled was added to Bob the Orc");
@@ -71,16 +71,16 @@ describe("Action suite", function () {
         mockCharacter.getAttribCurrentFor.when("Att-Melee-Base").thenReturn(0);
         window.getObj.when("character", "c1").thenReturn(mockCharacter);
 
-        var targetToken = Davout.TokenFactory.getInstance(targetTokenId);
+        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
 
-        state.Davout.TargetIdsOfAction[tokenId] = [targetTokenId];
+        state.Davout.ConditionFW.TargetIdsOfAction[tokenId] = [targetTokenId];
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
-        davoutToken.addCondition(state.Davout.ConditionObj["entangled"]);
-        targetToken.addCondition(state.Davout.ConditionObj["blinded"]);
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
+        targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
 
-        Davout.ActionObj.command._action(mockMessage, "attack-melee");
+        Davout.ConditionFW.command._action(mockMessage, "attack-melee");
 
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Jack the Target");
         expect(sendChat).toHaveBeenCalledWith("API"
@@ -103,8 +103,8 @@ describe("Action suite", function () {
 
         mockMessage = {selected: [mockToken]};
 
-        davoutToken.addCondition(state.Davout.ConditionObj["fatigued"]);
-        Davout.ActionObj.command._action(mockMessage, "jump");
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
+        Davout.ConditionFW.command._action(mockMessage, "jump");
 
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Fatigued: 1 was added to Bob the Orc");
         expect(sendChat).toHaveBeenCalledWith("API"
