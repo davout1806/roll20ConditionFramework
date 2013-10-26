@@ -18,7 +18,7 @@ describe("Condition suite", function() {
         spyOn(window, 'log');
     });
 
-    xit ("conditions can be added and removed", function(){
+    it ("conditions can be added and removed", function(){
         expect(davoutToken.listAllConditions()).toEqual("");
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         expect(davoutToken.listAllConditions()).toEqual("Fatigued<br>");
@@ -37,7 +37,7 @@ describe("Condition suite", function() {
         expect(log).toHaveBeenCalledWith("Removed: condition Fatigued removed from Orc");
     });
 
-    xit ("conditions affects modifiers, no targets", function() {
+    it ("conditions affects modifiers, no targets", function() {
         var affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
         expect(affectForAction.targets).toEqual([]);
         expect(affectForAction.self.effectsAffectingAction).toEqual([]);
@@ -68,7 +68,7 @@ describe("Condition suite", function() {
         expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([]);
     });
 
-    xit ("Condition: prevent action when token has prohibited condition effect", function(){
+    it ("Condition: prevent action when token has prohibited condition effect", function(){
         expect(davoutToken.getAffectOn("improvise").afIsProhibited).toBe(false);
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         var affect = davoutToken.getAffectOn("improvise");
@@ -82,7 +82,7 @@ describe("Condition suite", function() {
         expect(affect.buildNotesString()).toEqual("");
     });
 
-    xit ("prevent adding a non-stackable condition when token already has the condition.", function(){
+    it ("prevent adding a non-stackable condition when token already has the condition.", function(){
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         expect(davoutToken.listAllConditions()).toEqual("Blinded<br>");
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Orc");
@@ -92,7 +92,7 @@ describe("Condition suite", function() {
         expect(sendChat).toHaveBeenCalledWith("API", "/w gm Orc already has the non-stackable condition Blinded");
     });
 
-    xit ("stackable conditions can stack to max and then switch to another condition", function(){
+    it ("stackable conditions can stack to max and then switch to another condition", function(){
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
@@ -108,7 +108,7 @@ describe("Condition suite", function() {
         expect(affect.buildNotesString()).toEqual("Unconscious, cannot perform craft skill.<br>");
     });
 
-    xit ("multiple conditions that affect the same action/attribute will have their modifiers combined", function(){
+    it ("multiple conditions that affect the same action/attribute will have their modifiers combined", function(){
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["baffled"]);
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
 
@@ -131,7 +131,6 @@ describe("Condition suite", function() {
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
 
-        alert(JSON.stringify(state.Davout.ConditionFW.ActionLookup["attack-melee"]));
         var affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], [targetTokenId]);
         expect(affectForAction.self.effectsAffectingAction).toEqual([]);
         expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([]);
