@@ -57,6 +57,7 @@ describe("Action suite", function () {
     it("condition on target can grant acting player modifier", function () {
         spyOn(window, 'randomInteger').andReturn(5);
         var targetTokenId = "2";
+        var playerId = "99";
 
         var mockTargetToken = {};
         mockTargetToken.get = jasmine.createSpy();
@@ -73,7 +74,7 @@ describe("Action suite", function () {
 
         var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
 
-        state.Davout.ConditionFW.TargetIdsOfAction[tokenId] = [targetTokenId];
+        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 

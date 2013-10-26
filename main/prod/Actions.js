@@ -15,6 +15,8 @@ state.Davout.ConditionFW.TargetIdsOfAction = state.Davout.ConditionFW.TargetIdsO
  */
 Davout.ConditionFW.Action = function Action (actionName, attrAffectedName, baseAffectedName, doesApcPenApply) {
     "use strict";
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Action", arguments, [_.isString, _.isString, _.isString, _.isBoolean]);
+    if (!(this instanceof Davout.ConditionFW.Action)) {return new Davout.ConditionFW.Action(actionName, attrAffectedName, baseAffectedName, doesApcPenApply)}
     this.acName = actionName;
     this.acAttrAffectedName = attrAffectedName;
     this.acBaseAffectedName = baseAffectedName;
@@ -26,7 +28,7 @@ Davout.ConditionFW.Action = function Action (actionName, attrAffectedName, baseA
  *
  * @returns {string} Name of reaction, used as affectedName in Effect.
  */
-Davout.ConditionFW.Action.prototype.getReactionName = function(){
+Davout.ConditionFW.Action.prototype.getTargetAffectedName = function(){
     return "VS-" + this.acName;
 };
 

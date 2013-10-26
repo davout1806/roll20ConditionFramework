@@ -31,6 +31,7 @@ Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg) {
 
 Davout.Utils.removeFromArrayFirstOccurOf = function (array, itemToRemove) {
     "use strict";
+    Davout.Utils.argTypeCheck("Davout.Utils.capitaliseFirstLetter", arguments, [_.isArray, _.isNumber]);
     var workingArray = array;
     var index = workingArray.indexOf(itemToRemove);
     if (index > -1) {
@@ -58,6 +59,7 @@ Davout.Utils.contains = function (array, obj) {
 
 Davout.Utils.capitaliseFirstLetter = function (string) {
     "use strict";
+    Davout.Utils.argTypeCheck("Davout.Utils.capitaliseFirstLetter", arguments, [_.isString]);
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
