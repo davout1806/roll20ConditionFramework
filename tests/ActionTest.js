@@ -20,17 +20,70 @@ describe("Action suite", function () {
         spyOn(window, 'log');
     });
 
-    it("Action: prevent action when token has prohibited condition effect", function () {
-        mockMessage = {selected: [mockToken]};
-        window.getObj.when("character", "c1").thenReturn(mockCharacter);
+    xit ("conditions affects modifiers, no targets", function() {
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
 
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
-        Davout.ConditionFW.command._action(mockMessage, "improvise");
-        expect(sendChat).toHaveBeenCalledWith("API", "/w gm Condition Blinded was added to Bob the Orc");
-        expect(sendChat).toHaveBeenCalledWith("API", "/w gm Bob the Orc is prohibited from performing Improvise.<br>Blinded, cannot perform craft skill.<br>");
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        expect(affectCollection.affIsProhibited).toEqual(false);
+        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(1);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
+
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        expect(affectCollection.affIsProhibited).toEqual(false);
+        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(2);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
+
+        davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(1);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
+
+        davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
     });
 
-    it("action takes into account condition modifier", function () {
+    it("Action: prevent action when token has prohibited condition effect", function () {
+        var targetTokenId = "2";
+        mockMessage = {selected: [mockToken]};
+        var mockTargetToken = {};
+        window.getObj.when("character", "c1").thenReturn(mockCharacter);
+        window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
+
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["improvise"], []);
+        expect(affectCollection.affIsProhibited).toEqual(true);
+        expect(affectCollection.affEffectsAffectingActorAction[0].seaName).toEqual("Blinded");
+        expect(affectCollection.affEffectsAffectingActorAction[0].seaIsProhibited).toEqual(true);
+        expect(affectCollection.affEffectsAffectingActorAction[0].seaModifier).toBeNaN();
+        expect(affectCollection.affEffectsAffectingActorAction[0].seaNote).toEqual("cannot perform craft skill.");
+        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
+    });
+
+    xit("action takes into account condition modifier", function () {
         spyOn(window, 'randomInteger').andReturn(17);
         window.getObj.when("character", "c1").thenReturn(mockCharacter);
 
@@ -54,7 +107,7 @@ describe("Action suite", function () {
             , "/w gm Bob the Orc Jump: Rolls 17 + (Dex: 4) + (Acrobatics-Base: 1) + (ACP: -3) + (Conditions: -6) = <b>13</b><br>Baffled: -2<br>Entangled: -4<br>");
     });
 
-    it("condition on target can grant acting player modifier", function () {
+    xit("condition on target can grant acting player modifier", function () {
         spyOn(window, 'randomInteger').andReturn(5);
         var targetTokenId = "2";
         var playerId = "99";
@@ -80,6 +133,14 @@ describe("Action suite", function () {
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
+//        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], [targetTokenId]);
+//        expect(affectCollection.affIsProhibited).toEqual(false);   // todo need test where actor is blinded
+//        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
+//        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
+//        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaName).toEqual("Blinded");
+//        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaIsProhibited).toEqual(true);
+//        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaModifier).toEqual(-2);
+//        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaNote).toEqual("");
 
         Davout.ConditionFW.command._action(mockMessage, "attack-melee");
 
@@ -90,7 +151,7 @@ describe("Action suite", function () {
 
     //TODO test with condition affecting attribute ex: Str
 
-    it("action takes into account condition that modifies character attribute such as Dexterity", function () {
+    xit("action takes into account condition that modifies character attribute such as Dexterity", function () {
         spyOn(window, 'randomInteger').andReturn(17);
         window.getObj.when("character", "c1").thenReturn(mockCharacter);
 

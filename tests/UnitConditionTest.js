@@ -131,7 +131,7 @@ describe("Condition Unit suite", function () {
                 .not.toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on action but effect was attribute effect.");
         });
 
-        it("getEffectsAffectingActionsAttr with effect type checking", function () {
+        it("getEffectsAffectingActorsAttr with effect type checking", function () {
             var effects = new Array(
                 new Davout.ConditionFW.Effect("Str", true, false, -2)
                 , new Davout.ConditionFW.Effect("Jump", false, false, -2, "huh")
@@ -140,11 +140,11 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("test", effects);
 
             var mockActionObj = {acName: "Str"};
-            expect(function () {condition.getEffectsAffectingActionsAttr(mockActionObj)})
+            expect(function () {condition.getEffectsAffectingActorsAttr(mockActionObj)})
                 .not.toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on attribute but effect was action effect.");
 
             mockActionObj = {acName: "Jump"};
-            expect(function () {condition.getEffectsAffectingActionsAttr(mockActionObj)})
+            expect(function () {condition.getEffectsAffectingActorsAttr(mockActionObj)})
                 .toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on attribute but effect was action effect.");
         });
     });

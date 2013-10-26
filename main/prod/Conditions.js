@@ -41,37 +41,33 @@ Davout.ConditionFW.Condition = function Condition (name, effects, maxStackSize, 
 
 Davout.ConditionFW.Condition.prototype.getEffectsAffectingAction = function (actionName) {
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition.prototype.getEffectsAffectingAction", arguments, [_.isString]);
-    return this.effectsAffecting(actionName, false
-        , "Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on action but effect was attribute effect.");
+    return this.affects(actionName, false);
 };
 
-Davout.ConditionFW.Condition.prototype.getEffectsAffectingActionsAttr = function (actionName) {
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition.prototype.getEffectsAffectingActionsAttr", arguments, [_.isString]);
-    return this.effectsAffecting(actionName, true
-        , "Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on attribute but effect was action effect.");
+Davout.ConditionFW.Condition.prototype.getEffectsAffectingActorsAttr = function (actionName) {
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition.prototype.getEffectsAffectingActorsAttr", arguments, [_.isString]);
+    return this.affects(actionName, true);
 };
 
-Davout.ConditionFW.Condition.prototype.effectsAffecting = function (nameOfAffected, expectAttrType, msgOnError) {
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition.prototype.effectsAffecting", arguments, [_.isString, _.isBoolean, _.isString]);
+Davout.ConditionFW.Condition.prototype.affects = function (nameOfAffected, isAffectingAttribute) {
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition.prototype.affects", arguments, [_.isString, _.isBoolean, _.isString]);
+    var affectList = [];
     var effects = [];
-    var modList = [];
+    var prohibited = false;
     if (this.coEffects[nameOfAffected] !== undefined) {
         effects = effects.concat(this.coEffects[nameOfAffected]);
     }
     var conditionName = this.coName;
 
     _.each(effects, function (effect) {
-        if(effect.efIsAttribute !== expectAttrType){
-            throw msgOnError;
+        var affect = effect.getAffect(conditionName, isAffectingAttribute);
+        if (effect.efIsProhibited) {
+            prohibited = true;
         }
-
-        if (effect.efHasModifier) {
-            modList.push(
-                {name: Davout.Utils.capitaliseFirstLetter(conditionName), value: effect.efModifier});
-        }
+        affectList.push(affect);
     });
 
-    return modList;
+    return {isProhibited: prohibited, affects: affectList};
 };
 
 /**
@@ -102,6 +98,18 @@ Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProh
             this.efHasModifier = true;
         }
     }
+};
+
+Davout.ConditionFW.Effect.prototype.getAffect = function (conditionName, isAffectingAttribute){
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean]);
+    if(this.efIsAttribute !== isAffectingAttribute){
+        var msg ="not to an Attribute";
+        if (this.efIsAttribute){
+            msg = "to be an Attribute"
+        }
+        throw "Davout.ConditionFW.Effect.prototype.getAffect Expecting affected " + msg;
+    }
+    return new Davout.ConditionFW.SingleEffectsAffect(Davout.Utils.capitaliseFirstLetter(conditionName), this.efIsProhibited, this.efModifier, this.efNote);
 };
 
 /******************************************************************************************

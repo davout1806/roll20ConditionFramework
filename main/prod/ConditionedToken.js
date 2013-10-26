@@ -106,33 +106,21 @@ Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
 Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (actionObj, targetIdsArray) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction", arguments, [Davout.Utils.isTrueObject, _.isArray]);
-//    var effectsOnToken = getTokenEffectsFor(actionObj, this);
 
-    var actingTokenEffects = new Davout.ConditionFW.TokenEffects();
+    var affectCollection = new Davout.ConditionFW.AffectCollection();
+
     _.each(this.twcConditions, function (condition) {
-        actingTokenEffects.addEffects(condition.getEffectsAffectingAction(actionObj.acName), condition.getEffectsAffectingActionsAttr(actionObj.acAttrAffectedName));
+        var effectsAffectingAction = condition.getEffectsAffectingAction(actionObj.acName);
+        affectCollection.affIsProhibited = effectsAffectingAction.isProhibited;
+        affectCollection.addEffectsAffectingAction(effectsAffectingAction.affects);
+        affectCollection.addEffectsAffectingActionAttr(condition.getEffectsAffectingActorsAttr(actionObj.acAttrAffectedName).affects);
     });
 
-    var effectsOnAllTargets = {};
-    var targetTokenEffects = {};
     _.each(targetIdsArray, function (targetTokenId) {
-        targetTokenEffects = new Davout.ConditionFW.TokenEffects();
         _.each(Davout.ConditionFW.getTokenInstance(targetTokenId).twcConditions, function (condition) {
-            targetTokenEffects.addEffects(condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()), []);
+            affectCollection.addTargetEffectsAffects(targetTokenId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
         });
-        effectsOnAllTargets[targetTokenId] = targetTokenEffects;
     });
 
-    return {self: actingTokenEffects, targets: effectsOnAllTargets};
-};
-
-Davout.ConditionFW.TokenEffects = function TokenEffects() {
-    if (!(this instanceof Davout.ConditionFW.TokenEffects)) {return new Davout.ConditionFW.TokenEffects()}
-    this.effectsAffectingAction = [];
-    this.effectsAffectingActionsAttr = [];
-};
-
-Davout.ConditionFW.TokenEffects.prototype.addEffects = function (effectsAffectingAction, effectsAffectingActionsAttr) {
-    this.effectsAffectingAction = this.effectsAffectingAction.concat(effectsAffectingAction);
-    this.effectsAffectingActionsAttr = this.effectsAffectingActionsAttr.concat(effectsAffectingActionsAttr);
+    return affectCollection;
 };

@@ -37,37 +37,6 @@ describe("Condition suite", function() {
         expect(log).toHaveBeenCalledWith("Removed: condition Fatigued removed from Orc");
     });
 
-    it ("conditions affects modifiers, no targets", function() {
-        var affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectForAction.targets).toEqual([]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([]);
-
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
-        affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectForAction.targets).toEqual([]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([{name: "Fatigued", value: -2}]);
-
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
-        affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectForAction.targets).toEqual([]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([{name: "Fatigued", value: -2}, {name: "Fatigued", value: -2}]);
-
-        davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
-        affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectForAction.targets).toEqual([]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([{name: "Fatigued", value: -2}]);
-
-        davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
-        affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectForAction.targets).toEqual([]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([]);
-    });
-
     it ("Condition: prevent action when token has prohibited condition effect", function(){
         expect(davoutToken.getAffectOn("improvise").afIsProhibited).toBe(false);
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
