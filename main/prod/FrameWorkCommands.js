@@ -15,11 +15,11 @@ Davout.ConditionFW.command._manageCondition = function (actionType, selected, co
                 switch (actionType) {
                     case "ADD":
                         tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-                        tokenCondition.addCondition(state.Davout.ConditionFW[conditionName]);
+                        tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
                         break;
                     case "DEL":
                         tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-                        tokenCondition.removeCondition(state.Davout.ConditionFW[conditionName]);
+                        tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
                         break;
                     case "SHOW":
                         Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions());
@@ -58,8 +58,6 @@ Davout.ConditionFW.command._setTargets = function (playerId, targets) {
             state.Davout.ConditionFW.TargetIdsOfAction[playerId].push(tokenObjR20.get("id"));
         }
     });
-
-    log("state.Davout.ConditionFW.TargetIdsOfAction = " + state.Davout.ConditionFW.TargetIdsOfAction[playerId]);
 };
 
 on("ready", function () {
@@ -147,3 +145,6 @@ on("ready", function () {
     };
     community.command.add("target", setTargetCommand);
 });
+
+// FrameworkCommands
+

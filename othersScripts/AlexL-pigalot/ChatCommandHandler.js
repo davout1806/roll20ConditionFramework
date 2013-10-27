@@ -133,6 +133,7 @@ community.command.parse = function(message, roll20Object) {
     arr.splice(0, 1);
 
     // Does the command exist
+    log("command = " + JSON.stringify(command));
     if(command in community.command.commandList) {
 
         if("handle" in community.command.commandList[command]) {
@@ -267,7 +268,7 @@ community.command.parse = function(message, roll20Object) {
             log("Command is there but has no function to handle it.");
         }
     } else {
-        community.command.whisper("GM", "Unknown Command");
+        community.command.whisper("GM", "Unknown Command --");
     }
 };
 

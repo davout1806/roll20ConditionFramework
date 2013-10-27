@@ -35,3 +35,6 @@ Davout.ConditionFW.Action.prototype.getTargetAffectedName = function(){
 Davout.ConditionFW.Action.getResult = function (actingToken, targetTokenList) {
 
 };
+
+// Actions
+

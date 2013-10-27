@@ -65,3 +65,6 @@ Davout.ConditionFW.AffectCollection.prototype.addTargetEffectsAffects = function
     }
     this.affEffectsAffectingTargetReaction[targetTokenId] = this.affEffectsAffectingTargetReaction[targetTokenId].concat(effectsAffectingAction);
 };
+
+// Affect
+

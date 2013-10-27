@@ -124,3 +124,6 @@ Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (act
 
     return affectCollection;
 };
+
+// ConditionedToken
+

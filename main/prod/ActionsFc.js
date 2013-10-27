@@ -9,19 +9,19 @@ state.Davout.ConditionFW.ActionLookup["attack-hurl"] = new Davout.ConditionFW.Ac
 state.Davout.ConditionFW.ActionLookup["attack-range"] = new Davout.ConditionFW.Action("Range Attack", "Dex", "Att-Range-Base", false);
 state.Davout.ConditionFW.ActionLookup["haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
 
-state.Davout.ConditionFW.DcChallengeLookup["attack-melee"] = new Davout.ConditionFW.StaticChallenge("Melee Defense", "Dex", "Defense");
-state.Davout.ConditionFW.DcChallengeLookup["attack-hurl"] = new Davout.ConditionFW.StaticChallenge("Hurl Defense", "Dex", "Defense");
-state.Davout.ConditionFW.DcChallengeLookup["attack-range"] = new Davout.ConditionFW.StaticChallenge("Range Defense", "Dex", "Defense");
-state.Davout.ConditionFW.DcChallengeLookup["haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
+//state.Davout.ConditionFW.DcChallengeLookup["attack-melee"] = new Davout.ConditionFW.StaticChallenge("Melee Defense", "Dex", "Defense");
+//state.Davout.ConditionFW.DcChallengeLookup["attack-hurl"] = new Davout.ConditionFW.StaticChallenge("Hurl Defense", "Dex", "Defense");
+//state.Davout.ConditionFW.DcChallengeLookup["attack-range"] = new Davout.ConditionFW.StaticChallenge("Range Defense", "Dex", "Defense");
+//state.Davout.ConditionFW.DcChallengeLookup["haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
 
 // TODO I need targetTokenWithConditions && targetWorkingStateChar. Should I put all this into state? It would have to cleared either before or after each usage.
 // TODO actually flat footed affects DC number NOT the attacker's roll. So should I move getAffectOn() back from Action to TokenWithConditions?
-Davout.ConditionFW.Affect.prototype.applySystemSpecificRule = function (actionObj, tokenWithConditions, workingStateChar){
-    "use strict";
-    if (tokenWithConditions["flat-footed"] !== undefined && wo){
-        //Defense-Base
-    }
-};
+//Davout.ConditionFW.Affect.prototype.applySystemSpecificRule = function (actionObj, tokenWithConditions, workingStateChar){
+//    "use strict";
+//    if (tokenWithConditions["flat-footed"] !== undefined && wo){
+//        //Defense-Base
+//    }
+//};
 
 // ActionsFC
 

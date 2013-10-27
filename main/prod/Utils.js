@@ -47,9 +47,8 @@ Davout.Utils.isTrueObject = function (parameter) {
     if (parameter == null) return false;
     if (_.isArray(parameter)) return false;
     if (_.isFunction(parameter)) return false;
-    if (!_.isObject(parameter)) return false;
 
-    return true;
+    return _.isObject(parameter);
 };
 
 Davout.Utils.contains = function (array, obj) {
