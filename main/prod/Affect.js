@@ -63,5 +63,5 @@ Davout.ConditionFW.AffectCollection.prototype.addTargetEffectsAffects = function
     if (this.affEffectsAffectingTargetReaction[targetTokenId] === undefined) {
         this.affEffectsAffectingTargetReaction[targetTokenId] = []
     }
-    this.affEffectsAffectingTargetReaction[targetTokenId].push(effectsAffectingAction);
+    this.affEffectsAffectingTargetReaction[targetTokenId] = this.affEffectsAffectingTargetReaction[targetTokenId].concat(effectsAffectingAction);
 };
