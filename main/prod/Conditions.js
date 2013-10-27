@@ -19,8 +19,8 @@ state.Davout.ConditionFW.ConditionLookup = state.Davout.ConditionFW.ConditionLoo
  */
 Davout.ConditionFW.Condition = function Condition (name, effects, maxStackSize, nextConditionName) {
     "use strict";
-    if (!(this instanceof Davout.ConditionFW.Condition)) {return new Davout.ConditionFW.Condition(name, effects, maxStackSize, nextConditionName)} // Ensure this acts as a constructor rather than a function
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition", arguments, [_.isString, _.isArray, [_.isNumber, _.isUndefined], [_.isString, _.isUndefined]]);
+    if (!(this instanceof Davout.ConditionFW.Condition)) {return new Davout.ConditionFW.Condition(name, effects, maxStackSize, nextConditionName)} // Ensure this acts as a constructor rather than a function
     this.coName = name;
     if (maxStackSize == undefined) {
         this.coMaxStackSize = 1;
@@ -82,8 +82,8 @@ Davout.ConditionFW.Condition.prototype.affects = function (nameOfAffected, isAff
 
 Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProhibited, modifier, note) {
     "use strict";
-    if (!(this instanceof Davout.ConditionFW.Effect)) {return new Davout.ConditionFW.Effect(nameOfAffected, isAttribute, isProhibited, modifier, note)}
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Effect", arguments, [_.isString, _.isBoolean, _.isBoolean, _.isNumber, [_.isString, _.isUndefined]]);
+    if (!(this instanceof Davout.ConditionFW.Effect)) {return new Davout.ConditionFW.Effect(nameOfAffected, isAttribute, isProhibited, modifier, note)}
 
     this.efModifier = NaN;
     this.efHasModifier = false;
@@ -103,7 +103,7 @@ Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProh
 Davout.ConditionFW.Effect.prototype.getAffect = function (conditionName, isAffectingAttribute){
     Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean]);
     if(this.efIsAttribute !== isAffectingAttribute){
-        var msg ="not to an Attribute";
+        var msg ="not to be an Attribute";
         if (this.efIsAttribute){
             msg = "to be an Attribute"
         }

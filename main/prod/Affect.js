@@ -2,7 +2,7 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 
 Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingStateChar) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition", arguments, [Davout.Utils.isTrueObject, Davout.Utils.isTrueObject, Davout.Utils.isTrueObject]);
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Affect", arguments, [Davout.Utils.isTrueObject, Davout.Utils.isTrueObject, Davout.Utils.isTrueObject]);
     if (!(this instanceof Davout.ConditionFW.Affect)) {
         return new Davout.ConditionFW.Affect(actionObj, tokenWithConditions, workingStateChar)
     }
@@ -17,10 +17,10 @@ Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingSta
 
 Davout.ConditionFW.SingleEffectsAffect = function SingleEffectsAffect(conditionName, isProhibited, modifier, note) {
     "use strict";
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean, _.isNumber, _.isString]);
     if (!(this instanceof Davout.ConditionFW.SingleEffectsAffect)) {
         return new Davout.ConditionFW.SingleEffectsAffect(conditionName, isProhibited, modifier, note)
     }
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean, _.isNumber, _.isString]);
 
     this.seaName = conditionName;
     this.seaIsProhibited = isProhibited;

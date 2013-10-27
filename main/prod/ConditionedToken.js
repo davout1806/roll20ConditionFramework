@@ -7,8 +7,8 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 
 Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
     "use strict";
-    if (!(this instanceof Davout.ConditionFW.WorkingStateChar)) {return new Davout.ConditionFW.WorkingStateChar(charId)}
     Davout.Utils.argTypeCheck("Davout.ConditionFW.WorkingStateChar", arguments, [_.isString]);
+    if (!(this instanceof Davout.ConditionFW.WorkingStateChar)) {return new Davout.ConditionFW.WorkingStateChar(charId)}
     this.chCharId = charId;
     var attributes = findObjs({ _type: 'attribute', _characterid: this.chCharId });
     _.each(attributes, function (attribute) {
@@ -22,8 +22,8 @@ Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
  */
 Davout.ConditionFW.ConditionedToken = function (tokenId) {
     "use strict";
-    if (!(this instanceof Davout.ConditionFW.ConditionedToken)) {return new Davout.ConditionFW.ConditionedToken(tokenId)}
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken", arguments, [_.isString]);
+    if (!(this instanceof Davout.ConditionFW.ConditionedToken)) {return new Davout.ConditionFW.ConditionedToken(tokenId)}
     this.twcTokenId = tokenId;
     this.twcName = getObj("graphic", this.twcTokenId).get("name");
     this.twcCharId = Davout.R20Utils.tokenIdToCharId(this.twcTokenId);

@@ -37,20 +37,6 @@ describe("Condition suite", function() {
         expect(log).toHaveBeenCalledWith("Removed: condition Fatigued removed from Orc");
     });
 
-    it ("Condition: prevent action when token has prohibited condition effect", function(){
-        expect(davoutToken.getAffectOn("improvise").afIsProhibited).toBe(false);
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
-        var affect = davoutToken.getAffectOn("improvise");
-        expect(affect.afIsProhibited).toBe(true);
-
-        expect(affect.buildNotesString()).toEqual("Blinded, cannot perform craft skill.<br>");
-
-        davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
-        affect = davoutToken.getAffectOn("improvise");
-        expect(affect.afIsProhibited).toBe(false);
-        expect(affect.buildNotesString()).toEqual("");
-    });
-
     it ("prevent adding a non-stackable condition when token already has the condition.", function(){
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         expect(davoutToken.listAllConditions()).toEqual("Blinded<br>");
@@ -70,57 +56,6 @@ describe("Condition suite", function() {
 
         expect(davoutToken.listAllConditions()).toEqual("Fatigued<br>Fatigued<br>Fatigued<br>Fatigued<br>Unconscious<br>");
 
-        var affect = davoutToken.getAffectOn("str");
-        expect(affect.buildModListString()).toEqual("(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>(Str) Fatigued: -2<br>");
-        affect = davoutToken.getAffectOn("improvise");
-        expect(affect.afIsProhibited).toBe(true);
-        expect(affect.buildNotesString()).toEqual("Unconscious, cannot perform craft skill.<br>");
-    });
-
-    it ("multiple conditions that affect the same action/attribute will have their modifiers combined", function(){
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["baffled"]);
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
-
-        expect(davoutToken.getAffectOn("tumble").afCondModTotal).toEqual(-6);
-    });
-
-    // todo move to Action Test?
-    it ("get modifier based on target", function(){
-        var targetTokenId = "2";
-        var playerId = "99";
-
-        var mockTargetToken = {};
-        mockTargetToken.get = jasmine.createSpy();
-        mockTargetToken.get.when("name").thenReturn("Troll");
-        mockTargetToken.get.when("represents").thenReturn("c2");
-        mockTargetToken.get.when("subtype").thenReturn("token");
-
-        window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
-        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
-        targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
-        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
-
-        var affectForAction = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], [targetTokenId]);
-        expect(affectForAction.self.effectsAffectingAction).toEqual([]);
-        expect(affectForAction.self.effectsAffectingActionsAttr).toEqual([]);
-        expect(affectForAction.targets[targetTokenId].effectsAffectingAction).toEqual([{name: "Blinded", value: -2}]);
-        expect(affectForAction.targets[targetTokenId].effectsAffectingActionsAttr).toEqual([]);
-    });
-
-    it ("get modifier based on target using system specific rule", function(){
-//        var targetTokenId = "2";
-//        var playerId = "99";
-//
-//        var mockTargetToken = {};
-//        mockTargetToken.get = jasmine.createSpy();
-//        mockTargetToken.get.when("name").thenReturn("Troll");
-//        mockTargetToken.get.when("represents").thenReturn("c2");
-//        mockTargetToken.get.when("subtype").thenReturn("token");
-//
-//        window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
-//        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
-//        targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["flat-footed"]);
-//        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
     });
 });
 

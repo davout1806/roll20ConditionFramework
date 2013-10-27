@@ -17,7 +17,7 @@ describe("Action suite", function () {
         davoutToken = Davout.ConditionFW.getTokenInstance(tokenId);
     });
 
-    xit ("conditions affects modifiers, no targets", function() {
+    it ("conditions affects modifiers, no targets", function() {
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
         expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
@@ -62,7 +62,7 @@ describe("Action suite", function () {
         expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
     });
 
-    xit("Action: prevent action when token has prohibited condition effect", function () {
+    it("Action: prevent action when token has prohibited condition effect", function () {
         var targetTokenId = "2";
         mockMessage = {selected: [mockToken]};
 
@@ -78,7 +78,6 @@ describe("Action suite", function () {
     });
 
     it("condition on target can grant acting player modifier", function () {
-//        spyOn(window, 'randomInteger').andReturn(5);
         var targetTokenId = "2";
         var playerId = "99";
 
@@ -107,4 +106,24 @@ describe("Action suite", function () {
         expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaModifier).toEqual(-2);
         expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaNote).toEqual("");
     });
+
+    /*
+    it ("get modifier based on target using system specific rule", function(){
+        var targetTokenId = "2";
+        var playerId = "99";
+
+        var mockTargetToken = {};
+        mockTargetToken.get = jasmine.createSpy();
+        mockTargetToken.get.when("name").thenReturn("Jack the Target");
+        window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
+
+        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
+
+        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
+
+        mockMessage = {selected: [mockToken], playerid: tokenId};
+
+        targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["flat-footed"]);
+    });
+    */
 });

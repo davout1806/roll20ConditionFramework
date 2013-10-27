@@ -3,8 +3,8 @@ describe("Condition Unit suite", function () {
 
         it("is invalid args", function () {
             expect(function () {
-                new Davout.ConditionFW.Effect({}, [], [], "x");
-            }).toThrow("Davout.ConditionFW.Effect Arg # 0 with value of {} is of an invalid type. Arg # 1 with value of [] is of an invalid type. Arg # 2 with value of [] is of an invalid type. Arg # 3 with value of \"x\" is of an invalid type.");
+                new Davout.ConditionFW.Effect({}, [], [], "x", true);
+            }).toThrow("Davout.ConditionFW.Effect Arg # 0 with value of {} is of an invalid type. Arg # 1 with value of [] is of an invalid type. Arg # 2 with value of [] is of an invalid type. Arg # 3 with value of \"x\" is of an invalid type. Arg # 4 with value of true is of an invalid type.");
         });
 
         it("typical", function () {
@@ -67,15 +67,12 @@ describe("Condition Unit suite", function () {
             expect(condition.coName).toEqual("baffled");
             expect(condition.coMaxStackSize).toEqual(1);
             expect(condition.coNextConditionName).toEqual(undefined);
-            expect(condition.coEffects).toEqual(
-                {
-                    "balance": [
-                        {efModifier: -2, efHasModifier: true, efNameOfAffected: "balance", efNote: "", efIsProhibited: false, efIsAttribute: false }
-                    ], "break-fall": [
-                    {efModifier: -2, efHasModifier: true, efNameOfAffected: "break-fall", efNote: "huh", efIsProhibited: false, efIsAttribute: false }
-                ]
-                }
-            );
+            expect(condition.coEffects["balance"][0]["efModifier"]).toEqual(-2);
+            expect(condition.coEffects["balance"][0]["efHasModifier"]).toEqual(true);
+            expect(condition.coEffects["balance"][0]["efNameOfAffected"]).toEqual("balance");
+            expect(condition.coEffects["balance"][0]["efNote"]).toEqual("");
+            expect(condition.coEffects["balance"][0]["efIsProhibited"]).toEqual(false);
+            expect(condition.coEffects["balance"][0]["efIsAttribute"]).toEqual(false);
         });
 
         it("where condition stackable", function () {
@@ -85,13 +82,12 @@ describe("Condition Unit suite", function () {
             expect(condition.coName).toEqual("fatigued");
             expect(condition.coMaxStackSize).toEqual(4);
             expect(condition.coNextConditionName).toEqual(undefined);
-            expect(condition.coEffects).toEqual(
-                {
-                    "Str": [
-                        {efModifier: -2, efHasModifier: true, efNameOfAffected: "Str", efNote: "", efIsProhibited: false, efIsAttribute: true }
-                    ]
-                }
-            );
+            expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);
+            expect(condition.coEffects["Str"][0]["efHasModifier"]).toEqual(true);
+            expect(condition.coEffects["Str"][0]["efNameOfAffected"]).toEqual("Str");
+            expect(condition.coEffects["Str"][0]["efNote"]).toEqual("");
+            expect(condition.coEffects["Str"][0]["efIsProhibited"]).toEqual(false);
+            expect(condition.coEffects["Str"][0]["efIsAttribute"]).toEqual(true);
         });
 
         it("where condition stackable with NextCondition", function () {
@@ -101,13 +97,12 @@ describe("Condition Unit suite", function () {
             expect(condition.coName).toEqual("fatigued");
             expect(condition.coMaxStackSize).toEqual(4);
             expect(condition.coNextConditionName).toEqual("unconscious");
-            expect(condition.coEffects).toEqual(
-                {
-                    "Str": [
-                        {efModifier: -2, efHasModifier: true, efNameOfAffected: "Str", efNote: "", efIsProhibited: false, efIsAttribute: true }
-                    ]
-                }
-            );
+            expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);
+            expect(condition.coEffects["Str"][0]["efHasModifier"]).toEqual(true);
+            expect(condition.coEffects["Str"][0]["efNameOfAffected"]).toEqual("Str");
+            expect(condition.coEffects["Str"][0]["efNote"]).toEqual("");
+            expect(condition.coEffects["Str"][0]["efIsProhibited"]).toEqual(false);
+            expect(condition.coEffects["Str"][0]["efIsAttribute"]).toEqual(true);
         });
 
     });
@@ -121,55 +116,35 @@ describe("Condition Unit suite", function () {
 
             var condition = new Davout.ConditionFW.Condition("test", effects);
 
-            var mockActionObj = {acName: "Str"};
+            expect(function () {condition.getEffectsAffectingAction("Str")})
+                .toThrow("Davout.ConditionFW.Effect.prototype.getAffect Expecting affected to be an Attribute");
 
-            expect(function () {condition.getEffectsAffectingAction(mockActionObj)})
-                .toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on action but effect was attribute effect.");
-
-            mockActionObj = {acName: "Jump"};
-            expect(function () {condition.getEffectsAffectingAction(mockActionObj)})
-                .not.toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on action but effect was attribute effect.");
-        });
-
-        it("getEffectsAffectingActorsAttr with effect type checking", function () {
-            var effects = new Array(
-                new Davout.ConditionFW.Effect("Str", true, false, -2)
-                , new Davout.ConditionFW.Effect("Jump", false, false, -2, "huh")
-            );
-
-            var condition = new Davout.ConditionFW.Condition("test", effects);
-
-            var mockActionObj = {acName: "Str"};
-            expect(function () {condition.getEffectsAffectingActorsAttr(mockActionObj)})
-                .not.toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on attribute but effect was action effect.");
-
-            mockActionObj = {acName: "Jump"};
-            expect(function () {condition.getEffectsAffectingActorsAttr(mockActionObj)})
-                .toThrow("Davout.ConditionFW.ConditionedToken.getAffectForAction: Looking for effects on attribute but effect was action effect.");
+            expect(function () {condition.getEffectsAffectingActorsAttr("Jump")})
+                .toThrow("Davout.ConditionFW.Effect.prototype.getAffect Expecting affected not to be an Attribute");
         });
     });
 
-    describe("Condition getEffectsAffecting", function () {
-        it("with matching name", function () {
-            var effects = new Array(
-                new Davout.ConditionFW.Effect("balance", false, false, -2)
-                , new Davout.ConditionFW.Effect("break-fall", false, false, -2, "huh")
-            );
-            var condition = new Davout.ConditionFW.Condition("baffled", effects);
-
-            expect(condition.getEffectsAffecting("break-fall")).toEqual([
-                {efModifier: -2, efHasModifier: true, efNameOfAffected: "break-fall", efNote: "huh", efIsProhibited: false, efIsAttribute: false }
-            ]);
-        });
-
-        it("with unmatching name", function () {
-            var effects = new Array(
-                new Davout.ConditionFW.Effect("balance", false, false, -2)
-                , new Davout.ConditionFW.Effect("break-fall", false, false, -2, "huh")
-            );
-            var condition = new Davout.ConditionFW.Condition("baffled", effects);
-
-            expect(condition.getEffectsAffecting("Melee Attack")).toEqual([]);
-        });
-    });
+//    describe("Condition getEffectsAffecting", function () {
+//        it("with matching name", function () {
+//            var effects = new Array(
+//                new Davout.ConditionFW.Effect("balance", false, false, -2)
+//                , new Davout.ConditionFW.Effect("break-fall", false, false, -2, "huh")
+//            );
+//            var condition = new Davout.ConditionFW.Condition("baffled", effects);
+//
+//            expect(condition.getEffectsAffecting("break-fall")).toEqual([
+//                {efModifier: -2, efHasModifier: true, efNameOfAffected: "break-fall", efNote: "huh", efIsProhibited: false, efIsAttribute: false }
+//            ]);
+//        });
+//
+//        it("with unmatching name", function () {
+//            var effects = new Array(
+//                new Davout.ConditionFW.Effect("balance", false, false, -2)
+//                , new Davout.ConditionFW.Effect("break-fall", false, false, -2, "huh")
+//            );
+//            var condition = new Davout.ConditionFW.Condition("baffled", effects);
+//
+//            expect(condition.getEffectsAffecting("Melee Attack")).toEqual([]);
+//        });
+//    });
 });

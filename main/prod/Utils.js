@@ -41,13 +41,13 @@ Davout.Utils.removeFromArrayFirstOccurOf = function (array, itemToRemove) {
     return workingArray;
 };
 
-Davout.Utils.isTrueObject = function (parameter, throwMsg) {
+Davout.Utils.isTrueObject = function (parameter) {
     "use strict";
-    if (_.isUndefined(parameter)) throw throwMsg + " parameter: undefined";
-    if (parameter == null) throw throwMsg + " parameter: null";
-    if (_.isArray(parameter)) throw throwMsg + " parameter: array";
-    if (_.isFunction(parameter)) throw throwMsg + " parameter: function";
-    if (!_.isObject(parameter)) throw throwMsg + " parameter: other";
+    if (_.isUndefined(parameter)) return false;
+    if (parameter == null) return false;
+    if (_.isArray(parameter)) return false;
+    if (_.isFunction(parameter)) return false;
+    if (!_.isObject(parameter)) return false;
 
     return true;
 };
