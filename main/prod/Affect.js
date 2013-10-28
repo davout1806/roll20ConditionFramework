@@ -3,9 +3,9 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingStateChar) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Affect", arguments, [Davout.Utils.isTrueObject, Davout.Utils.isTrueObject, Davout.Utils.isTrueObject]);
-    if (!(this instanceof Davout.ConditionFW.Affect)) {
-        return new Davout.ConditionFW.Affect(actionObj, tokenWithConditions, workingStateChar)
-    }
+//    if (!(this instanceof Davout.ConditionFW.Affect)) {
+//        return new Davout.ConditionFW.Affect(actionObj, tokenWithConditions, workingStateChar)
+//    }
 
     this.afIsProhibited = false;
     this.afCondModTotal = 0;
@@ -18,9 +18,9 @@ Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingSta
 Davout.ConditionFW.SingleEffectsAffect = function SingleEffectsAffect(conditionName, isProhibited, modifier, note) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean, _.isNumber, _.isString]);
-    if (!(this instanceof Davout.ConditionFW.SingleEffectsAffect)) {
-        return new Davout.ConditionFW.SingleEffectsAffect(conditionName, isProhibited, modifier, note)
-    }
+//    if (!(this instanceof Davout.ConditionFW.SingleEffectsAffect)) {
+//        return new Davout.ConditionFW.SingleEffectsAffect(conditionName, isProhibited, modifier, note)
+//    }
 
     this.seaName = conditionName;
     this.seaIsProhibited = isProhibited;
@@ -30,9 +30,9 @@ Davout.ConditionFW.SingleEffectsAffect = function SingleEffectsAffect(conditionN
 
 Davout.ConditionFW.AffectCollection = function AffectCollection() {
     "use strict";
-    if (!(this instanceof Davout.ConditionFW.AffectCollection)) {
-        return new Davout.ConditionFW.AffectCollection()
-    }
+//    if (!(this instanceof Davout.ConditionFW.AffectCollection)) {
+//        return new Davout.ConditionFW.AffectCollection()
+//    }
     this.affIsProhibited = false;
     this.affEffectsAffectingActorAction = [];
     this.affEffectsAffectingActorAttribute = [];

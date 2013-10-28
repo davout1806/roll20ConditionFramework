@@ -20,7 +20,7 @@ state.Davout.ConditionFW.ConditionLookup = state.Davout.ConditionFW.ConditionLoo
 Davout.ConditionFW.Condition = function Condition (name, effects, maxStackSize, nextConditionName) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Condition", arguments, [_.isString, _.isArray, [_.isNumber, _.isUndefined], [_.isString, _.isUndefined]]);
-    if (!(this instanceof Davout.ConditionFW.Condition)) {return new Davout.ConditionFW.Condition(name, effects, maxStackSize, nextConditionName)} // Ensure this acts as a constructor rather than a function
+//    if (!(this instanceof Davout.ConditionFW.Condition)) {return new Davout.ConditionFW.Condition(name, effects, maxStackSize, nextConditionName)} // Ensure this acts as a constructor rather than a function
     this.coName = name;
     if (maxStackSize == undefined) {
         this.coMaxStackSize = 1;
@@ -83,7 +83,7 @@ Davout.ConditionFW.Condition.prototype.affects = function (nameOfAffected, isAff
 Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProhibited, modifier, note) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Effect", arguments, [_.isString, _.isBoolean, _.isBoolean, _.isNumber, [_.isString, _.isUndefined]]);
-    if (!(this instanceof Davout.ConditionFW.Effect)) {return new Davout.ConditionFW.Effect(nameOfAffected, isAttribute, isProhibited, modifier, note)}
+//    if (!(this instanceof Davout.ConditionFW.Effect)) {return new Davout.ConditionFW.Effect(nameOfAffected, isAttribute, isProhibited, modifier, note)}
 
     this.efModifier = NaN;
     this.efHasModifier = false;
@@ -128,3 +128,6 @@ Davout.ConditionFW.getTokenInstance = function (tokenId) {
 
     return state.Davout.ConditionFW.TokensWithConditionObj[tokenId];
 };
+
+// Conditions
+
