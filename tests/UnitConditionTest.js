@@ -77,9 +77,9 @@ describe("Condition Unit suite", function () {
 
         it("where condition stackable", function () {
             var effects = new Array(new Davout.ConditionFW.Effect("Str", true, false, -2));
-            var condition = new Davout.ConditionFW.Condition("fatigued", effects, 4);
+            var condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4);
 
-            expect(condition.coName).toEqual("fatigued");
+            expect(condition.coName).toEqual("Fatigued");
             expect(condition.coMaxStackSize).toEqual(4);
             expect(condition.coNextConditionName).toEqual(undefined);
             expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);
@@ -92,9 +92,9 @@ describe("Condition Unit suite", function () {
 
         it("where condition stackable with NextCondition", function () {
             var effects = new Array(new Davout.ConditionFW.Effect("Str", true, false, -2));
-            var condition = new Davout.ConditionFW.Condition("fatigued", effects, 4, "unconscious");
+            var condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4, "unconscious");
 
-            expect(condition.coName).toEqual("fatigued");
+            expect(condition.coName).toEqual("Fatigued");
             expect(condition.coMaxStackSize).toEqual(4);
             expect(condition.coNextConditionName).toEqual("unconscious");
             expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);

@@ -1,19 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Jasmine Spec Runner</title>
+    <title>Jasmine Spec Runner</title>
 
-  <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.3.0/jasmine_favicon.png">
-  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.3.0/jasmine.css">
-  <script type="text/javascript" src="lib/jasmine-1.3.0/jasmine.js"></script>
-  <script type="text/javascript" src="lib/jasmine-1.3.0/jasmine-html.js"></script>
+    <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.3.0/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="lib/jasmine-1.3.0/jasmine.css">
 
-  <script type="text/javascript" src="lib/underscore.js"></script>
-  <script type="text/javascript" src="lib/jasmine-stealth.js"></script>
+    <!-- testing framework -->
+    <script type="text/javascript" src="lib/jasmine-1.3.0/jasmine.js"></script>
+    <script type="text/javascript" src="lib/jasmine-1.3.0/jasmine-html.js"></script>
+    <script type="text/javascript" src="lib/jasmine-stealth.js"></script>
 
-  <!-- include source files here... -->
+    <!-- 3rd party libs used in roll20 -->
+    <script type="text/javascript" src="lib/underscore.js"></script>
+
+    <!-- include roll20 function declarations -->
     <script type="text/javascript" src="../main/testing/Roll20Mock.js"></script>
+
+    <!-- include source files here... -->
     <script type="text/javascript" src="../main/prod/Utils.js"></script>
     <script type="text/javascript" src="../main/prod/Roll20Utils.js"></script>
     <script type="text/javascript" src="../main/prod/Conditions.js"></script>
@@ -24,41 +29,42 @@
     <script type="text/javascript" src="../main/prod/Affect.js"></script>
     <script type="text/javascript" src="../main/prod/FrameworkCommands.js"></script>
 
-  <!-- include spec files here... -->
-  <script type="text/javascript" src="ConditionsTest.js"></script>
-  <script type="text/javascript" src="ConditionedTokenTest.js"></script>
-  <script type="text/javascript" src="AffectTest.js"></script>
-  <script type="text/javascript" src="ActionTest.js"></script>
-  <script type="text/javascript" src="FrameworkCommandsTest.js"></script>
+    <!-- include spec files here... -->
+    <script type="text/javascript" src="ConditionsTest.js"></script>
+    <script type="text/javascript" src="ConditionedTokenTest.js"></script>
+    <script type="text/javascript" src="AffectTest.js"></script>
+    <script type="text/javascript" src="ActionTest.js"></script>
+    <script type="text/javascript" src="FrameworkCommandsTest.js"></script>
 
-  <script type="text/javascript">
-    (function() {
-      var jasmineEnv = jasmine.getEnv();
-      jasmineEnv.updateInterval = 1000;
+    <!-- standard jasmine spec runner boilerplate code -->
+    <script type="text/javascript">
+        (function () {
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
 
-      var htmlReporter = new jasmine.HtmlReporter();
+            var htmlReporter = new jasmine.HtmlReporter();
 
-      jasmineEnv.addReporter(htmlReporter);
+            jasmineEnv.addReporter(htmlReporter);
 
-      jasmineEnv.specFilter = function(spec) {
-        return htmlReporter.specFilter(spec);
-      };
+            jasmineEnv.specFilter = function (spec) {
+                return htmlReporter.specFilter(spec);
+            };
 
-      var currentWindowOnload = window.onload;
+            var currentWindowOnload = window.onload;
 
-      window.onload = function() {
-        if (currentWindowOnload) {
-          currentWindowOnload();
-        }
-        execJasmine();
-      };
+            window.onload = function () {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                execJasmine();
+            };
 
-      function execJasmine() {
-        jasmineEnv.execute();
-      }
+            function execJasmine() {
+                jasmineEnv.execute();
+            }
 
-    })();
-  </script>
+        })();
+    </script>
 
 </head>
 
