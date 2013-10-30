@@ -19,47 +19,47 @@ describe("Action suite", function () {
 
     it ("conditions affects modifiers, no targets", function() {
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
-        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
+        expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
-        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(1);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
+        expect(affectCollection.afCoIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
-        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(2);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual({});
+        expect(affectCollection.afCoIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(2);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
-        expect(affectCollection.affEffectsAffectingActorAttribute.length).toEqual(1);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
-        expect(affectCollection.affEffectsAffectingActorAttribute[0].seaNote).toEqual("");
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaModifier).toEqual(-2);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaNote).toEqual("");
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affEffectsAffectingActorAction).toEqual([]);
-        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);
     });
 
     it("Action: prevent action when token has prohibited condition effect", function () {
@@ -68,13 +68,13 @@ describe("Action suite", function () {
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["improvise"], []);
-        expect(affectCollection.affIsProhibited).toEqual(true);
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaName).toEqual("Blinded");
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaIsProhibited).toEqual(true);
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaModifier).toBeNaN();
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaNote).toEqual("cannot perform craft skill.");
-        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
-        expect(affectCollection.affEffectsAffectingTargetReaction).toEqual([]);
+        expect(affectCollection.afCoIsProhibited).toEqual(true);
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Blinded");
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(true);
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaModifier).toBeNaN();
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaNote).toEqual("cannot perform craft skill.");
+        expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);
     });
 
     it("condition on target can grant acting player modifier", function () {
@@ -95,16 +95,16 @@ describe("Action suite", function () {
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["blinded"]);
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], [targetTokenId]);
-        expect(affectCollection.affIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaName).toEqual("Entangled");
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaModifier).toEqual(-2);
-        expect(affectCollection.affEffectsAffectingActorAction[0].seaNote).toEqual("");
-        expect(affectCollection.affEffectsAffectingActorAttribute).toEqual([]);
-        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaName).toEqual("Blinded");
-        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaIsProhibited).toEqual(false);
-        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaModifier).toEqual(-2);
-        expect(affectCollection.affEffectsAffectingTargetReaction[targetTokenId][0].seaNote).toEqual("");
+        expect(affectCollection.afCoIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Entangled");
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaModifier).toEqual(-2);
+        expect(affectCollection.afCoEffectsAffectingActorAction[0].seaNote).toEqual("");
+        expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction[targetTokenId][0].seaName).toEqual("Blinded");
+        expect(affectCollection.afCoEffectsAffectingTargetReaction[targetTokenId][0].seaIsProhibited).toEqual(false);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction[targetTokenId][0].seaModifier).toEqual(2);
+        expect(affectCollection.afCoEffectsAffectingTargetReaction[targetTokenId][0].seaNote).toEqual("");
     });
 
     /*

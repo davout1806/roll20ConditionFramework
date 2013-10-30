@@ -3,9 +3,6 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingStateChar) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Affect", arguments, [Davout.Utils.isTrueObject, Davout.Utils.isTrueObject, Davout.Utils.isTrueObject]);
-//    if (!(this instanceof Davout.ConditionFW.Affect)) {
-//        return new Davout.ConditionFW.Affect(actionObj, tokenWithConditions, workingStateChar)
-//    }
 
     this.afIsProhibited = false;
     this.afCondModTotal = 0;
@@ -18,9 +15,6 @@ Davout.ConditionFW.Affect = function (actionObj, tokenWithConditions, workingSta
 Davout.ConditionFW.SingleEffectsAffect = function SingleEffectsAffect(conditionName, isProhibited, modifier, note) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean, _.isNumber, _.isString]);
-//    if (!(this instanceof Davout.ConditionFW.SingleEffectsAffect)) {
-//        return new Davout.ConditionFW.SingleEffectsAffect(conditionName, isProhibited, modifier, note)
-//    }
 
     this.seaName = conditionName;
     this.seaIsProhibited = isProhibited;
@@ -28,42 +22,57 @@ Davout.ConditionFW.SingleEffectsAffect = function SingleEffectsAffect(conditionN
     this.seaNote = note;
 };
 
-Davout.ConditionFW.AffectCollection = function AffectCollection() {
+Davout.ConditionFW.AffectCollection = function AffectCollection(tokenName, actionName) {
     "use strict";
-//    if (!(this instanceof Davout.ConditionFW.AffectCollection)) {
-//        return new Davout.ConditionFW.AffectCollection()
-//    }
-    this.affIsProhibited = false;
-    this.affEffectsAffectingActorAction = [];
-    this.affEffectsAffectingActorAttribute = [];
-    this.affEffectsAffectingTargetReaction = {};
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.AffectCollection", arguments, [_.isString, _.isString]);
 
+    this.afCoTokenName = tokenName;
+    this.afCoActionName = actionName;
+    this.afCoIsProhibited = false;
+    this.afCoEffectsAffectingActorAction = [];
+    this.afCoEffectsAffectingActorAttribute = [];
+    this.afCoEffectsAffectingTargetReaction = {};
 };
+
 Davout.ConditionFW.AffectCollection.prototype.addEffectsAffectingAction = function (effectsAffectingAction) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isArray]);
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.AffectCollection.prototype.addEffectsAffectingAction", arguments, [_.isArray]);
 
     if (effectsAffectingAction.length > 0) {
-        this.affEffectsAffectingActorAction = this.affEffectsAffectingActorAction.concat(effectsAffectingAction);
+        this.afCoEffectsAffectingActorAction = this.afCoEffectsAffectingActorAction.concat(effectsAffectingAction);
     }
 };
 
 Davout.ConditionFW.AffectCollection.prototype.addEffectsAffectingActionAttr = function (effectsAffectingActionsAttr) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isArray]);
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.AffectCollection.prototype.addEffectsAffectingActionAttr", arguments, [_.isArray]);
 
     if (effectsAffectingActionsAttr.length > 0) {
-        this.affEffectsAffectingActorAttribute = this.affEffectsAffectingActorAttribute.concat(effectsAffectingActionsAttr);
+        this.afCoEffectsAffectingActorAttribute = this.afCoEffectsAffectingActorAttribute.concat(effectsAffectingActionsAttr);
     }
 
 };
 
 Davout.ConditionFW.AffectCollection.prototype.addTargetEffectsAffects = function (targetTokenId, effectsAffectingAction) {
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isArray]);
-    if (this.affEffectsAffectingTargetReaction[targetTokenId] === undefined) {
-        this.affEffectsAffectingTargetReaction[targetTokenId] = []
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.AffectCollection.prototype.addTargetEffectsAffects", arguments, [_.isString, _.isArray]);
+    if (this.afCoEffectsAffectingTargetReaction[targetTokenId] === undefined) {
+        this.afCoEffectsAffectingTargetReaction[targetTokenId] = []
     }
-    this.affEffectsAffectingTargetReaction[targetTokenId] = this.affEffectsAffectingTargetReaction[targetTokenId].concat(effectsAffectingAction);
+    this.afCoEffectsAffectingTargetReaction[targetTokenId] = this.afCoEffectsAffectingTargetReaction[targetTokenId].concat(effectsAffectingAction);
+};
+
+Davout.ConditionFW.AffectCollection.prototype.isProhibited = function (){
+    if (this.afCoIsProhibited){
+        var msgStr = "/w gm " + this.afCoTokenName + " is prohibited from performing "
+            + this.afCoActionName + ".<br>";
+
+        _.each(this.afCoEffectsAffectingActorAction, function(singleAffect){
+            if (singleAffect.seaIsProhibited){
+                msgStr += singleAffect.seaNote + "<br>";
+            }
+        });
+        sendChat("API", "<br>");
+    }
 };
 
 // Affect

@@ -8,7 +8,6 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.WorkingStateChar", arguments, [_.isString]);
-//    if (!(this instanceof Davout.ConditionFW.WorkingStateChar)) {return new Davout.ConditionFW.WorkingStateChar(charId)}
     this.chCharId = charId;
     var attributes = findObjs({ _type: 'attribute', _characterid: this.chCharId });
     _.each(attributes, function (attribute) {
@@ -23,7 +22,6 @@ Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
 Davout.ConditionFW.ConditionedToken = function (tokenId) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken", arguments, [_.isString]);
-//    if (!(this instanceof Davout.ConditionFW.ConditionedToken)) {return new Davout.ConditionFW.ConditionedToken(tokenId)}
     this.twcTokenId = tokenId;
     this.twcName = getObj("graphic", this.twcTokenId).get("name");
     this.twcCharId = Davout.R20Utils.tokenIdToCharId(this.twcTokenId);
@@ -44,26 +42,26 @@ Davout.ConditionFW.ConditionedToken.prototype.addCondition = function (condition
         if (condition.coMaxStackSize > conditionCount) {
             this.twcConditions.push(condition);
             var displayCount = conditionCount + 1;
-            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + ": " + displayCount + " was added to " + this.twcName);
-            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + ": " + displayCount + " to " + this.twcName);
+            sendChat("API", "/w gm Condition " + condition.coName + ": " + displayCount + " was added to " + this.twcName);
+            log("Added: condition " + condition.coName + ": " + displayCount + " to " + this.twcName);
         } else { // if max level of condition has been reached.
             // if the max level of condition causes a different condition to be applied.
             if (condition.coNextConditionName != null) {
                 this.twcConditions.push(state.Davout.ConditionFW.ConditionLookup[condition.coNextConditionName]);
-                sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.coNextConditionName) + " was added to " + this.twcName);
-                log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.coNextConditionName) + " to " + this.twcName);
+                sendChat("API", "/w gm Condition " + condition.coNextConditionName + " was added to " + this.twcName);
+                log("Added: condition " + condition.coNextConditionName + " to " + this.twcName);
             } else {
-                sendChat("API", "/w gm " + this.twcName + " already has reached the stack limit for " + Davout.Utils.capitaliseFirstLetter(condition.coName));
+                sendChat("API", "/w gm " + this.twcName + " already has reached the stack limit for " + condition.coName);
             }
         }
     } else {
         // if token does not already have condition
         if (!_.findWhere(this.twcConditions, {coName: condition.coName})) {
             this.twcConditions.push(condition);
-            sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + " was added to " + this.twcName);
-            log("Added: condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + " to " + this.twcName);
+            sendChat("API", "/w gm Condition " + condition.coName + " was added to " + this.twcName);
+            log("Added: condition " + condition.coName + " to " + this.twcName);
         } else {
-            sendChat("API", "/w gm " + this.twcName + " already has the non-stackable condition " + Davout.Utils.capitaliseFirstLetter(condition.coName));
+            sendChat("API", "/w gm " + this.twcName + " already has the non-stackable condition " + condition.coName);
         }
     }
 };
@@ -78,10 +76,10 @@ Davout.ConditionFW.ConditionedToken.prototype.removeCondition = function (condit
     var index = this.twcConditions.indexOf(condition);
     if (index > -1) {
         this.twcConditions.splice(index, 1);
-        sendChat("API", "/w gm Condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + " was removed from " + this.twcName);
-        log("Removed: condition " + Davout.Utils.capitaliseFirstLetter(condition.coName) + " removed from " + this.twcName);
+        sendChat("API", "/w gm Condition " + condition.coName + " was removed from " + this.twcName);
+        log("Removed: condition " + condition.coName + " removed from " + this.twcName);
     } else {
-        sendChat("API", "Selected Token " + Davout.Utils.capitaliseFirstLetter(condition.coName) + " does not have condition: " + Davout.Utils.capitaliseFirstLetter(condition.coName));
+        sendChat("API", "Selected Token " + condition.coName + " does not have condition: " + condition.coName);
     }
 };
 
@@ -94,29 +92,29 @@ Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
     var conditions = this.twcConditions;
     var str = "";
     for (var i = 0; i < conditions.length; i++) {
-        str += Davout.Utils.capitaliseFirstLetter(conditions[i].coName) + "<br>";
+        str += conditions[i].coName + "<br>";
     }
 
     return str;
 };
 
 
-// todo modifiers from attributes
 // todo dc challenge #
 Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (actionObj, targetIdsArray) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction", arguments, [Davout.Utils.isTrueObject, _.isArray]);
 
-    var affectCollection = new Davout.ConditionFW.AffectCollection();
+    var affectCollection = new Davout.ConditionFW.AffectCollection(this.twcName, actionObj.acName);
 
     _.each(this.twcConditions, function (condition) {
         var effectsAffectingAction = condition.getEffectsAffectingAction(actionObj.acName);
-        affectCollection.affIsProhibited = effectsAffectingAction.isProhibited;
+        affectCollection.afCoIsProhibited = effectsAffectingAction.isProhibited;
         affectCollection.addEffectsAffectingAction(effectsAffectingAction.affects);
         affectCollection.addEffectsAffectingActionAttr(condition.getEffectsAffectingActorsAttr(actionObj.acAttrAffectedName).affects);
     });
 
     _.each(targetIdsArray, function (targetTokenId) {
+        log("tokenId = " + JSON.stringify(targetTokenId));
         _.each(Davout.ConditionFW.getTokenInstance(targetTokenId).twcConditions, function (condition) {
             affectCollection.addTargetEffectsAffects(targetTokenId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
         });

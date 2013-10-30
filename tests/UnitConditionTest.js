@@ -117,10 +117,10 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("test", effects);
 
             expect(function () {condition.getEffectsAffectingAction("Str")})
-                .toThrow("Davout.ConditionFW.Effect.prototype.getAffect Expecting affected to be an Attribute");
+                .toThrow("Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect Expecting affected to be an Attribute");
 
             expect(function () {condition.getEffectsAffectingActorsAttr("Jump")})
-                .toThrow("Davout.ConditionFW.Effect.prototype.getAffect Expecting affected not to be an Attribute");
+                .toThrow("Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect Expecting affected not to be an Attribute");
         });
     });
 

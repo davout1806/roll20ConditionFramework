@@ -17,6 +17,6 @@ describe("Framework Commands suite", function () {
         conditionedToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
 
         var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
-        expect(affectCollection.affIsProhibited).toEqual(false);
+        expect(affectCollection.afCoIsProhibited).toEqual(false);
     });
 });

@@ -1,13 +1,13 @@
 /**
  * Note: Action Name in chat command/property name cannot contain spaces.
  */
-state.Davout.ConditionFW.ActionLookup["fort-save"] = new Davout.ConditionFW.Action("Fort Save", "Con", "Fortitude-Mod", false);
-state.Davout.ConditionFW.ActionLookup["jump"] = new Davout.ConditionFW.Action("Jump", "Dex", "Acrobatics-Base", true);
-state.Davout.ConditionFW.ActionLookup["improvise"] = new Davout.ConditionFW.Action("Improvise", "Int", "Crafting-Base", false);
-state.Davout.ConditionFW.ActionLookup["attack-melee"] = new Davout.ConditionFW.Action("Melee Attack", "Str", "Att-Melee-Base", false);
-state.Davout.ConditionFW.ActionLookup["attack-hurl"] = new Davout.ConditionFW.Action("Hurl Attack", "Dex", "Att-Hurl-Base", false);
-state.Davout.ConditionFW.ActionLookup["attack-range"] = new Davout.ConditionFW.Action("Range Attack", "Dex", "Att-Range-Base", false);
-state.Davout.ConditionFW.ActionLookup["haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
+state.Davout.ConditionFW.ActionLookup["Fort-save"] = new Davout.ConditionFW.Action("Fort Save", "Con", "Fortitude-Mod", false);
+state.Davout.ConditionFW.ActionLookup["Jump"] = new Davout.ConditionFW.Action("Jump", "Dex", "Acrobatics-Base", true);
+state.Davout.ConditionFW.ActionLookup["Improvise"] = new Davout.ConditionFW.Action("Improvise", "Int", "Crafting-Base", false);
+state.Davout.ConditionFW.ActionLookup["Attack-melee"] = new Davout.ConditionFW.Action("Melee Attack", "Str", "Att-Melee-Base", false);
+state.Davout.ConditionFW.ActionLookup["Attack-hurl"] = new Davout.ConditionFW.Action("Hurl Attack", "Dex", "Att-Hurl-Base", false);
+state.Davout.ConditionFW.ActionLookup["Attack-range"] = new Davout.ConditionFW.Action("Range Attack", "Dex", "Att-Range-Base", false);
+state.Davout.ConditionFW.ActionLookup["Haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
 
 //state.Davout.ConditionFW.DcChallengeLookup["attack-melee"] = new Davout.ConditionFW.StaticChallenge("Melee Defense", "Dex", "Defense");
 //state.Davout.ConditionFW.DcChallengeLookup["attack-hurl"] = new Davout.ConditionFW.StaticChallenge("Hurl Defense", "Dex", "Defense");

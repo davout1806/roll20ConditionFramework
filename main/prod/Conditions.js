@@ -60,7 +60,7 @@ Davout.ConditionFW.Condition.prototype.affects = function (nameOfAffected, isAff
     var conditionName = this.coName;
 
     _.each(effects, function (effect) {
-        var affect = effect.getAffect(conditionName, isAffectingAttribute);
+        var affect = effect.getSingleEffectsAffect(conditionName, isAffectingAttribute);
         if (effect.efIsProhibited) {
             prohibited = true;
         }
@@ -83,7 +83,6 @@ Davout.ConditionFW.Condition.prototype.affects = function (nameOfAffected, isAff
 Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProhibited, modifier, note) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Effect", arguments, [_.isString, _.isBoolean, _.isBoolean, _.isNumber, [_.isString, _.isUndefined]]);
-//    if (!(this instanceof Davout.ConditionFW.Effect)) {return new Davout.ConditionFW.Effect(nameOfAffected, isAttribute, isProhibited, modifier, note)}
 
     this.efModifier = NaN;
     this.efHasModifier = false;
@@ -100,16 +99,16 @@ Davout.ConditionFW.Effect = function Effect (nameOfAffected, isAttribute, isProh
     }
 };
 
-Davout.ConditionFW.Effect.prototype.getAffect = function (conditionName, isAffectingAttribute){
+Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect = function (conditionName, isAffectingAttribute){
     Davout.Utils.argTypeCheck("Davout.ConditionFW.SingleEffectsAffect", arguments, [_.isString, _.isBoolean]);
     if(this.efIsAttribute !== isAffectingAttribute){
         var msg ="not to be an Attribute";
         if (this.efIsAttribute){
             msg = "to be an Attribute"
         }
-        throw "Davout.ConditionFW.Effect.prototype.getAffect Expecting affected " + msg;
+        throw "Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect Expecting affected " + msg;
     }
-    return new Davout.ConditionFW.SingleEffectsAffect(Davout.Utils.capitaliseFirstLetter(conditionName), this.efIsProhibited, this.efModifier, this.efNote);
+    return new Davout.ConditionFW.SingleEffectsAffect(conditionName, this.efIsProhibited, this.efModifier, this.efNote);
 };
 
 /******************************************************************************************
@@ -117,15 +116,20 @@ Davout.ConditionFW.Effect.prototype.getAffect = function (conditionName, isAffec
  *******************************************************************************************/
 Davout.ConditionFW.getTokenInstance = function (tokenId) {
     "use strict";
-    if (!_.isString(tokenId)) throw "Davout.ConditionFW.getTokenInstance twcTokenId invalid parameter type";
+    if (!_.isString(tokenId)) throw "Davout.ConditionFW.getTokenInstance tokenId invalid parameter type";
     if (state.Davout.ConditionFW.TokensWithConditionObj == undefined) {
         state.Davout.ConditionFW.TokensWithConditionObj = {};
     }
 
     if (state.Davout.ConditionFW.TokensWithConditionObj[tokenId] == undefined) {
-        state.Davout.ConditionFW.TokensWithConditionObj[tokenId] = new Davout.ConditionFW.ConditionedToken(tokenId);
+        var conditionedToken = new Davout.ConditionFW.ConditionedToken(tokenId);
+//    var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], "gfg");
+        log("NEW");
+        state.Davout.ConditionFW.TokensWithConditionObj[tokenId] = conditionedToken;
     }
 
+//    var affectCollection = state.Davout.ConditionFW.TokensWithConditionObj[tokenId].getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], "gfg");
+        log("EXISTING");
     return state.Davout.ConditionFW.TokensWithConditionObj[tokenId];
 };
 

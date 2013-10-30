@@ -1,5 +1,5 @@
 /**
- * Utilities that have receives communication from the Roll20Server
+ * Utilities that have incoming communication from the Roll20Server
  */
 
 var Davout = Davout || {};
@@ -15,7 +15,7 @@ Davout.R20Utils.selectedToTokenObj = function (singleSelectedObject){
     "use strict";
     if (singleSelectedObject == undefined) return undefined;
 
-    var tokenObjR20 = getObj("graphic", singleSelectedObject.get("id"));
+    var tokenObjR20 = getObj("graphic", singleSelectedObject._id);
     if (tokenObjR20 == undefined) return undefined;
     if (tokenObjR20.get("subtype") != "token") return undefined;
     return tokenObjR20;

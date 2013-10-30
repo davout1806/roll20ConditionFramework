@@ -31,7 +31,7 @@ Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg) {
 
 Davout.Utils.removeFromArrayFirstOccurOf = function (array, itemToRemove) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.Utils.capitaliseFirstLetter", arguments, [_.isArray, _.isNumber]);
+    Davout.Utils.argTypeCheck("Davout.Utils.removeFromArrayFirstOccurOf", arguments, [_.isArray, _.isNumber]);
     var workingArray = array;
     var index = workingArray.indexOf(itemToRemove);
     if (index > -1) {

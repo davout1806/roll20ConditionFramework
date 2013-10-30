@@ -10,19 +10,26 @@ Davout.ConditionFW.command._manageCondition = function (actionType, selected, co
         tokenObjR20 = getObj("graphic", obj._id);
         if (tokenObjR20.get("subtype") == "token") {
             tokenId = tokenObjR20.get("id");
+            log("tokenId = " + JSON.stringify(tokenId));
             if (tokenId != "") {
-                var tokenCondition;
+                var tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
                 switch (actionType) {
                     case "ADD":
-                        tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-                        tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
+                            Davout.Utils.sendDirectedMsgToChat(true, conditionName + " is not a valid condition");
+                        } else {
+                            tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        }
                         break;
                     case "DEL":
-                        tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-                        tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
+                            Davout.Utils.sendDirectedMsgToChat(true, conditionName + " is not a valid condition");
+                        } else {
+                            tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        }
                         break;
                     case "SHOW":
-                        Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + Davout.ConditionObj.listAllConditions());
+                        Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + tokenCondition.listAllConditions());
                         break;
                 }
             }
@@ -39,7 +46,14 @@ Davout.ConditionFW.command._action = function (msg, actionName) {
 
     var tokenId = tokenObjR20.get("id");
     var tokenWithCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-    var affect = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid]);
+    log("jso = " + JSON.stringify(tokenWithCondition));
+    var targetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid];
+    targetIdsOfAction = (targetIdsOfAction === undefined) ? [] : targetIdsOfAction
+    var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdsOfAction);
+    log("affectCollection = " + JSON.stringify(affectCollection));
+    if (!affectCollection.isProhibited()){
+
+    }
 
 };
 
@@ -83,7 +97,7 @@ on("ready", function () {
     addCommand.syntax = "!cond_add <ConditionName><br> ConditionName cannot contain spaces.";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
-            Davout.ConditionFW.command._manageCondition("ADD", msg.selected, args[0].value);
+            Davout.ConditionFW.command._manageCondition("ADD", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
         }
     };
     community.command.add("cond_add", addCommand);
@@ -96,7 +110,7 @@ on("ready", function () {
     removeCommand.syntax = "!cond_del <ConditionName><br> ConditionName cannot contain spaces.";
     removeCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
-            Davout.ConditionFW.command._manageCondition("DEL", msg.selected, args[0].value);
+            Davout.ConditionFW.command._manageCondition("DEL", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
         }
     };
     community.command.add("cond_del", removeCommand);
@@ -126,7 +140,7 @@ on("ready", function () {
                 Davout.ConditionFW.command._action(msg, args[0].value);
             } else {
                 log(args[0].value + " is an unknown action");
-                sendChat("API", "/w gm " + Davout.Utils.capitaliseFirstLetter(args[0].value) + " is an unknown action");
+                sendChat("API", "/w gm " + args[0].value + " is an unknown action");
             }
         }
     };
