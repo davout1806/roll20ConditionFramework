@@ -113,7 +113,6 @@ Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (act
     });
 
     _.each(targetIdsArray, function (targetTokenId) {
-        log("tokenId = " + JSON.stringify(targetTokenId));
         _.each(Davout.ConditionFW.getTokenInstance(targetTokenId).twcConditions, function (condition) {
             affectCollection.addTargetEffectsAffects(targetTokenId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
         });

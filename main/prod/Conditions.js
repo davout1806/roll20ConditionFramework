@@ -123,13 +123,9 @@ Davout.ConditionFW.getTokenInstance = function (tokenId) {
 
     if (state.Davout.ConditionFW.TokensWithConditionObj[tokenId] == undefined) {
         var conditionedToken = new Davout.ConditionFW.ConditionedToken(tokenId);
-//    var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], "gfg");
-        log("NEW");
         state.Davout.ConditionFW.TokensWithConditionObj[tokenId] = conditionedToken;
     }
 
-//    var affectCollection = state.Davout.ConditionFW.TokensWithConditionObj[tokenId].getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], "gfg");
-        log("EXISTING");
     return state.Davout.ConditionFW.TokensWithConditionObj[tokenId];
 };
 
