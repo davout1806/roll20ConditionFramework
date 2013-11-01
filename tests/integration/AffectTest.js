@@ -68,6 +68,7 @@ describe("Affect suite", function () {
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Improvise"], []);
+        expect(affectCollection.isProhibited()).toEqual("/w gm Bob the Orc is prohibited from performing Improvise.<br>cannot perform craft skill.<br>");
         expect(affectCollection.afCoIsProhibited).toEqual(true);
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Blinded");
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(true);
@@ -95,6 +96,7 @@ describe("Affect suite", function () {
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);
         var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], [targetTokenId]);
+        expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Entangled");
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(false);

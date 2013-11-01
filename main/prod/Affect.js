@@ -71,8 +71,10 @@ Davout.ConditionFW.AffectCollection.prototype.isProhibited = function (){
                 msgStr += singleAffect.seaNote + "<br>";
             }
         });
-        sendChat("API", "<br>");
+        return msgStr;
     }
+
+    return false;
 };
 
 // Affect
