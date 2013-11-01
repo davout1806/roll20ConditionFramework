@@ -1,3 +1,12 @@
+// TODO Non-modifier conditions
+// TODO Scene conditions: conditions that exist throughout the area of the current scene.
+// TODO locational conditions
+// TODO action where character vs character ex: attack where each may have a condition.
+// TODO remove condition based on timer.
+// TODO add/remove status markers.
+// TODO equipment affects.
+// TODO update javascript docs
+
 Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
 
@@ -10,7 +19,6 @@ Davout.ConditionFW.command._manageCondition = function (actionType, selected, co
         tokenObjR20 = getObj("graphic", obj._id);
         if (tokenObjR20.get("subtype") == "token") {
             tokenId = tokenObjR20.get("id");
-            log("tokenId = " + JSON.stringify(tokenId));
             if (tokenId != "") {
                 var tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
                 switch (actionType) {
@@ -46,11 +54,9 @@ Davout.ConditionFW.command._action = function (msg, actionName) {
 
     var tokenId = tokenObjR20.get("id");
     var tokenWithCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-    log("jso = " + JSON.stringify(tokenWithCondition));
     var targetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid];
     targetIdsOfAction = (targetIdsOfAction === undefined) ? [] : targetIdsOfAction
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdsOfAction);
-    log("affectCollection = " + JSON.stringify(affectCollection));
     if (!affectCollection.isProhibited()){
 
     }
