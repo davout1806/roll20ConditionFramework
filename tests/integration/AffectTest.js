@@ -25,6 +25,7 @@ describe("Affect suite", function () {
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
+        expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
@@ -36,6 +37,7 @@ describe("Affect suite", function () {
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
+        expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(2);
@@ -47,6 +49,7 @@ describe("Affect suite", function () {
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
+        expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
         expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
@@ -57,6 +60,7 @@ describe("Affect suite", function () {
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
         affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
+        expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);

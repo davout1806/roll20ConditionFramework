@@ -57,8 +57,11 @@ Davout.ConditionFW.command._action = function (msg, actionName) {
     var targetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid];
     targetIdsOfAction = (targetIdsOfAction === undefined) ? [] : targetIdsOfAction
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdsOfAction);
-    if (!affectCollection.isProhibited()){
+    var isProhibited = affectCollection.isProhibited();
+    if (isProhibited === false) {
 
+    } else {
+        sendChat("API", isProhibited);
     }
 
 };
