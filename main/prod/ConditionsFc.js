@@ -36,7 +36,7 @@ condition = new Davout.ConditionFW.Condition("Entangled", effects);
 state.Davout.ConditionFW.ConditionLookup["Entangled"] = condition;
 
 effects = [new Davout.ConditionFW.Effect("Str", true, false, -2)];
-condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4, "unconscious");
+condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4, "Unconscious");
 state.Davout.ConditionFW.ConditionLookup["Fatigued"] = condition;
 
 effects = [new Davout.ConditionFW.Effect("Improvise", false, true, 0, "cannot perform craft skill.")];

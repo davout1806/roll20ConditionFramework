@@ -89,10 +89,9 @@ Davout.ConditionFW.ConditionedToken.prototype.removeCondition = function (condit
  */
 Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
     "use strict";
-    var conditions = this.twcConditions;
     var str = "";
-    for (var i = 0; i < conditions.length; i++) {
-        str += conditions[i].coName + "<br>";
+    for (var i = 0; i < this.twcConditions.length; i++) {
+        str += this.twcConditions[i].coName + "<br>";
     }
 
     return str;

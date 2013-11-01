@@ -12,11 +12,11 @@ describe("Framework Commands suite", function () {
 
         var mockSelected = {_id: selectedId};
 
-        Davout.ConditionFW.command._manageCondition("ADD", [mockSelected], "fatigued");
+        Davout.ConditionFW.command._manageCondition("ADD", [mockSelected], "Fatigued");
         var conditionedToken = Davout.ConditionFW.getTokenInstance(tokenId);
-        conditionedToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
+        conditionedToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
 
-        var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
     });
 });

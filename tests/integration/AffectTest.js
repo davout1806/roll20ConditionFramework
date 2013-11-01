@@ -1,4 +1,4 @@
-describe("Action suite", function () {
+describe("Affect suite", function () {
     var tokenId = "1";
     var mockMessage = null;
     var mockToken = {};
@@ -18,13 +18,13 @@ describe("Action suite", function () {
     });
 
     it ("conditions affects modifiers, no targets", function() {
-        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
-        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
@@ -35,7 +35,7 @@ describe("Action suite", function () {
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
-        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(2);
@@ -46,7 +46,7 @@ describe("Action suite", function () {
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual({});
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
-        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute.length).toEqual(1);
         expect(affectCollection.afCoEffectsAffectingActorAttribute[0].seaName).toEqual("Fatigued");
@@ -56,7 +56,7 @@ describe("Action suite", function () {
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);
 
         davoutToken.removeCondition(state.Davout.ConditionFW.ConditionLookup["Fatigued"]);
-        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], []);
+        affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
         expect(affectCollection.afCoEffectsAffectingActorAction).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingActorAttribute).toEqual([]);
         expect(affectCollection.afCoEffectsAffectingTargetReaction).toEqual([]);
@@ -67,7 +67,7 @@ describe("Action suite", function () {
         mockMessage = {selected: [mockToken]};
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);
-        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["improvise"], []);
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Improvise"], []);
         expect(affectCollection.afCoIsProhibited).toEqual(true);
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Blinded");
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(true);
@@ -92,9 +92,9 @@ describe("Action suite", function () {
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
-        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["entangled"]);
+        davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);
-        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["attack-melee"], [targetTokenId]);
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], [targetTokenId]);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Entangled");
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaIsProhibited).toEqual(false);
