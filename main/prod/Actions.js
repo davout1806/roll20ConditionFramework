@@ -31,8 +31,37 @@ Davout.ConditionFW.Action.prototype.getTargetAffectedName = function(){
     return "VS-" + this.acName;
 };
 
-Davout.ConditionFW.Action.getResult = function (actingToken, targetTokenList) {
+Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken, targetIdsOfAction, affectCollection, dieResult) {
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Action.getResult", arguments, [Davout.Utils.isTrueObject, _.isArray, Davout.Utils.isTrueObject, [_.isNumber, _.isUndefined]]);
+    var isProhibited = affectCollection.isProhibited();
+    if (isProhibited === false) {
+        dieResult = (dieResult === undefined) ? randomInteger(20) : dieResult;
+        var actingChar = Davout.R20Utils.charIdToCharObj(actingConditionedToken.twcCharId);
+        affectCollection.finalize();
 
+        var attributeValue = actingChar.getAttribCurrentFor(this.acAttrAffectedName) + affectCollection.afCoFinalAttrbuteAffectMod;
+        var baseValue = actingChar.getAttribCurrentFor(this.acBaseAffectedName) + affectCollection.afCoFinalActionAffectMod;
+        var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue);
+
+        var actionString = this.acName;
+        actionString += ": Rolls " + dieResult + " + ";
+        actionString += "(" + this.acAttrAffectedName + ": " + Math.floor(attributeValue / 2 - 5);
+        actionString += ") + (" + this.acBaseAffectedName + ": " + baseValue + ")<br>";
+        actionString += affectCollection.afCoDisplayMessage;
+
+        if (this.acDoesApcPenApply) {
+            var acpValue = actingChar.getAttribCurrentFor(this.acCharSheetAcpName);
+            rollTotal -= Number(acpValue);
+            actionString += " + (ACP: -" + acpValue + ")";
+        }
+
+        for (var i = 0; i < targetIdsOfAction.length; i++) {
+            var targetId = targetIdsOfAction[i];
+
+        }
+    } else {
+        sendChat("API", isProhibited);
+    }
 };
 
 // Actions

@@ -14,8 +14,7 @@ state.Davout.ConditionFW.ActionLookup["Haggle"] = new Davout.ConditionFW.Action(
 //state.Davout.ConditionFW.DcChallengeLookup["attack-range"] = new Davout.ConditionFW.StaticChallenge("Range Defense", "Dex", "Defense");
 //state.Davout.ConditionFW.DcChallengeLookup["haggle"] = new Davout.ConditionFW.Action("Haggle", "Wis", "Haggle-Base", false);
 
-// TODO I need targetTokenWithConditions && targetWorkingStateChar. Should I put all this into state? It would have to cleared either before or after each usage.
-// TODO actually flat footed affects DC number NOT the attacker's roll. So should I move getAffectOn() back from Action to TokenWithConditions?
+// TODO actually flat footed affects DC number NOT the attacker's roll.
 //Davout.ConditionFW.Affect.prototype.applySystemSpecificRule = function (actionObj, tokenWithConditions, workingStateChar){
 //    "use strict";
 //    if (tokenWithConditions["flat-footed"] !== undefined && wo){

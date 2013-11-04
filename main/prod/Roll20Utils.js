@@ -45,5 +45,10 @@ Davout.R20Utils.tokenObjToCharObj = function (tokenObject){
     return getObj("character", Davout.R20Utils.tokenObjToCharId(tokenObject));
 };
 
+Davout.R20Utils.charIdToCharObj = function (charId){
+    "use strict";
+    return getObj("character", charId);
+};
+
 // Roll20Utils
 

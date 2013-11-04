@@ -79,7 +79,7 @@ Davout.ConditionFW.ConditionedToken.prototype.removeCondition = function (condit
         sendChat("API", "/w gm Condition " + condition.coName + " was removed from " + this.twcName);
         log("Removed: condition " + condition.coName + " removed from " + this.twcName);
     } else {
-        sendChat("API", "Selected Token " + condition.coName + " does not have condition: " + condition.coName);
+        sendChat("API", "/w gm Selected Token " + condition.coName + " does not have condition: " + condition.coName);
     }
 };
 

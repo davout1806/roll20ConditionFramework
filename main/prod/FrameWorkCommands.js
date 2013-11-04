@@ -24,20 +24,20 @@ Davout.ConditionFW.command._manageCondition = function (actionType, selected, co
                 switch (actionType) {
                     case "ADD":
                         if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
-                            Davout.Utils.sendDirectedMsgToChat(true, conditionName + " is not a valid condition");
+                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
                         } else {
                             tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
                         }
                         break;
                     case "DEL":
                         if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
-                            Davout.Utils.sendDirectedMsgToChat(true, conditionName + " is not a valid condition");
+                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
                         } else {
                             tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
                         }
                         break;
                     case "SHOW":
-                        Davout.Utils.sendDirectedMsgToChat(true, tokenObjR20.get("name") + " has the following conditions:<br>" + tokenCondition.listAllConditions());
+                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + tokenCondition.listAllConditions());
                         break;
                 }
             }
@@ -45,7 +45,7 @@ Davout.ConditionFW.command._manageCondition = function (actionType, selected, co
     });
 };
 
-Davout.ConditionFW.command._action = function (msg, actionName) {
+Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
     "use strict";
     var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
     if (tokenObjR20 === undefined) {
@@ -57,12 +57,8 @@ Davout.ConditionFW.command._action = function (msg, actionName) {
     var targetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid];
     targetIdsOfAction = (targetIdsOfAction === undefined) ? [] : targetIdsOfAction
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdsOfAction);
-    var isProhibited = affectCollection.isProhibited();
-    if (isProhibited === false) {
+    state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdsOfAction, affectCollection, dieResult);
 
-    } else {
-        sendChat("API", isProhibited);
-    }
 
 };
 
@@ -99,6 +95,7 @@ on("ready", function () {
     }
 
     var addCommand = {};
+    addCommand.gmOnly = true;
     addCommand.minArgs = 1;
     addCommand.maxArgs = 1;
     addCommand.typeList = [];
@@ -112,6 +109,7 @@ on("ready", function () {
     community.command.add("cond_add", addCommand);
 
     var removeCommand = {};
+    removeCommand.gmOnly = true;
     removeCommand.minArgs = 1;
     removeCommand.maxArgs = 1;
     removeCommand.typeList = [];
@@ -125,6 +123,7 @@ on("ready", function () {
     community.command.add("cond_del", removeCommand);
 
     var showCommand = {};
+    showCommand.gmOnly = true;
     showCommand.minArgs = 0;
     showCommand.maxArgs = 0;
     showCommand.typeList = [];
@@ -139,17 +138,19 @@ on("ready", function () {
 
     var actionCommand = {};
     actionCommand.minArgs = 1;
-    actionCommand.maxArgs = 1;
+    actionCommand.maxArgs = 2;
     actionCommand.typeList = [];
     actionCommand.typeList = ["str"];
-    actionCommand.syntax = "!action <ActionName><br>ActionName cannot contain spaces.";
+    actionCommand.syntax = "!action <ActionName> [dieRoll]<br>ActionName cannot contain spaces.";
     actionCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
-            if (state.Davout.ConditionFW.ActionLookup[args[0].value] != undefined) {
-                Davout.ConditionFW.command._action(msg, args[0].value);
+            var actionName = Davout.Utils.capitaliseFirstLetter(args[0].value);
+            var dieRoll = (args[1] === undefined) ? undefined : args[1].value;
+            if (state.Davout.ConditionFW.ActionLookup[actionName] != undefined) {
+                Davout.ConditionFW.command._action(msg, actionName, dieRoll);
             } else {
                 log(args[0].value + " is an unknown action");
-                sendChat("API", "/w gm " + args[0].value + " is an unknown action");
+                sendChat("API", "/w gm " + actionName + " is an unknown action");
             }
         }
     };

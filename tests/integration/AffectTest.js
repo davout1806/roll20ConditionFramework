@@ -67,7 +67,6 @@ describe("Affect suite", function () {
     });
 
     it("Action: prevent action when token has prohibited condition effect", function () {
-        var targetTokenId = "2";
         mockMessage = {selected: [mockToken]};
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);

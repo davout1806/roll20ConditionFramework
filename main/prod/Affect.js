@@ -32,6 +32,40 @@ Davout.ConditionFW.AffectCollection = function AffectCollection(tokenName, actio
     this.afCoEffectsAffectingActorAction = [];
     this.afCoEffectsAffectingActorAttribute = [];
     this.afCoEffectsAffectingTargetReaction = {};
+    this.afCoFinalAttrbuteAffectMod = 0;
+    this.afCoFinalActionAffectMod = 0;
+    this.afCoFinalTargetActionAffectMod = 0;
+    this.afCoDisplayMessage = "";
+};
+
+Davout.ConditionFW.AffectCollection.prototype.finalize = function (){
+    if (this.afCoEffectsAffectingActorAttribute.length > 0){
+        this.afCoDisplayMessage = "[ Attr: ";
+    }
+
+    for (var i = 0; i < this.afCoEffectsAffectingActorAttribute.length; i++) {
+        var attributeAffect = this.afCoEffectsAffectingActorAttribute[i];
+        this.afCoDisplayMessage += attributeAffect.seaName + " (" + attributeAffect.seaModifier + " " + attributeAffect.seaNote + ")";
+        this.afCoFinalAttrbuteAffectMod += attributeAffect.seaModifier;
+    }
+
+    if (this.afCoEffectsAffectingActorAttribute.length > 0){
+        this.afCoDisplayMessage += "]<br>";
+    }
+
+    if (this.afCoEffectsAffectingActorAction.length > 0){
+        this.afCoDisplayMessage += "[ Action: ";
+    }
+
+    for (var i = 0; i < this.afCoEffectsAffectingActorAction.length; i++) {
+        var actionAffect = this.afCoEffectsAffectingActorAction[i];
+        this.afCoDisplayMessage += actionAffect.seaName + " (" + actionAffect.seaModifier + " " + actionAffect.seaNote + ")";
+        this.afCoFinalActionAffectMod += actionAffect.seaModifier;
+    }
+
+    if (this.afCoEffectsAffectingActorAction.length > 0){
+        this.afCoDisplayMessage += "]<br>";
+    }
 };
 
 Davout.ConditionFW.AffectCollection.prototype.addEffectsAffectingAction = function (effectsAffectingAction) {

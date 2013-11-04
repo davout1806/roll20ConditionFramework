@@ -20,14 +20,14 @@ Davout.Utils.checkForSelectionAndMsgIfNot = function (selected, msgToSend, onlyO
     return true;
 };
 
-Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg) {
-    "use strict";
-    var whisper = "";
-    if (whisperToGm) {
-        whisper = "/w gm ";
-    }
-    sendChat("API", whisper + msg);
-};
+//Davout.Utils.sendDirectedMsgToChat = function (whisperToGm, msg) {
+//    "use strict";
+//    var whisper = "";
+//    if (whisperToGm) {
+//        whisper = "/w gm ";
+//    }
+//    sendChat("API", whisper + msg);
+//};
 
 Davout.Utils.removeFromArrayFirstOccurOf = function (array, itemToRemove) {
     "use strict";
