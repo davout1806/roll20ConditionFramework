@@ -7,9 +7,13 @@ Davout.R20Utils = Davout.R20Utils || {};
 
 Davout.R20Utils.getAttribCurrentFor = function (charId, attributeName){
     "use strict";
-    var attributeSheetObj = findObjs({ _type: 'attribute', name: attributeName, _characterid: charId })[0]
-    return attributeSheetObj.get("current");
+    return findObjs({ _type: 'attribute', name: attributeName, _characterid: charId })[0].get("current");
 };
+
+Davout.R20Utils.getGraphicProp = function (id, propertyName){
+    "use strict";
+    return getObj("graphic", id).get(propertyName);
+}
 
 Davout.R20Utils.selectedToTokenObj = function (singleSelectedObject){
     "use strict";

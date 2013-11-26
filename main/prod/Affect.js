@@ -34,7 +34,6 @@ Davout.ConditionFW.AffectCollection = function AffectCollection(tokenName, actio
     this.afCoEffectsAffectingTargetReaction = {};
     this.afCoFinalAttrbuteAffectMod = 0;
     this.afCoFinalActionAffectMod = 0;
-    this.afCoFinalTargetActionAffectMod = 0;
     this.afCoDisplayMessage = "";
 };
 

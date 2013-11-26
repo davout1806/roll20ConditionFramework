@@ -13,7 +13,7 @@ state.Davout.ConditionFW.TargetIdsOfAction = state.Davout.ConditionFW.TargetIdsO
  * @param doesApcPenApply
  * @constructor
  */
-Davout.ConditionFW.Action = function Action (actionName, attrAffectedName, baseAffectedName, doesApcPenApply) {
+Davout.ConditionFW.Action = function Action(actionName, attrAffectedName, baseAffectedName, doesApcPenApply) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Action", arguments, [_.isString, _.isString, _.isString, _.isBoolean]);
     this.acName = actionName;
@@ -27,20 +27,21 @@ Davout.ConditionFW.Action = function Action (actionName, attrAffectedName, baseA
  *
  * @returns {string} Name of reaction, used as affectedName in Effect.
  */
-Davout.ConditionFW.Action.prototype.getTargetAffectedName = function(){
+Davout.ConditionFW.Action.prototype.getTargetAffectedName = function () {
     return "VS-" + this.acName;
 };
 
-Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken, targetIdsOfAction, affectCollection, dieResult) {
+// todo this could use some clean up.
+Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken, targetTokenIdsOfAction, affectCollection, dieResult) {
     Davout.Utils.argTypeCheck("Davout.ConditionFW.Action.getResult", arguments, [Davout.Utils.isTrueObject, _.isArray, Davout.Utils.isTrueObject, [_.isNumber, _.isUndefined]]);
+
     var isProhibited = affectCollection.isProhibited();
     if (isProhibited === false) {
         dieResult = (dieResult === undefined) ? randomInteger(20) : dieResult;
-        var actingChar = Davout.R20Utils.charIdToCharObj(actingConditionedToken.twcCharId);
         affectCollection.finalize();
 
-        var attributeValue = actingChar.getAttribCurrentFor(this.acAttrAffectedName) + affectCollection.afCoFinalAttrbuteAffectMod;
-        var baseValue = actingChar.getAttribCurrentFor(this.acBaseAffectedName) + affectCollection.afCoFinalActionAffectMod;
+        var attributeValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acAttrAffectedName)) + affectCollection.afCoFinalAttrbuteAffectMod;
+        var baseValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acBaseAffectedName)) + affectCollection.afCoFinalActionAffectMod;
         var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue);
 
         var actionString = this.acName;
@@ -50,15 +51,35 @@ Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken
         actionString += affectCollection.afCoDisplayMessage;
 
         if (this.acDoesApcPenApply) {
-            var acpValue = actingChar.getAttribCurrentFor(this.acCharSheetAcpName);
+            var acpValue = Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acCharSheetAcpName);
             rollTotal -= Number(acpValue);
             actionString += " + (ACP: -" + acpValue + ")";
         }
 
-        for (var i = 0; i < targetIdsOfAction.length; i++) {
-            var targetId = targetIdsOfAction[i];
+        var actionStringTarget = "";
+        for (var i = 0; i < targetTokenIdsOfAction.length; i++) {
+            var targetId = targetTokenIdsOfAction[i];
+            var targetAffects = affectCollection.afCoEffectsAffectingTargetReaction[targetId];
+            actionStringTarget += "vs (" + Davout.R20Utils.getGraphicProp(targetId, "name");
+            var rollTotalTarget = 0;
+            var vsTotal = rollTotal;
+            var vsConditionList = "";
+            if (targetAffects !== undefined) {
+                for (var j = 0; j < targetAffects.length; j++) {
+                    var targetAffect = targetAffects[j];
 
+                    if (targetAffect !== undefined) {
+                        rollTotalTarget += targetAffect.seaModifier;
+                        vsConditionList += targetAffect.seaName + " ";
+                    }
+                }
+                vsTotal += rollTotalTarget;
+            }
+            actionStringTarget += ": <b>" + vsTotal + "</b> " + vsConditionList + ")";
+            actionStringTarget += "<br>";
         }
+
+        sendChat("API", "/w gm Total: <b>" + rollTotal + "</b><br>" + actionString + actionStringTarget);
     } else {
         sendChat("API", isProhibited);
     }
