@@ -48,7 +48,13 @@ Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
     "use strict";
     var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
     if (tokenObjR20 === undefined) {
-        throw "Selected object is not valid token";
+        sendChat("API", "/w gm Selected object is not valid token.");
+        return;
+    }
+
+    if (Davout.R20Utils.tokenObjToCharId(tokenObjR20) === undefined){
+        sendChat("API", "/w gm Selected object does not have a backing character sheet.");
+        return;
     }
 
     var tokenId = tokenObjR20.get("id");
