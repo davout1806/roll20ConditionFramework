@@ -1,7 +1,6 @@
 // TODO Non-modifier conditions
 // TODO Scene conditions: conditions that exist throughout the area of the current scene.
 // TODO locational conditions
-// TODO action where character vs character ex: attack where each may have a condition.
 // TODO remove condition based on timer.
 // TODO add/remove status markers.
 // TODO equipment affects.
@@ -75,6 +74,7 @@ Davout.ConditionFW.command._setTargets = function (playerId, targets) {
         tokenObjR20 = getObj("graphic", obj._id);
         if (tokenObjR20.get("subtype") == "token") {
             state.Davout.ConditionFW.TargetIdsOfAction[playerId].push(tokenObjR20.get("id"));
+            sendChat("API", "/w gm " + tokenObjR20.get("name") + " set as target");
         }
     });
 };

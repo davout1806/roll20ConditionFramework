@@ -40,46 +40,50 @@ Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken
         dieResult = (dieResult === undefined) ? randomInteger(20) : dieResult;
         affectCollection.finalize();
 
-        var attributeValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acAttrAffectedName)) + affectCollection.afCoFinalAttrbuteAffectMod;
-        var baseValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acBaseAffectedName)) + affectCollection.afCoFinalActionAffectMod;
-        var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue);
+        try {
+            var attributeValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acAttrAffectedName)) + affectCollection.afCoFinalAttrbuteAffectMod;
+            var baseValue = Number(Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acBaseAffectedName)) + affectCollection.afCoFinalActionAffectMod;
+            var rollTotal = dieResult + Number(Math.floor(attributeValue / 2 - 5)) + Number(baseValue);
 
-        var actionString = this.acName;
-        actionString += ": Rolls " + dieResult + " + ";
-        actionString += "(" + this.acAttrAffectedName + ": " + Math.floor(attributeValue / 2 - 5);
-        actionString += ") + (" + this.acBaseAffectedName + ": " + baseValue + ")<br>";
-        actionString += affectCollection.afCoDisplayMessage;
+            var actionString = this.acName;
+            actionString += ": Rolls " + dieResult + " + ";
+            actionString += "(" + this.acAttrAffectedName + ": " + Math.floor(attributeValue / 2 - 5);
+            actionString += ") + (" + this.acBaseAffectedName + ": " + baseValue + ")<br>";
+            actionString += affectCollection.afCoDisplayMessage;
 
-        if (this.acDoesApcPenApply) {
-            var acpValue = Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acCharSheetAcpName);
-            rollTotal -= Number(acpValue);
-            actionString += " + (ACP: -" + acpValue + ")";
-        }
-
-        var actionStringTarget = "";
-        for (var i = 0; i < targetTokenIdsOfAction.length; i++) {
-            var targetId = targetTokenIdsOfAction[i];
-            var targetAffects = affectCollection.afCoEffectsAffectingTargetReaction[targetId];
-            actionStringTarget += "vs (" + Davout.R20Utils.getGraphicProp(targetId, "name");
-            var rollTotalTarget = 0;
-            var vsTotal = rollTotal;
-            var vsConditionList = "";
-            if (targetAffects !== undefined) {
-                for (var j = 0; j < targetAffects.length; j++) {
-                    var targetAffect = targetAffects[j];
-
-                    if (targetAffect !== undefined) {
-                        rollTotalTarget += targetAffect.seaModifier;
-                        vsConditionList += targetAffect.seaName + " ";
-                    }
-                }
-                vsTotal += rollTotalTarget;
+            if (this.acDoesApcPenApply) {
+                var acpValue = Davout.R20Utils.getAttribCurrentFor(actingConditionedToken.twcCharId, this.acCharSheetAcpName);
+                rollTotal -= Number(acpValue);
+                actionString += " + (ACP: -" + acpValue + ")";
             }
-            actionStringTarget += ": <b>" + vsTotal + "</b> " + vsConditionList + ")";
-            actionStringTarget += "<br>";
-        }
 
-        sendChat("API", "/w gm Total: <b>" + rollTotal + "</b><br>" + actionString + actionStringTarget);
+            var actionStringTarget = "";
+            for (var i = 0; i < targetTokenIdsOfAction.length; i++) {
+                var targetId = targetTokenIdsOfAction[i];
+                var targetAffects = affectCollection.afCoEffectsAffectingTargetReaction[targetId];
+                actionStringTarget += "vs (" + Davout.R20Utils.getGraphicProp(targetId, "name");
+                var rollTotalTarget = 0;
+                var vsTotal = rollTotal;
+                var vsConditionList = "";
+                if (targetAffects !== undefined) {
+                    for (var j = 0; j < targetAffects.length; j++) {
+                        var targetAffect = targetAffects[j];
+
+                        if (targetAffect !== undefined) {
+                            rollTotalTarget += targetAffect.seaModifier;
+                            vsConditionList += targetAffect.seaName + " ";
+                        }
+                    }
+                    vsTotal += rollTotalTarget;
+                }
+                actionStringTarget += ": <b>" + vsTotal + "</b> " + vsConditionList + ")";
+                actionStringTarget += "<br>";
+            }
+
+            sendChat("API", "/w gm Total: <b>" + rollTotal + "</b><br>" + actionString + actionStringTarget);
+        } catch (e) {
+            sendChat("API", "/w gm ERROR: Could not perform action.<br>" + e);
+        }
     } else {
         sendChat("API", isProhibited);
     }
