@@ -99,9 +99,9 @@ Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
 
 
 // todo dc challenge #
-Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (actionObj, targetIdsArray) {
+Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (actionObj, targetId) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction", arguments, [Davout.Utils.isTrueObject, _.isArray]);
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction", arguments, [Davout.Utils.isTrueObject, [_.isString, _.isUndefined]]);
 
     var affectCollection = new Davout.ConditionFW.AffectCollection(this.twcName, actionObj.acName);
 
@@ -112,11 +112,11 @@ Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (act
         affectCollection.addEffectsAffectingActionAttr(condition.getEffectsAffectingActorsAttr(actionObj.acAttrAffectedName).affects);
     });
 
-    _.each(targetIdsArray, function (targetTokenId) {
-        _.each(Davout.ConditionFW.getTokenInstance(targetTokenId).twcConditions, function (condition) {
-            affectCollection.addTargetEffectsAffects(targetTokenId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
+    if (targetId != undefined) {
+        _.each(Davout.ConditionFW.getTokenInstance(targetId).twcConditions, function (condition) {
+            affectCollection.addTargetEffectsAffects(targetId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
         });
-    });
+    }
 
     return affectCollection;
 };

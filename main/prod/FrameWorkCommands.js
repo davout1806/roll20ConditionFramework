@@ -5,6 +5,9 @@
 // TODO add/remove status markers.
 // TODO equipment affects.
 // TODO update javascript docs
+// TODO add condition as gm viewable only
+// TODO add target image around targets.
+// TODO DC of targets
 
 Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
@@ -52,37 +55,32 @@ Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
         return;
     }
 
-    if (Davout.R20Utils.tokenObjToCharId(tokenObjR20) === undefined){
+    if (Davout.R20Utils.tokenObjToCharId(tokenObjR20) === undefined) {
         sendChat("API", "/w gm Selected object does not have a backing character sheet.");
         return;
     }
 
     var tokenId = tokenObjR20.get("id");
     var tokenWithCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-    var targetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction[msg.playerid];
-    targetIdsOfAction = (targetIdsOfAction === undefined) ? [] : targetIdsOfAction
-    var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdsOfAction);
-    state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdsOfAction, affectCollection, dieResult);
-
-
+    var targetIdOfAction = state.Davout.ConditionFW.TargetIdsOfAction;
+    var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
+    state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
 };
 
-// TODO add target image around targets.
-Davout.ConditionFW.command._setTargets = function (playerId, targets) {
+Davout.ConditionFW.command._setTarget = function (playerId, targetId) {
     "use strict";
     var tokenObjR20;
-    if (state.Davout.ConditionFW.TargetIdsOfAction == undefined) {
-        state.Davout.ConditionFW.TargetIdsOfAction = [];
-    }
-    state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [];
 
-    _.each(targets, function (obj) {
-        tokenObjR20 = getObj("graphic", obj._id);
-        if (tokenObjR20.get("subtype") == "token") {
-            state.Davout.ConditionFW.TargetIdsOfAction[playerId].push(tokenObjR20.get("id"));
-            sendChat("API", "/w gm " + tokenObjR20.get("name") + " set as target");
-        }
-    });
+    tokenObjR20 = getObj("graphic", targetId);
+    if (tokenObjR20.get("subtype") == "token") {
+        state.Davout.ConditionFW.TargetIdsOfAction = targetId;
+        sendChat("API", "/w gm " + tokenObjR20.get("name") + " set as target");
+    }
+};
+
+Davout.ConditionFW.command._clearState = function () {
+    state.Davout.ConditionFW.TokensWithConditionObj = {};
+    state.Davout.ConditionFW.TargetIdsOfAction = undefined;
 };
 
 on("ready", function () {
@@ -146,34 +144,50 @@ on("ready", function () {
     actionCommand.minArgs = 1;
     actionCommand.maxArgs = 2;
     actionCommand.typeList = [];
-    actionCommand.typeList = ["str"];
+    actionCommand.typeList = ["str", "str"];
     actionCommand.syntax = "!action <ActionName> [dieRoll]<br>ActionName cannot contain spaces.";
     actionCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", true, "/w gm you may only have 1 token selected.")) {
             var actionName = Davout.Utils.capitaliseFirstLetter(args[0].value);
-            var dieRoll = (args[1] === undefined) ? undefined : args[1].value;
-            if (state.Davout.ConditionFW.ActionLookup[actionName] != undefined) {
-                Davout.ConditionFW.command._action(msg, actionName, dieRoll);
+            var dieRoll = (args[1] === undefined) ? undefined : Number(args[1].value);
+
+            if (dieRoll === undefined || !isNaN(dieRoll)) {
+                if (state.Davout.ConditionFW.ActionLookup[actionName] != undefined) {
+                    Davout.ConditionFW.command._action(msg, actionName, dieRoll);
+                } else {
+                    log(args[0].value + " is an unknown action");
+                    sendChat("API", "/w gm " + actionName + " is an unknown action");
+                }
             } else {
-                log(args[0].value + " is an unknown action");
-                sendChat("API", "/w gm " + actionName + " is an unknown action");
+                sendChat("API", "Die roll must be a number!");
             }
         }
     };
     community.command.add("action", actionCommand);
 
     var setTargetCommand = {};
-    setTargetCommand.minArgs = 0;
-    setTargetCommand.maxArgs = 0;
+    setTargetCommand.minArgs = 1;
+    setTargetCommand.maxArgs = 1;
     setTargetCommand.typeList = [];
     setTargetCommand.typeList = ["str"];
     setTargetCommand.syntax = "!target";
     setTargetCommand.handle = function (args, who, isGm, msg) {
-        if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "")) {
-            Davout.ConditionFW.command._setTargets(msg.playerid, msg.selected);
-        }
+        var targetId = args[0];
+        Davout.ConditionFW.command._setTarget(msg.playerid, targetId.value);
     };
     community.command.add("target", setTargetCommand);
+
+    var clearStateCommand = {};
+    clearStateCommand.minArgs = 0;
+    clearStateCommand.maxArgs = 0;
+    clearStateCommand.typeList = [];
+    clearStateCommand.typeList = [];
+    clearStateCommand.syntax = "!clear_state";
+    clearStateCommand.handle = function (args, who, isGm, msg) {
+        var targetId = args[0];
+        Davout.ConditionFW.command._clearState();
+    };
+    community.command.add("clear_state", clearStateCommand);
 });
 
 // FrameworkCommands

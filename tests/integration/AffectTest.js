@@ -92,13 +92,13 @@ describe("Affect suite", function () {
 
         var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
 
-        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
+        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = targetTokenId;
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
         davoutToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
         targetToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Blinded"]);
-        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], [targetTokenId]);
+        var affectCollection = davoutToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], targetTokenId);
         expect(affectCollection.isProhibited()).toEqual(false);
         expect(affectCollection.afCoIsProhibited).toEqual(false);
         expect(affectCollection.afCoEffectsAffectingActorAction[0].seaName).toEqual("Entangled");

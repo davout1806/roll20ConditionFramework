@@ -3,7 +3,6 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
 
 state.Davout.ConditionFW.ActionLookup = state.Davout.ConditionFW.ActionLookup || {};
-state.Davout.ConditionFW.TargetIdsOfAction = state.Davout.ConditionFW.TargetIdsOfAction || [];  //Array of Arrays of IDs
 
 /**
  *
@@ -32,8 +31,8 @@ Davout.ConditionFW.Action.prototype.getTargetAffectedName = function () {
 };
 
 // todo this could use some clean up.
-Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken, targetTokenIdsOfAction, affectCollection, dieResult) {
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.Action.getResult", arguments, [Davout.Utils.isTrueObject, _.isArray, Davout.Utils.isTrueObject, [_.isNumber, _.isUndefined]]);
+Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken, targetTokenIdOfAction, affectCollection, dieResult) {
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.Action.getResult", arguments, [Davout.Utils.isTrueObject, [_.isString, _.isUndefined], Davout.Utils.isTrueObject, [_.isNumber, _.isUndefined]]);
 
     var isProhibited = affectCollection.isProhibited();
     if (isProhibited === false) {
@@ -58,10 +57,9 @@ Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken
             }
 
             var actionStringTarget = "";
-            for (var i = 0; i < targetTokenIdsOfAction.length; i++) {
-                var targetId = targetTokenIdsOfAction[i];
-                var targetAffects = affectCollection.afCoEffectsAffectingTargetReaction[targetId];
-                actionStringTarget += "vs (" + Davout.R20Utils.getGraphicProp(targetId, "name");
+            if (targetTokenIdOfAction != undefined) {
+                var targetAffects = affectCollection.afCoEffectsAffectingTargetReaction[targetTokenIdOfAction];
+                actionStringTarget += "vs (" + Davout.R20Utils.getGraphicProp(targetTokenIdOfAction, "name");
                 var rollTotalTarget = 0;
                 var vsTotal = rollTotal;
                 var vsConditionList = "";
@@ -84,7 +82,8 @@ Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken
         } catch (e) {
             sendChat("API", "/w gm ERROR: Could not perform action.<br>" + e);
         }
-    } else {
+    }
+    else {
         sendChat("API", isProhibited);
     }
 };
