@@ -1,8 +1,3 @@
-/*
- *  roll20 User: https://app.roll20.net/users/46544/stephen-l
- *  git User:    https://gist.github.com/Cazra/
- */
-
 /**
  * A set of chat commands used to set tokens to carry other tokens.
  * When a token moves, the any tokens it is carrying move to its new location.
@@ -30,8 +25,8 @@ var carryCmd = function(msg, myTokenName, carriedName) {
     }
 
     // You must be in control of your token and the carried token.
-    if((myToken.get("controlledby").indexOf(getPlayer(msg.who).get("_id")) !== -1) || msg.who.indexOf("(GM)") !== -1) {
-        if(carriedToken.get("controlledby").indexOf(getPlayer(msg.who).get("_id")) || msg.who.indexOf("(GM)") !== -1) {
+    if(isTokenControlledBy(msg.playerid, myTokenName)) {
+        if(isTokenControlledBy(msg.playerid, carriedName)) {
             _carryCmd(myToken, carriedToken);
             sendChat(msg.who, "/em : " + myTokenName + " is carrying " + carriedName);
         }
@@ -51,6 +46,7 @@ var _carryCmd = function(myToken, carriedToken) {
     }
 
     myToken.carryList.push(carriedToken);
+    toBack(carriedToken);  // added by Davout
 }
 
 /** Command one of your tokens to stop carrying another token. */
@@ -67,8 +63,8 @@ var dropCmd = function(msg, myTokenName, carriedName) {
     }
 
     // You must be in control of your token and the carried token.
-    if((myToken.get("controlledby").indexOf(getPlayer(msg.who).get("_id")) !== -1) || msg.who.indexOf("(GM)") !== -1) {
-        if(carriedToken.get("controlledby").indexOf(getPlayer(msg.who).get("_id")) !== -1 || msg.who.indexOf("(GM)") !== -1) {
+    if(isTokenControlledBy(msg.playerid, myTokenName)) {
+        if(isTokenControlledBy(msg.playerid, carriedName)) {
             _dropCmd(myToken, carriedToken);
             sendChat(msg.who, "/em : " + myTokenName + " dropped " + carriedName);
         }
@@ -99,7 +95,7 @@ var dropAllCmd = function(msg, myTokenName) {
     }
 
     // You must be in control of your token and the carried token.
-    if((myToken.get("controlledby").indexOf(getPlayer(msg.who).get("_id")) !== -1) || msg.who.indexOf("(GM)") !== -1) {
+    if(isTokenControlledBy(msg.playerid, myTokenName)) {
         for(var i in arrCopy) {
             var carriedToken = arrCopy[i];
             log(carriedToken);
@@ -189,14 +185,46 @@ on("change:graphic", function(obj, prev) {
 
 ////// Utility functions:
 
-/**
- * Gets a player object for a given player name.
- */
-var getPlayer = function(playerName) {
-    if(playerName.indexOf(" (GM)") !== -1) {
-        playerName = playerName.slice(0, playerName.length - 5)
+
+/** Returns true iff the player with the specified ID controls the token with the specified name. */
+var isTokenControlledBy = function(playerID, tokenName) {
+    return (getControllers(tokenName).indexOf(playerID) !== -1);
+}
+
+
+/** Returns the list of player IDs controlling the specified token. */
+var getControllers = function(tokenName) {
+    var token = getToken(tokenName);
+
+    // The token doesn't exist. 
+    if(token === null) {
+        return [];
     }
-    return findObjs({_type: "player", _displayname: playerName})[0];
+
+    // Return a list of all player ids controlling this token, including GMs.
+    else {
+        var character = getCharacterOf(token);
+        if(character === null) {
+            return getGMs();
+        }
+        else {
+            return character.get("controlledby").split(",");
+        }
+    }
+
+}
+
+
+/** Returns the Character that controls the specified token. */
+var getCharacterOf = function(token) {
+    var cID = token.get("represents");
+
+    if(cID === "") {
+        return null;
+    }
+    else {
+        return getObj("character", cID);
+    }
 }
 
 
@@ -206,6 +234,18 @@ var getPlayer = function(playerName) {
 var getToken = function(tokenName) {
     var curPageID = findObjs({_type: "campaign"})[0].get("playerpageid");
     return findObjs({_type: "graphic", layer: "objects", _pageid: curPageID, name: tokenName})[0];
+}
+
+
+/**
+ * Gets the list of the player IDs for all GMs of the campaign. (Just me)
+ */
+var getGMs = function() {
+    var result = new Array();
+
+    // populate result with the player IDs of the GMs for your campaign.
+
+    return result;
 }
 
 
