@@ -33,25 +33,20 @@ DavoutNpcStatParser.findName = function(line){
 
     for (var i=0; i < words.length && nameWordStart == undefined; i++){
         if (words[i].indexOf(")") == -1){
-//            log("1. words[i] = " + words[i]);
             nameWordStart = i;
         }
     }
-//    log("nameWordStart = " + nameWordStart);
 
     var wordAfterName
     var i = nameWordStart;
     for (; i < words.length && wordAfterName == undefined; i++){
         if (words[i].indexOf("(") != -1){
-//            log("2. words[i] = " + words[i]);
             wordAfterName = i;
         }
     }
-//    log("wordAfterName = " + wordAfterName);
     if (wordAfterName === null){
         wordAfterName = nameWordStart + 1;
     }
-//    log("wordAfterName = " + wordAfterName);
 
     var name = "";
     for (var i = nameWordStart; i < wordAfterName; i++){
@@ -62,33 +57,24 @@ DavoutNpcStatParser.findName = function(line){
 };
 
 DavoutNpcStatParser.findAttributes = function (line) {
-//    log("JSON.stringify(line) = " + JSON.stringify(line));
     var attribs = {};
     var attribPair = line.split(";");
-//    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
     for(var i=0; i < 6; i++){
         var splitPair = attribPair[i].split(": ");
-//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("/");
         attribs[splitPair[0].trim()] = splitValue[1].trim();
-//        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[1]));
     }
-//    log("attribs = " + JSON.stringify(attribs));
+
     return attribs;
 };
 
 DavoutNpcStatParser.findStandardThreeAtt = function (line, charStats) {
-//    log("JSON.stringify(line) = " + JSON.stringify(line));
     var attribPair = line.split("&nbsp;");
-//    log("JSON.stringify(attribPair) = " + JSON.stringify(attribPair));
     for(var i=0; i < 3; i++){
         var splitPair = attribPair[i].split(": ");
-//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("=");
         charStats[splitPair[0].trim()] = splitValue[0].trim();
-//        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
     }
-//    log("charStats = " + JSON.stringify(charStats));
 //    return charStats;
 };
 
@@ -106,14 +92,12 @@ DavoutNpcStatParser.findHealthRangedRef = function (line, npcType, charStats) {
     }
     for(; i < 3; i++){
         var splitPair = attribPair[i].split(": ");
-//        log("JSON.stringify(splitPair) = " + JSON.stringify(splitPair));
         var splitValue = splitPair[1].split("=");
         if (i === 0){
             charStats["DamageSave"] = splitValue[0].trim();
         } else {
             charStats[splitPair[0].trim()] = splitValue[0].trim();
         }
-        log("JSON.stringify(splitValue[1]) = " + JSON.stringify(splitValue[0]));
     }
 };
 

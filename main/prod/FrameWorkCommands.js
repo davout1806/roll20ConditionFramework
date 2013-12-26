@@ -6,9 +6,25 @@
 // TODO equipment affects.
 // TODO update javascript docs
 // TODO add condition as gm viewable only
-// TODO add target image around targets.
 // TODO DC of targets
 
+/**
+ * Order of files:
+ * Utils.js
+ * Roll20Utils.js
+ * Affect.js
+ * ConditionedToken.js
+ * Conditions.js
+ * Actions.js
+ * Actions<game>.js
+ * Conditions<game>.js
+ * Target.js
+ * FrameworkCommands.js
+ * Events.js
+ *
+ */
+
+Davout.ConditionFW.targetImgName = "_davoutTarget";
 Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
 
@@ -65,17 +81,6 @@ Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
     var targetIdOfAction = state.Davout.ConditionFW.TargetIdsOfAction;
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
     state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
-};
-
-Davout.ConditionFW.command._setTarget = function (playerId, targetId) {
-    "use strict";
-    var tokenObjR20;
-
-    tokenObjR20 = getObj("graphic", targetId);
-    if (tokenObjR20.get("subtype") == "token") {
-        state.Davout.ConditionFW.TargetIdsOfAction = targetId;
-        sendChat("API", "/w gm " + tokenObjR20.get("name") + " set as target");
-    }
 };
 
 Davout.ConditionFW.command._clearState = function () {
@@ -173,10 +178,11 @@ on("ready", function () {
     setTargetCommand.syntax = "!target";
     setTargetCommand.handle = function (args, who, isGm, msg) {
         var targetId = args[0];
-        Davout.ConditionFW.command._setTarget(msg.playerid, targetId.value);
+        Davout.ConditionFW.target.setTarget(msg.playerid, targetId.value);
     };
     community.command.add("target", setTargetCommand);
 
+    //This is only used for testing purposes.
     var clearStateCommand = {};
     clearStateCommand.minArgs = 0;
     clearStateCommand.maxArgs = 0;
