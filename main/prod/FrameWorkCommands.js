@@ -25,43 +25,12 @@
  */
 
 Davout.ConditionFW.targetImgName = "_davoutTarget";
+
 Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
+Davout.ConditionFW.command.addConditionCommand = "cond_add";
 
-Davout.ConditionFW.command._manageCondition = function (actionType, selected, conditionName) {
-    "use strict";
-    var tokenObjR20;
-    var tokenId;
 
-    _.each(selected, function (obj) {
-        tokenObjR20 = getObj("graphic", obj._id);
-        if (tokenObjR20.get("subtype") == "token") {
-            tokenId = tokenObjR20.get("id");
-            if (tokenId != "") {
-                var tokenCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-                switch (actionType) {
-                    case "ADD":
-                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
-                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
-                        } else {
-                            tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
-                        }
-                        break;
-                    case "DEL":
-                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
-                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
-                        } else {
-                            tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
-                        }
-                        break;
-                    case "SHOW":
-                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + tokenCondition.listAllConditions());
-                        break;
-                }
-            }
-        }
-    });
-};
 
 Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
     "use strict";
@@ -77,7 +46,7 @@ Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
     }
 
     var tokenId = tokenObjR20.get("id");
-    var tokenWithCondition = Davout.ConditionFW.getTokenInstance(tokenId);
+    var tokenWithCondition = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
     var targetIdOfAction = state.Davout.ConditionFW.TargetIdOfAction;
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
     state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
@@ -96,11 +65,15 @@ on("ready", function () {
     }
     if (Davout.Utils == undefined) {
         log("You must have Davout.Utils installed in a script tab before the tab this script is in to use.");
-        throw "Can't find Davout.Utils!";
+        throw "Can't find Davout.Utils,j";
     }
     if (Davout.R20Utils == undefined) {
         log("You must have Davout.R20Utils installed in a script tab before the tab this script is in to use.");
-        throw "Can't find Davout.R20Utils!";
+        throw "Can't find Davout.R20Utils.j";
+    }
+    if (Davout.ConditionFW.target == undefined) {
+        log("You must have Target installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Target.js";
     }
 
     var addCommand = {};
@@ -109,13 +82,13 @@ on("ready", function () {
     addCommand.maxArgs = 1;
     addCommand.typeList = [];
     addCommand.typeList = ["str"];
-    addCommand.syntax = "!cond_add <ConditionName><br> ConditionName cannot contain spaces.";
+    addCommand.syntax = "!" + Davout.ConditionFW.command.addConditionCommand + " <ConditionName><br> ConditionName cannot contain spaces.";
     addCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
-            Davout.ConditionFW.command._manageCondition("ADD", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
+            Davout.ConditionFW.conditions.manageCondition("ADD", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
         }
     };
-    community.command.add("cond_add", addCommand);
+    community.command.add(Davout.ConditionFW.command.addConditionCommand, addCommand);
 
     var removeCommand = {};
     removeCommand.gmOnly = true;
@@ -126,7 +99,7 @@ on("ready", function () {
     removeCommand.syntax = "!cond_del <ConditionName><br> ConditionName cannot contain spaces.";
     removeCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
-            Davout.ConditionFW.command._manageCondition("DEL", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
+            Davout.ConditionFW.conditions.manageCondition("DEL", msg.selected, Davout.Utils.capitaliseFirstLetter(args[0].value));
         }
     };
     community.command.add("cond_del", removeCommand);
@@ -140,7 +113,7 @@ on("ready", function () {
     showCommand.syntax = "!cond_show";
     showCommand.handle = function (args, who, isGm, msg) {
         if (Davout.Utils.checkForSelectionAndMsgIfNot(msg.selected, "/w gm nothing is selected", false, "") && isGm) {
-            Davout.ConditionFW.command._manageCondition("SHOW", msg.selected);
+            Davout.ConditionFW.conditions.manageCondition("SHOW", msg.selected);
         }
     };
     community.command.add("cond_show", showCommand);

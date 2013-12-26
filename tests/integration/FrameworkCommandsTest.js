@@ -12,8 +12,8 @@ describe("Framework Commands suite", function () {
 
         var mockSelected = {_id: selectedId};
 
-        Davout.ConditionFW.command._manageCondition("ADD", [mockSelected], "Fatigued");
-        var conditionedToken = Davout.ConditionFW.getTokenInstance(tokenId);
+        Davout.ConditionFW.conditions.manageCondition("ADD", [mockSelected], "Fatigued");
+        var conditionedToken = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
         conditionedToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
 
         var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);

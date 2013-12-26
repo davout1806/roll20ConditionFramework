@@ -113,7 +113,7 @@ Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (act
     });
 
     if (targetId != undefined) {
-        _.each(Davout.ConditionFW.getTokenInstance(targetId).twcConditions, function (condition) {
+        _.each(Davout.ConditionFW.conditions.getTokenInstance(targetId).twcConditions, function (condition) {
             affectCollection.addTargetEffectsAffects(targetId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
         });
     }

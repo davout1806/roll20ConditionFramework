@@ -46,6 +46,7 @@
 
 Davout = (Davout || {});
 Davout.ConditionFW = Davout.ConditionFW || {};
+Davout.ConditionFW.conditions = Davout.ConditionFW.conditions || {};
 
 state.Davout = state.Davout || {};
 state.Davout.ConditionFW = state.Davout.ConditionFW || {};
@@ -160,9 +161,9 @@ Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect = function (condition
 /******************************************************************************************
  Function Declarations
  *******************************************************************************************/
-Davout.ConditionFW.getTokenInstance = function (tokenId) {
+Davout.ConditionFW.conditions.getTokenInstance = function (tokenId) {
     "use strict";
-    if (!_.isString(tokenId)) throw "Davout.ConditionFW.getTokenInstance tokenId invalid parameter type";
+    if (!_.isString(tokenId)) throw "Davout.ConditionFW.conditions.getTokenInstance tokenId invalid parameter type";
     if (state.Davout.ConditionFW.TokensWithConditionObj == undefined) {
         state.Davout.ConditionFW.TokensWithConditionObj = {};
     }
@@ -173,6 +174,41 @@ Davout.ConditionFW.getTokenInstance = function (tokenId) {
     }
 
     return state.Davout.ConditionFW.TokensWithConditionObj[tokenId];
+};
+
+Davout.ConditionFW.conditions.manageCondition = function (actionType, selected, conditionName) {
+    "use strict";
+    var tokenObjR20;
+    var tokenId;
+
+    _.each(selected, function (obj) {
+        tokenObjR20 = getObj("graphic", obj._id);
+        if (tokenObjR20.get("subtype") == "token") {
+            tokenId = tokenObjR20.get("id");
+            if (tokenId != "") {
+                var tokenCondition = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
+                switch (actionType) {
+                    case "ADD":
+                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
+                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
+                        } else {
+                            tokenCondition.addCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        }
+                        break;
+                    case "DEL":
+                        if (state.Davout.ConditionFW.ConditionLookup[conditionName] === undefined) {
+                            sendChat("API", "/w gm " + conditionName + " is not a valid condition");
+                        } else {
+                            tokenCondition.removeCondition(state.Davout.ConditionFW.ConditionLookup[conditionName]);
+                        }
+                        break;
+                    case "SHOW":
+                        sendChat("API", "/w gm " + tokenObjR20.get("name") + " has the following conditions:<br>" + tokenCondition.listAllConditions());
+                        break;
+                }
+            }
+        }
+    });
 };
 
 // Conditions

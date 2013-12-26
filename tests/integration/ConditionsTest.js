@@ -24,8 +24,8 @@ describe("Condition suite", function() {
         window.getObj = jasmine.createSpy();
         window.getObj.when("graphic", tokenId).thenReturn(mockToken);
 
-        // Davout.ConditionFW.getTokenInstance(tokenId)
-        davoutToken = Davout.ConditionFW.getTokenInstance(tokenId);
+        // Davout.ConditionFW.conditions.getTokenInstance(tokenId)
+        davoutToken = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
 
         // create mock for roll20 function sendChat and log
         // use this style of mock creation when function does NOT return a value.

@@ -14,7 +14,7 @@ describe("Affect suite", function () {
         window.getObj = jasmine.createSpy();
         window.getObj.when("graphic", tokenId).thenReturn(mockToken);
 
-        davoutToken = Davout.ConditionFW.getTokenInstance(tokenId);
+        davoutToken = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
     });
 
     it ("conditions affects modifiers, no targets", function() {
@@ -90,7 +90,7 @@ describe("Affect suite", function () {
         mockTargetToken.get.when("name").thenReturn("Jack the Target");
         window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
 
-        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
+        var targetToken = Davout.ConditionFW.conditions.getTokenInstance(targetTokenId);
 
         state.Davout.ConditionFW.TargetIdOfAction[playerId] = targetTokenId;
 
@@ -122,7 +122,7 @@ describe("Affect suite", function () {
         mockTargetToken.get.when("name").thenReturn("Jack the Target");
         window.getObj.when("graphic", targetTokenId).thenReturn(mockTargetToken);
 
-        var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
+        var targetToken = Davout.ConditionFW.conditions.getTokenInstance(targetTokenId);
 
         state.Davout.ConditionFW.TargetIdOfAction[playerId] = [targetTokenId];
 
