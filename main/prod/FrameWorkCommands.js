@@ -78,14 +78,14 @@ Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
 
     var tokenId = tokenObjR20.get("id");
     var tokenWithCondition = Davout.ConditionFW.getTokenInstance(tokenId);
-    var targetIdOfAction = state.Davout.ConditionFW.TargetIdsOfAction;
+    var targetIdOfAction = state.Davout.ConditionFW.TargetIdOfAction;
     var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
     state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
 };
 
 Davout.ConditionFW.command._clearState = function () {
     state.Davout.ConditionFW.TokensWithConditionObj = {};
-    state.Davout.ConditionFW.TargetIdsOfAction = undefined;
+    state.Davout.ConditionFW.TargetIdOfAction = undefined;
 };
 
 on("ready", function () {
