@@ -1,6 +1,7 @@
 var Davout = Davout || {};
 Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
+Davout.ConditionFW.actions = Davout.ConditionFW.actions || {};
 
 state.Davout.ConditionFW.ActionLookup = state.Davout.ConditionFW.ActionLookup || {};
 
@@ -86,6 +87,29 @@ Davout.ConditionFW.Action.prototype.getResult = function (actingConditionedToken
     else {
         sendChat("API", isProhibited);
     }
+};
+
+/******************************************************************************************
+ Function Declarations
+ *******************************************************************************************/
+Davout.ConditionFW.actions.action = function (msg, actionName, dieResult) {
+    "use strict";
+    var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
+    if (tokenObjR20 === undefined) {
+        sendChat("API", "/w gm Selected object is not valid token.");
+        return;
+    }
+
+    if (Davout.R20Utils.tokenObjToCharId(tokenObjR20) === undefined) {
+        sendChat("API", "/w gm Selected object does not have a backing character sheet.");
+        return;
+    }
+
+    var tokenId = tokenObjR20.get("id");
+    var tokenWithCondition = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
+    var targetIdOfAction = state.Davout.ConditionFW.TargetIdOfAction;
+    var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
+    state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
 };
 
 // Actions

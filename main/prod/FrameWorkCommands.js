@@ -30,28 +30,6 @@ Davout.ConditionFW = Davout.ConditionFW || {};
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
 Davout.ConditionFW.command.addConditionCommand = "cond_add";
 
-
-
-Davout.ConditionFW.command._action = function (msg, actionName, dieResult) {
-    "use strict";
-    var tokenObjR20 = Davout.R20Utils.selectedToTokenObj(msg.selected[0]);
-    if (tokenObjR20 === undefined) {
-        sendChat("API", "/w gm Selected object is not valid token.");
-        return;
-    }
-
-    if (Davout.R20Utils.tokenObjToCharId(tokenObjR20) === undefined) {
-        sendChat("API", "/w gm Selected object does not have a backing character sheet.");
-        return;
-    }
-
-    var tokenId = tokenObjR20.get("id");
-    var tokenWithCondition = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
-    var targetIdOfAction = state.Davout.ConditionFW.TargetIdOfAction;
-    var affectCollection = tokenWithCondition.getAffectForAction(state.Davout.ConditionFW.ActionLookup[actionName], targetIdOfAction);
-    state.Davout.ConditionFW.ActionLookup[actionName].getResult(tokenWithCondition, targetIdOfAction, affectCollection, dieResult);
-};
-
 Davout.ConditionFW.command._clearState = function () {
     state.Davout.ConditionFW.TokensWithConditionObj = {};
     state.Davout.ConditionFW.TargetIdOfAction = undefined;
@@ -74,6 +52,14 @@ on("ready", function () {
     if (Davout.ConditionFW.target == undefined) {
         log("You must have Target installed in a script tab before the tab this script is in to use.");
         throw "Can't find Target.js";
+    }
+    if (Davout.ConditionFW.actions == undefined) {
+        log("You must have Actions installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Actions.js";
+    }
+    if (Davout.ConditionFW.conditions == undefined) {
+        log("You must have Conditions installed in a script tab before the tab this script is in to use.");
+        throw "Can't find Conditions.js";
     }
 
     var addCommand = {};
@@ -131,7 +117,7 @@ on("ready", function () {
 
             if (dieRoll === undefined || !isNaN(dieRoll)) {
                 if (state.Davout.ConditionFW.ActionLookup[actionName] != undefined) {
-                    Davout.ConditionFW.command._action(msg, actionName, dieRoll);
+                    Davout.ConditionFW.actions.action(msg, actionName, dieRoll);
                 } else {
                     log(args[0].value + " is an unknown action");
                     sendChat("API", "/w gm " + actionName + " is an unknown action");
