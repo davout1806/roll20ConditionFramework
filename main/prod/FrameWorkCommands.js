@@ -24,9 +24,11 @@
  *
  */
 
-Davout.ConditionFW.targetImgName = "_davoutTarget";
 
 Davout.ConditionFW = Davout.ConditionFW || {};
+
+Davout.ConditionFW.targetImgName = "_davoutTarget";
+
 Davout.ConditionFW.command = Davout.ConditionFW.command || {};
 Davout.ConditionFW.command.addConditionCommand = "cond_add";
 

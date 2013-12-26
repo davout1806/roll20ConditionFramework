@@ -60,7 +60,7 @@ Davout.R20Utils.findUniqueTokenByName = function (name) {
         _pageid: Campaign().get("playerpageid"),
         _type: "graphic",
         _subtype: "token",
-        _name: "_davoutTarget"
+        _name: name
     });
 
     if (tokens.length > 1) {
