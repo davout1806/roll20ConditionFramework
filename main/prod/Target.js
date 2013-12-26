@@ -4,8 +4,10 @@ Davout.ConditionFW.target = Davout.ConditionFW.target || {};
 Davout.ConditionFW.target.moveTargetImg = function (obj) {
     var targetImgToken = obj.target;
     if (targetImgToken) {
-        targetImgToken.set("left", obj.get("left"));
-        targetImgToken.set("top", obj.get("top"));
+        if (state.Davout.ConditionFW.TargetIdOfAction = obj.get("id")) {
+            targetImgToken.set("left", obj.get("left"));
+            targetImgToken.set("top", obj.get("top"));
+        }
     }
 };
 
@@ -15,7 +17,7 @@ Davout.ConditionFW.target.setTarget = function (playerId, targetId) {
 
     targetToken = getObj("graphic", targetId);
     if (targetToken.get("subtype") == "token") {
-        state.Davout.ConditionFW.TargetIdsOfAction = targetId;
+        state.Davout.ConditionFW.TargetIdOfAction = targetId;
         var targetImgToken = Davout.R20Utils.findUniqueTokenByName(Davout.ConditionFW.targetImgName);
         if (targetImgToken != undefined) {
             targetToken.target = targetImgToken

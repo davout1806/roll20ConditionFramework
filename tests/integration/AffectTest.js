@@ -92,7 +92,7 @@ describe("Affect suite", function () {
 
         var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
 
-        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = targetTokenId;
+        state.Davout.ConditionFW.TargetIdOfAction[playerId] = targetTokenId;
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
@@ -124,7 +124,7 @@ describe("Affect suite", function () {
 
         var targetToken = Davout.ConditionFW.getTokenInstance(targetTokenId);
 
-        state.Davout.ConditionFW.TargetIdsOfAction[playerId] = [targetTokenId];
+        state.Davout.ConditionFW.TargetIdOfAction[playerId] = [targetTokenId];
 
         mockMessage = {selected: [mockToken], playerid: tokenId};
 
