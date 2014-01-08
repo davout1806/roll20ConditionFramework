@@ -1,7 +1,11 @@
 /*
  *  roll20 User: https://app.roll20.net/users/84478/josh
  *  git User:    https://gist.github.com/DarokinB
+ *
+ *  plus mods from https://app.roll20.net/users/74414/quatar
+ *  https://docs.google.com/file/d/0B3E3jkp51s8aS1J5YWlBa3hKc00/edit
  */
+
 
 
 //Settings
