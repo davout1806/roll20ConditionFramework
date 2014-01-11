@@ -1,23 +1,14 @@
-/*
- *  roll20 User: https://app.roll20.net/users/84478/josh
- *  git User:    https://gist.github.com/DarokinB
- *
- *  plus mods from https://app.roll20.net/users/74414/quatar
- *  https://docs.google.com/file/d/0B3E3jkp51s8aS1J5YWlBa3hKc00/edit
- */
-
-
-
 //Settings
 var MovementTracker = MovementTracker || {};
 
-MovementTracker.TOTALPINS = 20; //The number of pins you have on your map
+MovementTracker.TOTALPINS = 12; //The number of pins you have on your map
 MovementTracker.SQUARE_AURA = false; //Change to true if you want it to be square auras
-MovementTracker.Aura1_Color = "#4a86e8"; //The double move color
+MovementTracker.Aura1_Color = "#4a86e8"; //The double move color (Single move color if SHOW_SINGLE_MOVE_ONLY is true)
 MovementTracker.Aura2_Color = "#FFFFFF"; //The single move color
 MovementTracker.GMName = "DM (GM)"; //The display name of the GM to override controls
-MovementTracker.DISPLAY_MESSAGES = false; //Set true if you want the system to make announcements
+MovementTracker.DISPLAY_MESSAGES = true; //Set true if you want the system to make announcements
 MovementTracker.DEFAULT_DOUBLE_MOVE = false; //Set true if you want players to be able to double move without !DoubleMove
+MovementTracker.SHOW_SINGLE_MOVE_ONLY = true; //Set to false if you want to see single/double move aura by default
 
 /* ********************* COMMANDS AVAILABLE *********************************
  *   !DoubleMove  - Unlocks the double move for this turn and make an announcement
@@ -305,6 +296,23 @@ on("chat:message", function(msg) {
         /****************** END TEST  ***************************/
 
         MovementTracker.DOUBLE_MOVE = true;
+
+        var Speed = 0;
+        if (current_token.get("represents") !== "") {
+            Speed = GetCharMaxSpeed(current_token.get("represents")); //Gets the characters Speed
+        }
+        else
+        {
+            Speed = 0;
+        }
+
+        if (Speed == "" || Speed == NaN) {
+            Speed = 0;
+        }
+
+        var unitsMoved2 = CalcUnitsMoved(); //Gets the total distance moved
+        SetPin(MovementTracker.MoveNumber-1, current_token.get("left"), current_token.get("top"), current_token.get("width"), current_token.get("height"), Speed - unitsMoved2, ((Speed * 2) - unitsMoved2)); //refresh aura
+
         if (MovementTracker.DISPLAY_MESSAGES) {
             sendChat("System", "/desc " + current_token.get("name") + " is now double moving.");
         }
@@ -405,13 +413,28 @@ on("chat:message", function(msg) {
             _type: "graphic",
             name: "XPin" + (MovementTracker.MoveNumber - 1),
         });
+        // Check if we're double moving
+        var doubleMove = ( MovementTracker.DEFAULT_DOUBLE_MOVE || MovementTracker.DOUBLE_MOVE || !MovementTracker.SHOW_SINGLE_MOVE_ONLY );
+
         _.each(Pins, function(tPin) {
             var pinname = tPin.get("name");
             if (pinname.substr(0,4) == "XPin") {
-                tPin.set({
-                    'aura2_radius': Speed - unitsMoved || "",
-                    'aura1_radius': (Speed * 2) - unitsMoved || "",
-                });
+                if (doubleMove) {
+                    tPin.set({
+                        'aura2_radius': Speed - unitsMoved || "",
+                        'aura1_radius': (Speed * 2) - unitsMoved || "",
+                        'aura2_color': MovementTracker.Aura2_Color,
+                        'aura1_color': MovementTracker.Aura1_Color,
+                    });
+                }
+                else {
+                    tPin.set({
+                        'aura2_radius': Speed - unitsMoved || "",
+                        'aura1_radius': "",
+                        'aura2_color': MovementTracker.Aura1_Color,
+                        'aura1_color': MovementTracker.Aura1_Color,
+                    });
+                }
             }
         });
 
@@ -464,6 +487,9 @@ on("chat:message", function(msg) {
 });
 
 function SetPin(PinNumber, LeftPos, TopPos, Width, Height, AuraSize, Speed) {
+    // Check if we're double moving
+    var doubleMove = ( MovementTracker.DEFAULT_DOUBLE_MOVE || MovementTracker.DOUBLE_MOVE || !MovementTracker.SHOW_SINGLE_MOVE_ONLY );
+
     //Resets all pins auras
     var Pins = findObjs({
         _pageid: Campaign().get("playerpageid"),
@@ -501,20 +527,38 @@ function SetPin(PinNumber, LeftPos, TopPos, Width, Height, AuraSize, Speed) {
         Speed = "";
     }
     _.each(Pins, function(tPin) {
-        tPin.set({
-            'left': LeftPos,
-            'top': TopPos,
-            'width': Width,
-            'height': Height,
-            'aura2_radius': AuraSize,
-            'aura2_color': MovementTracker.Aura2_Color,
-            'aura2_square': MovementTracker.SQUARE_AURA,
-            'showplayers_aura2': true,
-            'aura1_radius': Speed || "",
-            'aura1_color': MovementTracker.Aura1_Color,
-            'aura1_square': MovementTracker.SQUARE_AURA,
-            'showplayers_aura1': true,
-        });
+        if (doubleMove) { //everything stays the same, two auras
+            tPin.set({
+                'left': LeftPos,
+                'top': TopPos,
+                'width': Width,
+                'height': Height,
+                'aura2_radius': AuraSize,
+                'aura2_color': MovementTracker.Aura2_Color,
+                'aura2_square': MovementTracker.SQUARE_AURA,
+                'showplayers_aura2': true,
+                'aura1_radius': Speed || "",
+                'aura1_color': MovementTracker.Aura1_Color,
+                'aura1_square': MovementTracker.SQUARE_AURA,
+                'showplayers_aura1': true,
+            });
+        }
+        else { // No Aura1 (double move) and Aura2 in Aura1 color
+            tPin.set({
+                'left': LeftPos,
+                'top': TopPos,
+                'width': Width,
+                'height': Height,
+                'aura2_radius': AuraSize,
+                'aura2_color': MovementTracker.Aura1_Color,
+                'aura2_square': MovementTracker.SQUARE_AURA,
+                'showplayers_aura2': true,
+                'aura1_radius': "",
+                'aura1_color': MovementTracker.Aura1_Color,
+                'aura1_square': MovementTracker.SQUARE_AURA,
+                'showplayers_aura1': true,
+            });
+        }
         toBack(tPin);
     });
 };
