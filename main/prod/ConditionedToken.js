@@ -128,3 +128,4 @@ Davout.ConditionFW.ConditionedToken.prototype.getEffectsForAction = function (ac
 };
 
 // ConditionedToken
+
