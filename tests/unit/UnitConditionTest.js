@@ -65,7 +65,7 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("baffled", effects);
 
             expect(condition.coName).toEqual("baffled");
-            expect(condition.coMaxStackSize).toEqual(1);
+            expect(condition.coMaxGradeNumber).toEqual(1);
             expect(condition.coNextConditionName).toEqual(undefined);
             expect(condition.coEffects["balance"][0]["efModifier"]).toEqual(-2);
             expect(condition.coEffects["balance"][0]["efHasModifier"]).toEqual(true);
@@ -80,7 +80,7 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4);
 
             expect(condition.coName).toEqual("Fatigued");
-            expect(condition.coMaxStackSize).toEqual(4);
+            expect(condition.coMaxGradeNumber).toEqual(4);
             expect(condition.coNextConditionName).toEqual(undefined);
             expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);
             expect(condition.coEffects["Str"][0]["efHasModifier"]).toEqual(true);
@@ -95,7 +95,7 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("Fatigued", effects, 4, "unconscious");
 
             expect(condition.coName).toEqual("Fatigued");
-            expect(condition.coMaxStackSize).toEqual(4);
+            expect(condition.coMaxGradeNumber).toEqual(4);
             expect(condition.coNextConditionName).toEqual("unconscious");
             expect(condition.coEffects["Str"][0]["efModifier"]).toEqual(-2);
             expect(condition.coEffects["Str"][0]["efHasModifier"]).toEqual(true);
@@ -117,10 +117,10 @@ describe("Condition Unit suite", function () {
             var condition = new Davout.ConditionFW.Condition("test", effects);
 
             expect(function () {condition.getEffectsAffectingAction("Str")})
-                .toThrow("Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect Expecting affected to be an Attribute");
+                .toThrow("Davout.ConditionFW.Effect.prototype.getEffectOnToken Expecting affected to be an Attribute");
 
             expect(function () {condition.getEffectsAffectingActorsAttr("Jump")})
-                .toThrow("Davout.ConditionFW.Effect.prototype.getSingleEffectsAffect Expecting affected not to be an Attribute");
+                .toThrow("Davout.ConditionFW.Effect.prototype.getEffectOnToken Expecting affected not to be an Attribute");
         });
     });
 

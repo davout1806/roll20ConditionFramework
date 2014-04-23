@@ -16,7 +16,7 @@ describe("Framework Commands suite", function () {
         var conditionedToken = Davout.ConditionFW.conditions.getTokenInstance(tokenId);
         conditionedToken.addCondition(state.Davout.ConditionFW.ConditionLookup["Entangled"]);
 
-        var affectCollection = conditionedToken.getAffectForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
-        expect(affectCollection.afCoIsProhibited).toEqual(false);
+        var affectCollection = conditionedToken.getEffectsForAction(state.Davout.ConditionFW.ActionLookup["Attack-melee"], []);
+        expect(affectCollection.efToCoIsProhibited).toEqual(false);
     });
 });

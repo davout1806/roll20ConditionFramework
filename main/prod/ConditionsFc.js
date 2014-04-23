@@ -43,6 +43,13 @@ effects = [new Davout.ConditionFW.Effect("Improvise", false, true, 0, "cannot pe
 condition = new Davout.ConditionFW.Condition("Unconscious", effects);
 state.Davout.ConditionFW.ConditionLookup["Unconscious"] = condition;
 
+// todo The character loses his Dexterity bonus to Defense (if positive), as well as all dodge bonuses to Defense.
+//Davout.ConditionFW.EffectOnToken.prototype.applySystemSpecificRule = function (actionObj, tokenWithConditions, workingStateChar){
+//    "use strict";
+//    if (tokenWithConditions["flat-footed"] !== undefined && wo){
+//        //Defense-Base
+//    }
+//};
 
 // ConditionsFc
 

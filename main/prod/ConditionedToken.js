@@ -1,25 +1,31 @@
 Davout.ConditionFW = Davout.ConditionFW || {};
-Davout.ConditionFW = Davout.ConditionFW || {};
 
 /******************************************************************************************
  Class Declarations
  *******************************************************************************************/
 
-Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
-    "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.WorkingStateChar", arguments, [_.isString]);
-    this.chCharId = charId;
-    var attributes = findObjs({ _type: 'attribute', _characterid: this.chCharId });
-    _.each(attributes, function (attribute) {
-        this.chCurrentValues = attribute.get("current");
-    });
-};
-
 /**
- * Constructor for TokenWithConditions object, which represents the conditions on the associated roll20 token.
+ * Constructor for WorkingStateChar
+ * @param charId
  * @constructor
  */
-Davout.ConditionFW.ConditionedToken = function (tokenId) {
+//Davout.ConditionFW.WorkingStateChar = function WorkingStateChar(charId) {
+//    "use strict";
+//    Davout.Utils.argTypeCheck("Davout.ConditionFW.WorkingStateChar", arguments, [_.isString]);
+//    this.chCharId = charId;
+//    var attributes = findObjs({ _type: 'attribute', _characterid: this.chCharId });
+//    _.each(attributes, function (attribute) {
+//        this.chCurrentValues = attribute.get("current");
+//    });
+//};
+
+/**
+ * Represents the conditions on the associated roll20 token.
+ *
+ * Constructor for TokenWithConditions object.
+ * @constructor
+ */
+Davout.ConditionFW.ConditionedToken = function ConditionedToken (tokenId) {
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken", arguments, [_.isString]);
     this.twcTokenId = tokenId;
@@ -36,10 +42,10 @@ Davout.ConditionFW.ConditionedToken.prototype.addCondition = function (condition
     "use strict";
     Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.addCondition", arguments, [Davout.Utils.isTrueObject]);
     // condition is stackable
-    if (condition.coMaxStackSize > 1) {
+    if (condition.coMaxGradeNumber > 1) {
         var conditionCount = _.where(this.twcConditions, {coName: condition.coName}).length;
         // if additional level of condition can be added to stack
-        if (condition.coMaxStackSize > conditionCount) {
+        if (condition.coMaxGradeNumber > conditionCount) {
             this.twcConditions.push(condition);
             var displayCount = conditionCount + 1;
             sendChat("API", "/w gm Condition " + condition.coName + ": " + displayCount + " was added to " + this.twcName);
@@ -84,7 +90,7 @@ Davout.ConditionFW.ConditionedToken.prototype.removeCondition = function (condit
 };
 
 /**
- * Function that return string of all conditions on the TokensWithConditionObj associated to the roll20 token with the given tokenId.
+ * Returns string of all conditions on the TokensWithConditionObj associated to the roll20 token with the given tokenId.
  * @returns {string}
  */
 Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
@@ -99,26 +105,26 @@ Davout.ConditionFW.ConditionedToken.prototype.listAllConditions = function () {
 
 
 // todo dc challenge #
-Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction = function (actionObj, targetId) {
+Davout.ConditionFW.ConditionedToken.prototype.getEffectsForAction = function (actionObj, targetId) {
     "use strict";
-    Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getAffectForAction", arguments, [Davout.Utils.isTrueObject, [_.isString, _.isUndefined]]);
+    Davout.Utils.argTypeCheck("Davout.ConditionFW.ConditionedToken.prototype.getEffectsForAction", arguments, [Davout.Utils.isTrueObject, [_.isString, _.isUndefined]]);
 
-    var affectCollection = new Davout.ConditionFW.AffectCollection(this.twcName, actionObj.acName);
+    var effectOnTokenCollection = new Davout.ConditionFW.EffectOnTokenCollection(this.twcName, actionObj.acName);
 
     _.each(this.twcConditions, function (condition) {
         var effectsAffectingAction = condition.getEffectsAffectingAction(actionObj.acName);
-        affectCollection.afCoIsProhibited = effectsAffectingAction.isProhibited;
-        affectCollection.addEffectsAffectingAction(effectsAffectingAction.affects);
-        affectCollection.addEffectsAffectingActionAttr(condition.getEffectsAffectingActorsAttr(actionObj.acAttrAffectedName).affects);
+        effectOnTokenCollection.efToCoIsProhibited = effectsAffectingAction.isProhibited;
+        effectOnTokenCollection.addEffectsAffectingAction(effectsAffectingAction.effectsOnToken);
+        effectOnTokenCollection.addEffectsAffectingActionAttr(condition.getEffectsAffectingActorsAttr(actionObj.acAttrAffectedName).effectsOnToken);
     });
 
     if (targetId != undefined) {
         _.each(Davout.ConditionFW.conditions.getTokenInstance(targetId).twcConditions, function (condition) {
-            affectCollection.addTargetEffectsAffects(targetId, condition.getEffectsAffectingAction(actionObj.getTargetAffectedName()).affects);
+            effectOnTokenCollection.addTargetEffectsAffects(targetId, condition.getEffectsAffectingAction(actionObj.getEffectNameOnTarget()).effectsOnToken);
         });
     }
 
-    return affectCollection;
+    return effectOnTokenCollection;
 };
 
 // ConditionedToken

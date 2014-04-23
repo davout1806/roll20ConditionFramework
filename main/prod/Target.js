@@ -11,7 +11,7 @@ Davout.ConditionFW.target.moveTargetImg = function (obj) {
     }
 };
 
-Davout.ConditionFW.target.setTarget = function (playerId, targetId) {
+Davout.ConditionFW.target.setTarget = function (targetId) {
     "use strict";
     var targetToken;
 
@@ -28,6 +28,10 @@ Davout.ConditionFW.target.setTarget = function (playerId, targetId) {
             sendChat("API", "/w gm Error occurred selecting target.")
         }
     }
+};
+
+Davout.ConditionFW.target.clearTarget = function (){
+    state.Davout.ConditionFW.TargetIdOfAction = undefined;
 };
 
 // Target
