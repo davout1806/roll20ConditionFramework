@@ -1,4 +1,3 @@
-
 A key design goal: Conditions are associated to individual tokens not characters.
 This allows the use of multiple tokens to be associated to a single character while
 each token can have different conditions. But each token needs to be associated a character.
@@ -55,3 +54,32 @@ Desired design specifications:
 *
 * Since tokens might be associated to 0, 1, or more characters, it is not possible to adjust the ratings.
 * Therefore, must apply effects on rolls.
+
+// TODO Non-modifier conditions
+// TODO Scene conditions: conditions that exist throughout the area of the current scene.
+// TODO locational conditions
+// TODO remove condition based on timer.
+// TODO add/remove status markers.
+// TODO equipment effectsOnToken.
+// TODO update javascript docs
+// TODO add condition as gm viewable only
+// TODO DC of targets
+
+/**
+* Order of files:
+* ChatCommandHandler.js
+* Utils.js
+* Roll20Utils.js
+* EffectOnToken.js
+* ConditionedToken.js
+* Conditions.js
+* Actions.js
+* Actions<game>.js
+* DcCalculator.js
+* DcCalculator<game>.js
+* Conditions<game>.js
+* Target.js
+* FrameworkCommands.js
+* Events.js
+*
+*/
